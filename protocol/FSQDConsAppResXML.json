@@ -1,0 +1,219 @@
+{
+  "xs:schema": {
+    "-xmlns": "http://uCustoms/IL/MC/FSQDConsAppRes/v1.0",
+    "-xmlns:b": "http://schemas.microsoft.com/BizTalk/2003",
+    "-xmlns:ns0": "http://uCustoms/Common/Header/v1.0",
+    "-targetNamespace": "http://uCustoms/IL/MC/FSQDConsAppRes/v1.0",
+    "-xmlns:xs": "http://www.w3.org/2001/XMLSchema",
+    "xs:import": {
+      "-schemaLocation": "uCustoms.MC.Common.BizTalk.Schemas.XMLSchemas.Header",
+      "-namespace": "http://uCustoms/Common/Header/v1.0"
+    },
+    "xs:annotation": {
+      "xs:appinfo": {
+        "b:references": {
+          "b:reference": { "-targetNamespace": "http://uCustoms/Common/Header/v1.0" }
+        }
+      }
+    },
+    "xs:element": {
+      "-name": "FSQDConsAppRes",
+      "xs:annotation": {
+        "xs:appinfo": {
+          "b:properties": {
+            "b:property": [
+              {
+                "-distinguished": "true",
+                "-xpath": "/*[local-name()='FSQDConsAppResXML' and namespace-uri()='http://uCustoms/IL/MC/FSQDConsAppRes/v1.0']/*[local-name()='Response' and namespace-uri()='']/*[local-name()='CustomRegistrationNumber' and namespace-uri()='']"
+              },
+              {
+                "-distinguished": "true",
+                "-xpath": "/*[local-name()='FSQDConsAppResXML' and namespace-uri()='http://uCustoms/IL/MC/FSQDConsAppRes/v1.0']/*[local-name()='Response' and namespace-uri()='']/*[local-name()='ApprovalStatus' and namespace-uri()='']"
+              },
+              {
+                "-distinguished": "true",
+                "-xpath": "/*[local-name()='FSQDConsAppRes' and namespace-uri()='http://uCustoms/IL/MC/FSQDConsAppRes/v1.0']/*[local-name()='Header' and namespace-uri()='']/*[local-name()='batchID' and namespace-uri()='']"
+              },
+              {
+                "-distinguished": "true",
+                "-xpath": "/*[local-name()='FSQDConsAppRes' and namespace-uri()='http://uCustoms/IL/MC/FSQDConsAppRes/v1.0']/*[local-name()='Header' and namespace-uri()='']/*[local-name()='refBatchID' and namespace-uri()='']"
+              }
+            ]
+          }
+        }
+      },
+      "xs:complexType": {
+        "xs:sequence": {
+          "xs:element": [
+            {
+              "-name": "Header",
+              "-type": "ns0:HeaderType"
+            },
+            {
+              "-name": "Body",
+              "xs:complexType": {
+                "xs:sequence": {
+                  "xs:element": {
+                    "-minOccurs": "1",
+                    "-maxOccurs": "1",
+                    "-name": "FSQDDeclarationResponse",
+                    "xs:complexType": {
+                      "xs:sequence": {
+                        "xs:element": [
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "MCKey",
+                            "-type": "xs:string"
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "MCValue",
+                            "-type": "xs:string"
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "CustomRegistrationNumber",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "35" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "CommentFromFQC",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "512" },
+                                "xs:minLength": { "-value": "0" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "ProcessDate",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "17" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "InvoiceItems",
+                            "xs:complexType": {
+                              "xs:sequence": {
+                                "xs:element": {
+                                  "-minOccurs": "1",
+                                  "-maxOccurs": "unbounded",
+                                  "-name": "InvoiceItem",
+                                  "xs:complexType": {
+                                    "xs:sequence": {
+                                      "xs:element": [
+                                        {
+                                          "-name": "ItemNumber",
+                                          "xs:simpleType": {
+                                            "xs:restriction": {
+                                              "-base": "xs:int",
+                                              "xs:pattern": {
+                                                "-value": "\\d{1,5}"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "-minOccurs": "1",
+                                          "-maxOccurs": "1",
+                                          "-name": "HSCode",
+                                          "xs:simpleType": {
+                                            "xs:restriction": {
+                                              "-base": "xs:string",
+                                              "xs:maxLength": { "-value": "18" },
+                                              "xs:minLength": { "-value": "1" }
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "-maxOccurs": "1",
+                                          "-name": "ApprovalStatus",
+                                          "xs:annotation": {
+                                            "xs:appinfo": {
+                                              "b:fieldInfo": {
+                                                "-notes": "A-Approved, R-Rejection, N-Not applicable,I-Request Inspection 
+C- Conditional Release"
+                                              }
+                                            }
+                                          },
+                                          "xs:simpleType": {
+                                            "xs:restriction": {
+                                              "-base": "xs:string",
+                                              "xs:maxLength": { "-value": "3" },
+                                              "xs:minLength": { "-value": "1" },
+                                              "xs:enumeration": [
+                                                { "-value": "A" },
+                                                { "-value": "R" },
+                                                { "-value": "N" },
+                                                { "-value": "I" },
+                                                { "-value": "C" }
+                                              ]
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "-minOccurs": "1",
+                                          "-maxOccurs": "1",
+                                          "-name": "ActionCode",
+                                          "xs:annotation": {
+                                            "xs:appinfo": {
+                                              "b:fieldInfo": {
+                                                "-notes": "In case of Approval status is inspection, the action is I - phyisical inspection, S - sampling, D - document inspection
+
+In case of Approval status is rejection, the action is  R - Re-export"
+                                              }
+                                            }
+                                          },
+                                          "xs:simpleType": {
+                                            "xs:restriction": {
+                                              "-base": "xs:string",
+                                              "xs:maxLength": { "-value": "3" },
+                                              "xs:minLength": { "-value": "1" },
+                                              "xs:enumeration": [
+                                                { "-value": "I" },
+                                                { "-value": "S" },
+                                                { "-value": "D" },
+                                                { "-value": "R" }
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

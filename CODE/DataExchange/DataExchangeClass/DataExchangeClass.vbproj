@@ -84,6 +84,10 @@
     <Compile Include="class\FoodCodeMaster.vb" />
     <Compile Include="class\ItemInfo.vb" />
     <Compile Include="class\J_Srv.vb" />
+    <Compile Include="class\neo\FSQDConsAppReq.vb" />
+    <Compile Include="class\neo\FSQDConsAppRes.vb" />
+    <Compile Include="class\neo\FSQDFoodCodeMaster.vb" />
+    <Compile Include="class\neo\Header.vb" />
     <Compile Include="class\Officer.vb" />
     <Compile Include="class\PermitInfo.vb" />
     <Compile Include="class\ProcessInfo.vb" />

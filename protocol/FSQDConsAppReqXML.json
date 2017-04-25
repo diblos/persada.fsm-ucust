@@ -1,0 +1,1084 @@
+{
+  "xs:schema": {
+    "-xmlns": "http://uCustoms/IL/MC/FSQDConsAppReq/v1.0",
+    "-xmlns:b": "http://schemas.microsoft.com/BizTalk/2003",
+    "-xmlns:nsHeader": "http://uCustoms/Common/Header/v1.0",
+    "-targetNamespace": "http://uCustoms/IL/MC/FSQDConsAppReq/v1.0",
+    "-xmlns:xs": "http://www.w3.org/2001/XMLSchema",
+    "xs:import": {
+      "-schemaLocation": "uCustoms.MC.Common.BizTalk.Schemas.XMLSchemas.Header",
+      "-namespace": "http://uCustoms/Common/Header/v1.0"
+    },
+    "xs:annotation": {
+      "xs:appinfo": {
+        "b:references": {
+          "b:reference": { "-targetNamespace": "http://uCustoms/Common/Header/v1.0" }
+        }
+      }
+    },
+    "xs:element": {
+      "-name": "FSQDConsAppReq",
+      "xs:annotation": {
+        "xs:appinfo": {
+          "b:properties": {
+            "b:property": [
+              {
+                "-distinguished": "true",
+                "-xpath": "/*[local-name()='FSQDConsAppReq' and namespace-uri()='http://uCustoms/IL/MC/FSQDConsAppReq/v1.0']/*[local-name()='Header' and namespace-uri()='']/*[local-name()='txnDateTime' and namespace-uri()='']"
+              },
+              {
+                "-distinguished": "true",
+                "-xpath": "/*[local-name()='FSQDConsAppReq' and namespace-uri()='http://uCustoms/IL/MC/FSQDConsAppReq/v1.0']/*[local-name()='Header' and namespace-uri()='']/*[local-name()='batchID' and namespace-uri()='']"
+              },
+              {
+                "-distinguished": "true",
+                "-xpath": "/*[local-name()='FSQDConsAppReq' and namespace-uri()='http://uCustoms/IL/MC/FSQDConsAppReq/v1.0']/*[local-name()='Header' and namespace-uri()='']/*[local-name()='fileName' and namespace-uri()='']"
+              },
+              {
+                "-distinguished": "true",
+                "-xpath": "/*[local-name()='FSQDConsAppReq' and namespace-uri()='http://uCustoms/IL/MC/FSQDConsAppReq/v1.0']/*[local-name()='Header' and namespace-uri()='']/*[local-name()='refBatchID' and namespace-uri()='']"
+              }
+            ]
+          }
+        }
+      },
+      "xs:complexType": {
+        "xs:sequence": {
+          "xs:element": [
+            {
+              "-name": "Header",
+              "-type": "nsHeader:HeaderType"
+            },
+            {
+              "-name": "Body",
+              "xs:complexType": {
+                "xs:sequence": {
+                  "xs:element": {
+                    "-name": "FSQDDeclaration",
+                    "xs:complexType": {
+                      "xs:sequence": {
+                        "xs:element": [
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "MCKey",
+                            "-type": "xs:string"
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "MCValue",
+                            "-type": "xs:string"
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "CustomFormNumber",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "35" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "TransactionType",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "3" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "RegistrationDate",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "17" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "RegistrationTime",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "17" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "DeclarantName",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "105" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "DeclarantICNumber",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "17" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "DeclarantStatus",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "70" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-name": "TotalNumberOfItem",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:int",
+                                "xs:pattern": {
+                                  "-value": "\\d{1,5}"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "ExporterName",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "70" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "ExporterAddressStreetAndNumberPObox",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "70" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "ExporterAddressCountry",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "2" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "ImporterCode",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "17" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "ImporterName",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "105" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "ImporterAddressStreetAndNumberPObox",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "70" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "ImporterAddressCity",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:minLength": { "-value": "1" },
+                                "xs:maxLength": { "-value": "35" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "ImporterAddressCountry",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:minLength": { "-value": "1" },
+                                "xs:maxLength": { "-value": "2" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "ImporterAddressCountrySubEntityName",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "35" },
+                                "xs:minLength": { "-value": "1" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "ImporterAddressPostcodeIdentification",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:minLength": { "-value": "1" },
+                                "xs:maxLength": { "-value": "9" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "AgentCode",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:minLength": { "-value": "0" },
+                                "xs:maxLength": { "-value": "17" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "AgentName",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:minLength": { "-value": "0" },
+                                "xs:maxLength": { "-value": "105" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "AgentAddressStreetAndNumberPObox",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:minLength": { "-value": "0" },
+                                "xs:maxLength": { "-value": "70" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "AgentAddressCity",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:minLength": { "-value": "0" },
+                                "xs:maxLength": { "-value": "35" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "AgentAddressCountry",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:minLength": { "-value": "0" },
+                                "xs:maxLength": { "-value": "2" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "AgentAddressCountrySubEntityName",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:minLength": { "-value": "0" },
+                                "xs:maxLength": { "-value": "35" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "AgentAddressPostcodeIdentification",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:minLength": { "-value": "0" },
+                                "xs:maxLength": { "-value": "9" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "ConsignmentNote",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "35" },
+                                "xs:minLength": { "-value": "0" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "GeneralDescriptionOfGoods",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "512" },
+                                "xs:minLength": { "-value": "0" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "Marks",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "512" },
+                                "xs:minLength": { "-value": "0" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "ManifestRegistrationNumber",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "35" },
+                                "xs:minLength": { "-value": "0" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "ModeOfTransport",
+                            "xs:annotation": {
+                              "xs:appinfo": {
+                                "b:fieldInfo": { "-notes": "1-Sea mode,3-Road mode,4-Air mode" }
+                              }
+                            },
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "4" },
+                                "xs:minLength": { "-value": "0" },
+                                "xs:enumeration": [
+                                  { "-value": "1" },
+                                  { "-value": "3" },
+                                  { "-value": "4" }
+                                ]
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "DateOfImport",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "17" },
+                                "xs:minLength": { "-value": "0" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "VesselRegistration",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "25" },
+                                "xs:minLength": { "-value": "0" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "VoyageNumber",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "17" },
+                                "xs:minLength": { "-value": "0" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "VesselName",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "35" },
+                                "xs:minLength": { "-value": "0" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "FlightNumber",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "17" },
+                                "xs:minLength": { "-value": "0" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "FlightDate",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "17" },
+                                "xs:minLength": { "-value": "0" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "PlaceOfImport",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "17" },
+                                "xs:minLength": { "-value": "0" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "PlaceOfLoading",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "17" },
+                                "xs:minLength": { "-value": "0" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "0",
+                            "-maxOccurs": "1",
+                            "-name": "PortOfTransshipment",
+                            "xs:simpleType": {
+                              "xs:restriction": {
+                                "-base": "xs:string",
+                                "xs:maxLength": { "-value": "17" },
+                                "xs:minLength": { "-value": "0" }
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "Invoice",
+                            "xs:complexType": {
+                              "xs:sequence": {
+                                "xs:element": [
+                                  {
+                                    "-minOccurs": "1",
+                                    "-maxOccurs": "1",
+                                    "-name": "PayTo",
+                                    "xs:simpleType": {
+                                      "xs:restriction": {
+                                        "-base": "xs:string",
+                                        "xs:maxLength": { "-value": "2" },
+                                        "xs:minLength": { "-value": "1" }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "-minOccurs": "1",
+                                    "-maxOccurs": "1",
+                                    "-name": "Insurance",
+                                    "xs:simpleType": {
+                                      "xs:restriction": {
+                                        "-base": "xs:decimal",
+                                        "xs:pattern": {
+                                          "-value": "\\d{1,16}[,\\.]\\d{1,2}"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "-minOccurs": "1",
+                                    "-maxOccurs": "1",
+                                    "-name": "OtherCharges",
+                                    "xs:simpleType": {
+                                      "xs:restriction": {
+                                        "-base": "xs:decimal",
+                                        "xs:pattern": {
+                                          "-value": "\\d{1,16}[,\\.]\\d{1,2}"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "-minOccurs": "1",
+                                    "-maxOccurs": "1",
+                                    "-name": "CIF",
+                                    "xs:simpleType": {
+                                      "xs:restriction": {
+                                        "-base": "xs:decimal",
+                                        "xs:pattern": {
+                                          "-value": "\\d{1,16}[,\\.]\\d{1,2}"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "-minOccurs": "1",
+                                    "-maxOccurs": "1",
+                                    "-name": "FOB",
+                                    "xs:simpleType": {
+                                      "xs:restriction": {
+                                        "-base": "xs:decimal",
+                                        "xs:pattern": {
+                                          "-value": "\\d{1,16}[,\\.]\\d{1,2}"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "-minOccurs": "1",
+                                    "-maxOccurs": "1",
+                                    "-name": "Freight",
+                                    "xs:simpleType": {
+                                      "xs:restriction": {
+                                        "-base": "xs:decimal",
+                                        "xs:pattern": {
+                                          "-value": "\\d{1,16}[,\\.]\\d{1,2}"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "-minOccurs": "1",
+                                    "-maxOccurs": "1",
+                                    "-name": "TotalDutyPayable",
+                                    "xs:simpleType": {
+                                      "xs:restriction": {
+                                        "-base": "xs:decimal",
+                                        "xs:pattern": {
+                                          "-value": "\\d{1,16}[,\\.]\\d{1,2}"
+                                        }
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "-minOccurs": "1",
+                                    "-maxOccurs": "unbounded",
+                                    "-name": "InvoiceItems",
+                                    "xs:complexType": {
+                                      "xs:sequence": {
+                                        "xs:element": {
+                                          "-minOccurs": "1",
+                                          "-maxOccurs": "unbounded",
+                                          "-name": "InvoiceItem",
+                                          "xs:complexType": {
+                                            "xs:sequence": {
+                                              "xs:element": [
+                                                {
+                                                  "-minOccurs": "1",
+                                                  "-maxOccurs": "1",
+                                                  "-name": "ItemNumber",
+                                                  "xs:simpleType": {
+                                                    "xs:restriction": {
+                                                      "-base": "xs:int",
+                                                      "xs:pattern": {
+                                                        "-value": "\\d{1,5}"
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "-minOccurs": "1",
+                                                  "-maxOccurs": "1",
+                                                  "-name": "ItemDescription",
+                                                  "xs:simpleType": {
+                                                    "xs:restriction": {
+                                                      "-base": "xs:string",
+                                                      "xs:maxLength": { "-value": "512" },
+                                                      "xs:minLength": { "-value": "1" }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "-minOccurs": "1",
+                                                  "-maxOccurs": "1",
+                                                  "-name": "HSCode",
+                                                  "xs:simpleType": {
+                                                    "xs:restriction": {
+                                                      "-base": "xs:string",
+                                                      "xs:maxLength": { "-value": "18" },
+                                                      "xs:minLength": { "-value": "1" }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "-minOccurs": "1",
+                                                  "-maxOccurs": "1",
+                                                  "-name": "GrossWeightInKGS",
+                                                  "xs:simpleType": {
+                                                    "xs:restriction": {
+                                                      "-base": "xs:decimal",
+                                                      "xs:pattern": {
+                                                        "-value": "\\d{1,16}[,\\.]\\d{1,6}"
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "-minOccurs": "1",
+                                                  "-maxOccurs": "1",
+                                                  "-name": "DeclaredQuantity",
+                                                  "xs:simpleType": {
+                                                    "xs:restriction": {
+                                                      "-base": "xs:decimal",
+                                                      "xs:pattern": {
+                                                        "-value": "\\d{1,16}[,\\.]\\d{1,6}"
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "-minOccurs": "1",
+                                                  "-maxOccurs": "1",
+                                                  "-name": "DeclaredUnit",
+                                                  "xs:simpleType": {
+                                                    "xs:restriction": {
+                                                      "-base": "xs:string",
+                                                      "xs:maxLength": { "-value": "3" },
+                                                      "xs:minLength": { "-value": "1" }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "-minOccurs": "1",
+                                                  "-maxOccurs": "1",
+                                                  "-name": "UnitPrice",
+                                                  "xs:simpleType": {
+                                                    "xs:restriction": {
+                                                      "-base": "xs:decimal",
+                                                      "xs:pattern": {
+                                                        "-value": "\\d{1,16}[,\\.]\\d{1,2}"
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "-minOccurs": "1",
+                                                  "-maxOccurs": "1",
+                                                  "-name": "TotalPrice",
+                                                  "xs:simpleType": {
+                                                    "xs:restriction": {
+                                                      "-base": "xs:decimal",
+                                                      "xs:pattern": {
+                                                        "-value": "\\d{1,16}[,\\.]\\d{1,2}"
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "-minOccurs": "1",
+                                                  "-maxOccurs": "1",
+                                                  "-name": "DutyAmount",
+                                                  "xs:simpleType": {
+                                                    "xs:restriction": {
+                                                      "-base": "xs:decimal",
+                                                      "xs:pattern": {
+                                                        "-value": "\\d{1,16}[,\\.]\\d{1,2}"
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "-minOccurs": "1",
+                                                  "-maxOccurs": "1",
+                                                  "-name": "CountryOfOrigin",
+                                                  "xs:simpleType": {
+                                                    "xs:restriction": {
+                                                      "-base": "xs:string",
+                                                      "xs:maxLength": { "-value": "2" },
+                                                      "xs:minLength": { "-value": "1" }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "-minOccurs": "1",
+                                                  "-maxOccurs": "1",
+                                                  "-name": "CommodityStatus",
+                                                  "xs:annotation": {
+                                                    "xs:appinfo": {
+                                                      "b:fieldInfo": { "-notes": "D-Dutiable ,ND-Dutiable" }
+                                                    }
+                                                  },
+                                                  "xs:simpleType": {
+                                                    "xs:restriction": {
+                                                      "-base": "xs:string",
+                                                      "xs:maxLength": { "-value": "3" },
+                                                      "xs:minLength": { "-value": "1" },
+                                                      "xs:enumeration": [
+                                                        { "-value": "D" },
+                                                        { "-value": "ND" }
+                                                      ]
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "-minOccurs": "0",
+                                                  "-maxOccurs": "unbounded",
+                                                  "-name": "Permits",
+                                                  "xs:complexType": {
+                                                    "xs:sequence": {
+                                                      "xs:element": {
+                                                        "-minOccurs": "0",
+                                                        "-maxOccurs": "unbounded",
+                                                        "-name": "Permit",
+                                                        "xs:complexType": {
+                                                          "xs:sequence": {
+                                                            "xs:element": {
+                                                              "-minOccurs": "0",
+                                                              "-maxOccurs": "1",
+                                                              "-name": "ImportPermitNumber",
+                                                              "xs:simpleType": {
+                                                                "xs:restriction": {
+                                                                  "-base": "xs:string",
+                                                                  "xs:maxLength": { "-value": "35" },
+                                                                  "xs:minLength": { "-value": "0" }
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "-minOccurs": "0",
+                                                  "-maxOccurs": "unbounded",
+                                                  "-name": "Specifications",
+                                                  "xs:complexType": {
+                                                    "xs:sequence": {
+                                                      "xs:element": {
+                                                        "-minOccurs": "0",
+                                                        "-maxOccurs": "unbounded",
+                                                        "-name": "Specification",
+                                                        "xs:complexType": {
+                                                          "xs:sequence": {
+                                                            "xs:element": [
+                                                              {
+                                                                "-minOccurs": "0",
+                                                                "-maxOccurs": "1",
+                                                                "-name": "PurposeOfImport",
+                                                                "xs:simpleType": {
+                                                                  "xs:restriction": {
+                                                                    "-base": "xs:string",
+                                                                    "xs:maxLength": { "-value": "512" },
+                                                                    "xs:minLength": { "-value": "0" }
+                                                                  }
+                                                                }
+                                                              },
+                                                              {
+                                                                "-minOccurs": "0",
+                                                                "-maxOccurs": "1",
+                                                                "-name": "WarehouseCode",
+                                                                "xs:simpleType": {
+                                                                  "xs:restriction": {
+                                                                    "-base": "xs:string",
+                                                                    "xs:minLength": { "-value": "0" },
+                                                                    "xs:maxLength": { "-value": "512" }
+                                                                  }
+                                                                }
+                                                              },
+                                                              {
+                                                                "-minOccurs": "0",
+                                                                "-maxOccurs": "1",
+                                                                "-name": "WarehouseName",
+                                                                "xs:simpleType": {
+                                                                  "xs:restriction": {
+                                                                    "-base": "xs:string",
+                                                                    "xs:minLength": { "-value": "0" },
+                                                                    "xs:maxLength": { "-value": "512" }
+                                                                  }
+                                                                }
+                                                              },
+                                                              {
+                                                                "-minOccurs": "0",
+                                                                "-maxOccurs": "1",
+                                                                "-name": "WarehouseAddress",
+                                                                "xs:simpleType": {
+                                                                  "xs:restriction": {
+                                                                    "-base": "xs:string",
+                                                                    "xs:minLength": { "-value": "0" },
+                                                                    "xs:maxLength": { "-value": "512" }
+                                                                  }
+                                                                }
+                                                              },
+                                                              {
+                                                                "-minOccurs": "0",
+                                                                "-maxOccurs": "1",
+                                                                "-name": "ExporterCode",
+                                                                "xs:simpleType": {
+                                                                  "xs:restriction": {
+                                                                    "-base": "xs:string",
+                                                                    "xs:minLength": { "-value": "0" },
+                                                                    "xs:maxLength": { "-value": "512" }
+                                                                  }
+                                                                }
+                                                              },
+                                                              {
+                                                                "-minOccurs": "0",
+                                                                "-maxOccurs": "1",
+                                                                "-name": "FoodCode",
+                                                                "xs:simpleType": {
+                                                                  "xs:restriction": {
+                                                                    "-base": "xs:string",
+                                                                    "xs:minLength": { "-value": "0" },
+                                                                    "xs:maxLength": { "-value": "512" }
+                                                                  }
+                                                                }
+                                                              },
+                                                              {
+                                                                "-minOccurs": "0",
+                                                                "-maxOccurs": "1",
+                                                                "-name": "Brand",
+                                                                "xs:simpleType": {
+                                                                  "xs:restriction": {
+                                                                    "-base": "xs:string",
+                                                                    "xs:minLength": { "-value": "0" },
+                                                                    "xs:maxLength": { "-value": "512" }
+                                                                  }
+                                                                }
+                                                              },
+                                                              {
+                                                                "-minOccurs": "0",
+                                                                "-maxOccurs": "1",
+                                                                "-name": "DateOfProduction",
+                                                                "xs:simpleType": {
+                                                                  "xs:restriction": {
+                                                                    "-base": "xs:string",
+                                                                    "xs:minLength": { "-value": "0" },
+                                                                    "xs:maxLength": { "-value": "512" }
+                                                                  }
+                                                                }
+                                                              },
+                                                              {
+                                                                "-minOccurs": "0",
+                                                                "-maxOccurs": "1",
+                                                                "-name": "DateOfExpire",
+                                                                "xs:simpleType": {
+                                                                  "xs:restriction": {
+                                                                    "-base": "xs:string",
+                                                                    "xs:minLength": { "-value": "0" },
+                                                                    "xs:maxLength": { "-value": "512" }
+                                                                  }
+                                                                }
+                                                              },
+                                                              {
+                                                                "-minOccurs": "0",
+                                                                "-maxOccurs": "1",
+                                                                "-name": "Treatment",
+                                                                "xs:simpleType": {
+                                                                  "xs:restriction": {
+                                                                    "-base": "xs:string",
+                                                                    "xs:minLength": { "-value": "0" },
+                                                                    "xs:maxLength": { "-value": "512" }
+                                                                  }
+                                                                }
+                                                              },
+                                                              {
+                                                                "-minOccurs": "0",
+                                                                "-maxOccurs": "1",
+                                                                "-name": "ManufacturerCode",
+                                                                "xs:simpleType": {
+                                                                  "xs:restriction": {
+                                                                    "-base": "xs:string",
+                                                                    "xs:minLength": { "-value": "0" },
+                                                                    "xs:maxLength": { "-value": "512" }
+                                                                  }
+                                                                }
+                                                              },
+                                                              {
+                                                                "-minOccurs": "0",
+                                                                "-maxOccurs": "1",
+                                                                "-name": "ManufacturerName",
+                                                                "xs:simpleType": {
+                                                                  "xs:restriction": {
+                                                                    "-base": "xs:string",
+                                                                    "xs:minLength": { "-value": "0" },
+                                                                    "xs:maxLength": { "-value": "512" }
+                                                                  }
+                                                                }
+                                                              },
+                                                              {
+                                                                "-minOccurs": "0",
+                                                                "-maxOccurs": "1",
+                                                                "-name": "ManufacturerAddress",
+                                                                "xs:simpleType": {
+                                                                  "xs:restriction": {
+                                                                    "-base": "xs:string",
+                                                                    "xs:minLength": { "-value": "0" },
+                                                                    "xs:maxLength": { "-value": "512" }
+                                                                  }
+                                                                }
+                                                              },
+                                                              {
+                                                                "-minOccurs": "0",
+                                                                "-maxOccurs": "1",
+                                                                "-name": "PreImportRegistrationNo",
+                                                                "xs:simpleType": {
+                                                                  "xs:restriction": {
+                                                                    "-base": "xs:string",
+                                                                    "xs:maxLength": { "-value": "512" },
+                                                                    "xs:minLength": { "-value": "0" }
+                                                                  }
+                                                                }
+                                                              }
+                                                            ]
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          },
+                          {
+                            "-minOccurs": "1",
+                            "-maxOccurs": "1",
+                            "-name": "Attachments",
+                            "xs:complexType": {
+                              "xs:sequence": {
+                                "xs:element": {
+                                  "-minOccurs": "1",
+                                  "-maxOccurs": "unbounded",
+                                  "-name": "Attachment",
+                                  "xs:complexType": {
+                                    "xs:sequence": {
+                                      "xs:element": [
+                                        {
+                                          "-minOccurs": "1",
+                                          "-maxOccurs": "1",
+                                          "-name": "FilePath",
+                                          "xs:simpleType": {
+                                            "xs:restriction": { "-base": "xs:string" }
+                                          }
+                                        },
+                                        {
+                                          "-minOccurs": "0",
+                                          "-maxOccurs": "1",
+                                          "-name": "FileContent",
+                                          "xs:simpleType": {
+                                            "xs:restriction": { "-base": "xs:string" }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

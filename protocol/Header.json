@@ -1,0 +1,149 @@
+{
+  "xs:schema": {
+    "-xmlns": "http://uCustoms/Common/Header/v1.0",
+    "-xmlns:ns1": "https://uCustoms.MC.Common.BizTalk.Schemas.PropertySchema",
+    "-xmlns:b": "http://schemas.microsoft.com/BizTalk/2003",
+    "-xmlns:ns0": "https://uCustoms.MC.PORTS.BizTalk.Schemas.PropertySchema",
+    "-targetNamespace": "http://uCustoms/Common/Header/v1.0",
+    "-xmlns:xs": "http://www.w3.org/2001/XMLSchema",
+    "xs:annotation": {
+      "xs:appinfo": {
+        "b:imports": {
+          "b:namespace": {
+            "-prefix": "ns1",
+            "-uri": "https://uCustoms.MC.Common.BizTalk.Schemas.PropertySchema",
+            "-location": ".\\ESBPropertyXML.xsd"
+          }
+        }
+      }
+    },
+    "xs:element": {
+      "-name": "Header",
+      "-type": "HeaderType",
+      "xs:annotation": {
+        "xs:appinfo": {
+          "b:properties": {
+            "b:property": {
+              "-name": "ns1:MCBatchId",
+              "-xpath": "/*[local-name()='Header' and namespace-uri()='http://uCustoms/Common/Header/v1.0']/*[local-name()='batchID' and namespace-uri()='']"
+            }
+          }
+        }
+      }
+    },
+    "xs:complexType": {
+      "-name": "HeaderType",
+      "xs:sequence": {
+        "xs:element": [
+          {
+            "-minOccurs": "0",
+            "-maxOccurs": "1",
+            "-name": "Party",
+            "xs:complexType": {
+              "xs:sequence": {
+                "xs:element": [
+                  {
+                    "-minOccurs": "0",
+                    "-maxOccurs": "1",
+                    "-name": "code",
+                    "-type": "xs:string"
+                  },
+                  {
+                    "-minOccurs": "0",
+                    "-maxOccurs": "1",
+                    "-name": "location",
+                    "-type": "xs:string"
+                  },
+                  {
+                    "-minOccurs": "0",
+                    "-maxOccurs": "1",
+                    "-name": "name",
+                    "-type": "xs:string"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "-minOccurs": "0",
+            "-maxOccurs": "1",
+            "-name": "userName",
+            "-type": "xs:string"
+          },
+          {
+            "-minOccurs": "0",
+            "-maxOccurs": "1",
+            "-name": "password",
+            "-type": "xs:string"
+          },
+          {
+            "-minOccurs": "0",
+            "-maxOccurs": "1",
+            "-name": "securityToken",
+            "-type": "xs:string"
+          },
+          {
+            "-minOccurs": "0",
+            "-maxOccurs": "1",
+            "-name": "txnDateTime",
+            "-type": "xs:string"
+          },
+          {
+            "-minOccurs": "0",
+            "-maxOccurs": "1",
+            "-name": "batchID",
+            "-type": "xs:string"
+          },
+          {
+            "-minOccurs": "0",
+            "-maxOccurs": "1",
+            "-name": "refBatchID",
+            "-type": "xs:string"
+          },
+          {
+            "-minOccurs": "0",
+            "-maxOccurs": "1",
+            "-name": "fileName",
+            "-type": "xs:string"
+          },
+          {
+            "-minOccurs": "0",
+            "-maxOccurs": "1",
+            "-name": "currentDateTime",
+            "-type": "xs:string"
+          },
+          {
+            "-minOccurs": "0",
+            "-maxOccurs": "1",
+            "-name": "transportType",
+            "-type": "xs:string"
+          },
+          {
+            "-minOccurs": "0",
+            "-maxOccurs": "1",
+            "-name": "priority",
+            "-type": "xs:boolean"
+          },
+          {
+            "-minOccurs": "0",
+            "-maxOccurs": "1",
+            "-name": "btsPartyName",
+            "-type": "xs:string"
+          },
+          {
+            "-minOccurs": "0",
+            "-maxOccurs": "1",
+            "-name": "messageType",
+            "-type": "xs:string"
+          },
+          {
+            "-minOccurs": "0",
+            "-maxOccurs": "1",
+            "-name": "requestType",
+            "-type": "xs:string"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "xs:schema": {
+    "-xmlns": "http://uCustoms/IL/MC/FSQDFoodCodeMaster/v1.0",
+    "-xmlns:b": "http://schemas.microsoft.com/BizTalk/2003",
+    "-xmlns:ns0": "http://uCustoms/Common/Header/v1.0",
+    "-targetNamespace": "http://uCustoms/IL/MC/FSQDFoodCodeMaster/v1.0",
+    "-xmlns:xs": "http://www.w3.org/2001/XMLSchema",
+    "xs:import": {
+      "-schemaLocation": "uCustoms.MC.Common.BizTalk.Schemas.XMLSchemas.Header",
+      "-namespace": "http://uCustoms/Common/Header/v1.0"
+    },
+    "xs:annotation": {
+      "xs:appinfo": {
+        "b:references": {
+          "b:reference": { "-targetNamespace": "http://uCustoms/Common/Header/v1.0" }
+        }
+      }
+    },
+    "xs:element": {
+      "-name": "FSQDFoodCodeMaster",
+      "xs:annotation": {
+        "xs:appinfo": {
+          "b:properties": {
+            "b:property": [
+              {
+                "-distinguished": "true",
+                "-xpath": "/*[local-name()='FSQDFoodCodeMaster' and namespace-uri()='http://uCustoms/IL/MC/FSQDFoodCodeMaster/v1.0']/*[local-name()='Header' and namespace-uri()='']/*[local-name()='txnDateTime' and namespace-uri()='']"
+              },
+              {
+                "-distinguished": "true",
+                "-xpath": "/*[local-name()='FSQDFoodCodeMaster' and namespace-uri()='http://uCustoms/IL/MC/FSQDFoodCodeMaster/v1.0']/*[local-name()='Header' and namespace-uri()='']/*[local-name()='batchID' and namespace-uri()='']"
+              },
+              {
+                "-distinguished": "true",
+                "-xpath": "/*[local-name()='FSQDFoodCodeMaster' and namespace-uri()='http://uCustoms/IL/MC/FSQDFoodCodeMaster/v1.0']/*[local-name()='Header' and namespace-uri()='']/*[local-name()='fileName' and namespace-uri()='']"
+              },
+              {
+                "-distinguished": "true",
+                "-xpath": "/*[local-name()='FSQDFoodCodeMaster' and namespace-uri()='http://uCustoms/IL/MC/FSQDFoodCodeMaster/v1.0']/*[local-name()='Header' and namespace-uri()='']/*[local-name()='refBatchID' and namespace-uri()='']"
+              }
+            ]
+          }
+        }
+      },
+      "xs:complexType": {
+        "xs:sequence": {
+          "xs:element": [
+            {
+              "-name": "Header",
+              "-type": "ns0:HeaderType"
+            },
+            {
+              "-name": "Body",
+              "xs:complexType": {
+                "xs:sequence": {
+                  "xs:element": {
+                    "-name": "FoodCodeMaster",
+                    "xs:complexType": {
+                      "xs:sequence": {
+                        "xs:element": {
+                          "-minOccurs": "1",
+                          "-maxOccurs": "unbounded",
+                          "-name": "FoodCode",
+                          "xs:complexType": {
+                            "xs:sequence": {
+                              "xs:element": [
+                                {
+                                  "-minOccurs": "1",
+                                  "-maxOccurs": "1",
+                                  "-name": "FCOCode",
+                                  "xs:simpleType": {
+                                    "xs:restriction": {
+                                      "-base": "xs:string",
+                                      "xs:maxLength": { "-value": "8" },
+                                      "xs:minLength": { "-value": "1" }
+                                    }
+                                  }
+                                },
+                                {
+                                  "-minOccurs": "0",
+                                  "-maxOccurs": "1",
+                                  "-name": "FCODescription",
+                                  "xs:simpleType": {
+                                    "xs:restriction": {
+                                      "-base": "xs:string",
+                                      "xs:maxLength": { "-value": "512" },
+                                      "xs:minLength": { "-value": "0" }
+                                    }
+                                  }
+                                },
+                                {
+                                  "-minOccurs": "1",
+                                  "-maxOccurs": "1",
+                                  "-name": "RStatus",
+                                  "xs:simpleType": {
+                                    "xs:restriction": {
+                                      "-base": "xs:string",
+                                      "xs:maxLength": { "-value": "3" },
+                                      "xs:minLength": { "-value": "1" }
+                                    }
+                                  }
+                                },
+                                {
+                                  "-minOccurs": "1",
+                                  "-maxOccurs": "1",
+                                  "-default": "NA",
+                                  "-name": "Category",
+                                  "xs:simpleType": {
+                                    "xs:restriction": {
+                                      "-base": "xs:string",
+                                      "xs:maxLength": { "-value": "18" },
+                                      "xs:minLength": { "-value": "1" }
+                                    }
+                                  }
+                                },
+                                {
+                                  "-minOccurs": "1",
+                                  "-maxOccurs": "1",
+                                  "-default": "P",
+                                  "-name": "ProductType",
+                                  "xs:simpleType": {
+                                    "xs:restriction": {
+                                      "-base": "xs:string",
+                                      "xs:maxLength": { "-value": "3" },
+                                      "xs:minLength": { "-value": "1" }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
