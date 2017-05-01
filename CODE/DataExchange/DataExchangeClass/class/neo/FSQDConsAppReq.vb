@@ -1,4 +1,8 @@
-﻿Imports System.ComponentModel
+﻿'=====================================================
+'CONSIGNMENT APPROVAL REQUEST [UCUSTOM TO FOSIM]
+'=====================================================
+
+Imports System.ComponentModel
 
 Namespace FSQDConsAppReq
     Public Class FSQDConsAppReq

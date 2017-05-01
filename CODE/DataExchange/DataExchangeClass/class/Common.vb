@@ -223,8 +223,8 @@ Public Class Common
         End Try
     End Function
 
-    Public Shared Function ConsignmentApproval2SMKCForm(ByVal CAR As ConsigmentApprovalRequest) As SMKCForm_DTO
-        Return New SMKCForm_DTO
+    Public Shared Function ConsignmentApproval2SMKCForm(ByVal CAR As deprecating.ConsigmentApprovalRequest) As deprecating.SMKCForm_DTO
+        Return New deprecating.SMKCForm_DTO
     End Function
 
 End Class

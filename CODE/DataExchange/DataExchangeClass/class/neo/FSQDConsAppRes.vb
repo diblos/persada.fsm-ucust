@@ -1,4 +1,8 @@
-﻿Imports System.ComponentModel
+﻿'=====================================================
+'CONSIGNMENT APPROVAL RESPONSE [FOSIM TO UCUSTOM]
+'=====================================================
+
+Imports System.ComponentModel
 
 Namespace FSQDConsAppRes
     Public Class FSQDConsAppRes
@@ -74,12 +78,12 @@ Namespace FSQDConsAppRes
             End Set
         End Property
 
-        Private _InvoiceItems As InvoiceItem
-        Public Property InvoiceItems() As InvoiceItem
+        Private _InvoiceItems As List(Of InvoiceItem)
+        Public Property InvoiceItems() As List(Of InvoiceItem)
             Get
                 Return Me._InvoiceItems
             End Get
-            Set(ByVal value As InvoiceItem)
+            Set(ByVal value As List(Of InvoiceItem))
                 Me._InvoiceItems = value
             End Set
         End Property

@@ -10,12 +10,12 @@
             End Set
         End Property
 
-        Private _Body As FoodCodeMaster
-        Public Property Body() As FoodCodeMaster
+        Private _Body As List(Of FoodCodeMaster)
+        Public Property Body() As List(Of FoodCodeMaster)
             Get
                 Return Me._Body
             End Get
-            Set(ByVal value As FoodCodeMaster)
+            Set(ByVal value As List(Of FoodCodeMaster))
                 Me._Body = value
             End Set
         End Property
@@ -67,7 +67,7 @@
         Private _Category As String ' 1-18;N/A
         Public Property Category() As String
             Get
-                Return Me._Category
+                Return IIf(Me._Category = Nothing, "NA", Me._Category)
             End Get
             Set(ByVal value As String)
                 Me._Category = value
@@ -77,7 +77,7 @@
         Private _ProductType As String '1-3;P
         Public Property ProductType() As String
             Get
-                Return Me._ProductType
+                Return IIf(Me._ProductType = Nothing, "P", Me._ProductType)
             End Get
             Set(ByVal value As String)
                 Me._ProductType = value

@@ -23,7 +23,7 @@ Public Class Receiver
     Dim dService As New DataExchangeClass.Data
 
     <WebMethod(Description:="Consignment Approval Request Data")> _
-    Public Function ConsignmentApprovalData(ByVal ConsigmentApprovalRequest As DataExchangeClass.ConsigmentApprovalRequest) As DataExchangeClass.Acknowledge
+    Public Function ConsignmentApprovalData(ByVal ConsigmentApprovalRequest As DataExchangeClass.deprecating.ConsigmentApprovalRequest) As DataExchangeClass.Acknowledge
         Dim response As New DataExchangeClass.Acknowledge
         Try
             nEventLOG("Logs", SerializeIT(ConsigmentApprovalRequest))
@@ -66,7 +66,7 @@ Public Class Receiver
         Return cn
     End Function
 
-    Private Sub Process(ByVal data As DataExchangeClass.Officer)
+    Private Sub Process(ByVal data As DataExchangeClass.deprecating.Officer)
         Try
 
         Catch ex As Exception

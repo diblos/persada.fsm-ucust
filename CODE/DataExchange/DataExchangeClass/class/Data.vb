@@ -17,7 +17,7 @@
     Public Shared UPDATEDDATE As String
     Public Shared CERT_ID_DEFAULT As String = "1,2"
 
-    Public Function CAInsert(ByVal data As DataExchangeClass.ConsigmentApprovalRequest) As Integer
+    Public Function CAInsert(ByVal data As DataExchangeClass.deprecating.ConsigmentApprovalRequest) As Integer
 
         Dim result As Integer = 0
 

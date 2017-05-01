@@ -3,14 +3,16 @@
 Imports System.Xml
 Imports System.IO
 
+'APLIKASI POST DATA KE UCUSTOM
+
 Public Class MainForm
 
     Public Const AgencyName As String = "FSQD"
     Public Const WINDOWS_TEXT_TITLE As String = "Fosim Data Post"
     Dim nSize As Size
 
-    Dim dummyDataCA As DataExchangeClass.ConsigmentApprovalResponse
-    Dim dummyDataFC As DataExchangeClass.FoodCodeMaster
+    Dim dummyDataCA As DataExchangeClass.deprecating.ConsigmentApprovalResponse
+    Dim dummyDataFC As DataExchangeClass.deprecating.FoodCodeMaster
 
     Dim tmpData As DataTable 'for flag update
 
@@ -70,7 +72,7 @@ Public Class MainForm
                 lstMsgs("Sending Consigment Approval Response Data to uCustom Webservice")
                 If CheckBoxDB.Checked Then
                     tmpData = Nothing
-                    For Each item As DataExchangeClass.ConsigmentApprovalResponse In LoadCAData()
+                    For Each item As DataExchangeClass.deprecating.ConsigmentApprovalResponse In LoadCAData()
                         SOAPCall("CADATA", GetCA(item)) 'from DB
                     Next
                     'UPDATE HERE
@@ -180,14 +182,14 @@ Public Class MainForm
 
     End Sub
 
-    Private Function LoadCAData() As List(Of DataExchangeClass.ConsigmentApprovalResponse)
+    Private Function LoadCAData() As List(Of DataExchangeClass.deprecating.ConsigmentApprovalResponse)
         Dim k As New DataExchangeClass.Data
 
-        Dim newlist As New List(Of DataExchangeClass.ConsigmentApprovalResponse)
+        Dim newlist As New List(Of DataExchangeClass.deprecating.ConsigmentApprovalResponse)
         Dim dtCA As DataTable = k.GetResponseData()
 
         For Each row As DataRow In dtCA.Rows
-            Dim tmpObj As New DataExchangeClass.ConsigmentApprovalResponse
+            Dim tmpObj As New DataExchangeClass.deprecating.ConsigmentApprovalResponse
             With tmpObj
                 .Data_Header = row("DataHeader")
                 .UCustomRegistrationID = IIf(IsDBNull(row("customreg")), "", row("customreg"))
@@ -240,14 +242,14 @@ Public Class MainForm
 
     End Function
 
-    Private Function LoadFCData() As List(Of DataExchangeClass.FoodCodeMaster)
+    Private Function LoadFCData() As List(Of DataExchangeClass.deprecating.FoodCodeMaster)
         Dim k As New DataExchangeClass.Data
 
-        Dim newlist As New List(Of DataExchangeClass.FoodCodeMaster)
+        Dim newlist As New List(Of DataExchangeClass.deprecating.FoodCodeMaster)
         Dim dtFC As DataTable = k.GetFoodCodeData()
 
         For Each row As DataRow In dtFC.Rows
-            Dim tmpObj As New DataExchangeClass.FoodCodeMaster
+            Dim tmpObj As New DataExchangeClass.deprecating.FoodCodeMaster
             With tmpObj
                 .FCOCode = row("FCOCode")
                 .FCODescription = row("FCODescription")
@@ -269,7 +271,7 @@ Public Class MainForm
 
         'DataHeader	customreg	FQC	IMGLine	HScode	IMGCurrLvl	IMGFoodCode	LMBY	LMDT	IMHReplyDesign	IMGAGNotes	IMGPStatus	IMGStatusPurpose	IMHReplyRemarks
         'FQC001	K122015101004808	0709.60.1000 	3	NULL	5	V0103523	MOHD SUHAIMIE B. NOH	2015-01-21 19:57:23.647			R	R	Konsaimen diperiksa dan dilepaskan
-        dummyDataCA = New DataExchangeClass.ConsigmentApprovalResponse
+        dummyDataCA = New DataExchangeClass.deprecating.ConsigmentApprovalResponse
         With dummyDataCA
 
             .Data_Header = "FQC001"
@@ -296,7 +298,7 @@ Public Class MainForm
 
         'FCOCode	FCODescription	HS_ID	RStatus	LMBY	LMDT
         'A0301001	Food Colouring Substance - Allura Red Ac (16035)	2413	2	ADMIN	2005-11-17 13:15:04.000
-        dummyDataFC = New DataExchangeClass.FoodCodeMaster
+        dummyDataFC = New DataExchangeClass.deprecating.FoodCodeMaster
         With dummyDataFC
             .FCOCode = "A0301502"
             .FCODescription = "Food Colouring Substance - Amaranth (16185)"
@@ -343,7 +345,7 @@ Public Class MainForm
 
 #Region "Get XML Data"
 
-    Public Function GetCA(ByVal CAData As DataExchangeClass.ConsigmentApprovalResponse, Optional ByVal AsXMLString As Boolean = True) As Object
+    Public Function GetCA(ByVal CAData As DataExchangeClass.deprecating.ConsigmentApprovalResponse, Optional ByVal AsXMLString As Boolean = True) As Object
         If AsXMLString = True Then
             Return SOAP_ENVELOPE.Replace("@DATA", CA_ENV.Replace("@DATA", CleanSerializedData(SerializeIT(CAData))))
         Else

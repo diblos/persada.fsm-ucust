@@ -347,7 +347,7 @@ Public Class frmWatcher
         csv.Configuration.IgnoreBlankLines = True
 
         While csv.Read
-            Dim data As New DataExchangeClass.ConsigmentApprovalRequest
+            Dim data As New DataExchangeClass.deprecating.ConsigmentApprovalRequest
 
             With data
 

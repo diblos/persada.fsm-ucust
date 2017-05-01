@@ -23,7 +23,7 @@ Public Class uc
     Inherits System.Web.Services.WebService
 
     <WebMethod(Description:="Post a Consignment Approval Response Data")> _
-    Function ConsignmentApprovalData(ByVal ConsigmentApprovalResponse As DataExchangeClass.ConsigmentApprovalResponse) As DataExchangeClass.Acknowledge
+    Function ConsignmentApprovalData(ByVal ConsigmentApprovalResponse As DataExchangeClass.deprecating.ConsigmentApprovalResponse) As DataExchangeClass.Acknowledge
         Dim response As New DataExchangeClass.Acknowledge
         Try
             nEventLOG("Logs", SerializeIT(ConsigmentApprovalResponse))

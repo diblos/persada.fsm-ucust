@@ -3,6 +3,8 @@
 Imports System.Xml
 Imports System.IO
 
+'APLIKASI POST DATA KE FOSIM - PROOF OF CONCEPT
+
 Public Class MainForm
 
     Dim r As New Random
@@ -10,8 +12,8 @@ Public Class MainForm
     Public Const WINDOWS_TEXT_TITLE As String = "Custom Data Post"
     Dim nSize As Size
 
-    Dim dummyDataCA As DataExchangeClass.ConsigmentApprovalRequest
-    Dim dummyDataCD As DataExchangeClass.CUSDECInfo
+    Dim dummyDataCA As DataExchangeClass.deprecating.ConsigmentApprovalRequest
+    Dim dummyDataCD As DataExchangeClass.deprecating.CUSDECInfo
 
 #Region "Form Action"
     Public Delegate Sub AddItemsToListBoxDelegate( _
@@ -108,7 +110,7 @@ Public Class MainForm
 
     Private Sub InitializeDummyData()
 
-        dummyDataCA = New DataExchangeClass.ConsigmentApprovalRequest
+        dummyDataCA = New DataExchangeClass.deprecating.ConsigmentApprovalRequest
         With dummyDataCA
             .Data_Header = "SMK001"
             .Message_Type = "A"
@@ -232,7 +234,7 @@ Public Class MainForm
 
         End With
 
-        dummyDataCD = New DataExchangeClass.CUSDECInfo
+        dummyDataCD = New DataExchangeClass.deprecating.CUSDECInfo
         With dummyDataCD
 
         End With
@@ -284,9 +286,9 @@ Public Class MainForm
         End If
     End Function
 
-    Private Function GetAlarmData() As DataExchangeClass.Officer
+    Private Function GetAlarmData() As DataExchangeClass.deprecating.Officer
         Try
-            Dim test As New DataExchangeClass.Officer
+            Dim test As New DataExchangeClass.deprecating.Officer
 
             With test
                 .Name = "ABU"
@@ -296,7 +298,7 @@ Public Class MainForm
             Return test
         Catch ex As Exception
             'RaiseEvent OnError(Now, New Exception("GetAlarmData:" & ex.Message))
-            Return New DataExchangeClass.Officer
+            Return New DataExchangeClass.deprecating.Officer
         End Try
     End Function
 
