@@ -137,17 +137,17 @@ Public Class frmWatcher
             '             NotifyFilters.FileName Or _
             '             NotifyFilters.DirectoryName)
             watchfolder(x).NotifyFilter = IO.NotifyFilters.DirectoryName
-            watchfolder(x).NotifyFilter = watchfolder(x).NotifyFilter Or _
-                                          IO.NotifyFilters.LastWrite
-            'watchfolder(x).NotifyFilter = (NotifyFilters.LastAccess Or _
-            ' NotifyFilters.LastWrite Or _
-            ' NotifyFilters.FileName Or _
-            ' NotifyFilters.DirectoryName)
+            'watchfolder(x).NotifyFilter = watchfolder(x).NotifyFilter Or _
+            '                              IO.NotifyFilters.LastWrite
+            watchfolder(x).NotifyFilter = (NotifyFilters.LastAccess Or _
+             NotifyFilters.LastWrite Or _
+             NotifyFilters.FileName Or _
+             NotifyFilters.DirectoryName)
             '-------------------------------------------------------------
             ' add the handler to each event
 
-            AddHandler watchfolder(x).Changed, AddressOf logchange
-            'AddHandler watchfolder(x).Created, AddressOf logchange
+            'AddHandler watchfolder(x).Changed, AddressOf logchange
+            AddHandler watchfolder(x).Created, AddressOf logchange
             'AddHandler watchfolder(x).Deleted, AddressOf logchange
 
             ' add the rename handler as the signature is different
@@ -329,7 +329,9 @@ Public Class frmWatcher
 
         Select Case ServiceCode
             Case "RQCA"
+                'ReadCAFile_OLD(FILENAME)
                 ReadCAFile(FILENAME)
+
             Case "K1BTC"
                 ReadK1File(FILENAME)
             Case Else
@@ -339,6 +341,157 @@ Public Class frmWatcher
     End Sub
 
     Private Sub ReadCAFile(ByVal FILE_NAME As String)
+        lstMsgs(FILE_NAME, Me.ListBox1)
+        'Dim textReader As New StreamReader(FILE_NAME)
+        'Dim csv = New CsvHelper.CsvReader(textReader)
+        ''Dim records = csv.GetRecords(Of [MyClass])().ToList()
+        'csv.Configuration.HasHeaderRecord = False
+        'csv.Configuration.IgnoreBlankLines = True
+
+        'While csv.Read
+        '    Dim data As New DataExchangeClass.deprecating.ConsigmentApprovalRequest
+
+        '    With data
+
+        '        .Data_Header = csv.GetField(Of String)(0)
+        '        .Message_Type = csv.GetField(Of String)(1)
+        '        .Message_Mode = csv.GetField(Of String)(2)
+        '        .Import_Indicator = csv.GetField(Of String)(3)
+        '        .Custom_Form_number = csv.GetField(Of String)(4)
+        '        .Custom_Form_number_2 = csv.GetField(Of String)(5)
+        '        .FQC_Preassigned_control_number = csv.GetField(Of String)(6)
+        '        .Registration_Date = csv.GetField(Of String)(7)
+        '        .Resistration_Time = csv.GetField(Of String)(8)
+        '        .Total_number_of_Item = csv.GetField(Of String)(9)
+        '        .Commodity_Status = csv.GetField(Of String)(10)
+        '        .Transaction_Type = csv.GetField(Of String)(11)
+        '        .Exporter_name = csv.GetField(Of String)(12)
+        '        .Exporter_Address = csv.GetField(Of String)(13)
+        '        .Exporter_Address_2 = csv.GetField(Of String)(14)
+        '        .Exporter_Address_3 = csv.GetField(Of String)(15)
+        '        .Exporter_Address_4 = csv.GetField(Of String)(16)
+        '        .Exporter_Address_5 = csv.GetField(Of String)(17)
+        '        .Importer_Code = csv.GetField(Of String)(18)
+        '        .Importer_Name = csv.GetField(Of String)(19)
+        '        .Importer_Address = csv.GetField(Of String)(20)
+        '        .Importer_Address_2 = csv.GetField(Of String)(21)
+        '        .Importer_Address_3 = csv.GetField(Of String)(22)
+        '        .Importer_Address_4 = csv.GetField(Of String)(23)
+        '        .Importer_Address_5 = csv.GetField(Of String)(24)
+        '        .Agent_Code = csv.GetField(Of String)(25)
+        '        .Agent_Name = csv.GetField(Of String)(26)
+        '        .Agent_Address = csv.GetField(Of String)(27)
+        '        .Agent_Address_2 = csv.GetField(Of String)(28)
+        '        .Agent_Address_3 = csv.GetField(Of String)(29)
+        '        .Agent_Address_4 = csv.GetField(Of String)(30)
+        '        .Agent_Address_5 = csv.GetField(Of String)(31)
+        '        .Mode_of_Transport = csv.GetField(Of String)(32)
+        '        .Date_of_Import = csv.GetField(Of String)(33)
+        '        .Vessel_Registration = csv.GetField(Of String)(34)
+        '        .Voyage_number = csv.GetField(Of String)(35)
+        '        .Vessel_name = csv.GetField(Of String)(36)
+        '        .Flight_number = csv.GetField(Of String)(37)
+        '        .Flight_Date = csv.GetField(Of String)(38)
+        '        .Vehicle_Lorry_number = csv.GetField(Of String)(39)
+        '        .Trailer_number = csv.GetField(Of String)(40)
+        '        .Place_of_Import = csv.GetField(Of String)(41)
+        '        .Place_of_Loading = csv.GetField(Of String)(42)
+        '        .Port_of_Transhipment = csv.GetField(Of String)(43)
+        '        .Pay_To = csv.GetField(Of String)(44)
+        '        .Insurance = csv.GetField(Of String)(45)
+        '        .Insurance_2 = csv.GetField(Of String)(46)
+        '        .Other_Charges = csv.GetField(Of String)(47)
+        '        .Other_Charges_2 = csv.GetField(Of String)(48)
+        '        .CIF = csv.GetField(Of String)(49)
+        '        .CIF_2 = csv.GetField(Of String)(50)
+        '        .FOB = csv.GetField(Of String)(51)
+        '        .FOB_2 = csv.GetField(Of String)(52)
+        '        .Freight = csv.GetField(Of String)(53)
+        '        .Freight_2 = csv.GetField(Of String)(54)
+        '        .Gross_Weight = csv.GetField(Of String)(55)
+        '        .number_of_Packages = csv.GetField(Of String)(56)
+        '        .Type_of_Packages = csv.GetField(Of String)(57)
+        '        .Measurement = csv.GetField(Of String)(58)
+        '        .Consignment_Note = csv.GetField(Of String)(59)
+        '        .General_description_of_Goods = csv.GetField(Of String)(60)
+        '        .Marks = csv.GetField(Of String)(61)
+        '        .Manifest_Registration_number = csv.GetField(Of String)(62)
+        '        .Import_Permit_number = csv.GetField(Of String)(63)
+        '        .Import_Permit_number_2 = csv.GetField(Of String)(64)
+        '        .Special_Treatement = csv.GetField(Of String)(65)
+        '        .Total_Duty_Payable = csv.GetField(Of String)(66)
+        '        .Declarant_IC_number = csv.GetField(Of String)(67)
+        '        .Declarant_Name = csv.GetField(Of String)(68)
+        '        .Declarant_Status = csv.GetField(Of String)(69)
+
+        '        '====================================
+
+        '        .Data_Header_B = csv.GetField(Of String)(70)
+        '        .Custom_Form_number_B = csv.GetField(Of String)(71)
+        '        .Custom_Form_number_B_2 = csv.GetField(Of String)(72)
+        '        .Item_number = csv.GetField(Of String)(73)
+        '        .Item_Description = csv.GetField(Of String)(74)
+        '        .HS_code = csv.GetField(Of String)(75)
+        '        .Declared_Quantity_1 = csv.GetField(Of String)(76)
+        '        .Declared_unit_1 = csv.GetField(Of String)(77)
+        '        .Unit_price = csv.GetField(Of String)(78)
+        '        .Total_price = csv.GetField(Of String)(79)
+        '        .Duty_Amount_B = csv.GetField(Of String)(80)
+        '        .Duty_Amount_B_2 = csv.GetField(Of String)(81)
+        '        .number_of_Packages_B = csv.GetField(Of String)(82)
+        '        .Type_of_Packages_B = csv.GetField(Of String)(83)
+        '        .Country_of_Origin = csv.GetField(Of String)(84)
+        '        .Declared_Quantity_2 = csv.GetField(Of String)(85)
+        '        .Declared_unit_2 = csv.GetField(Of String)(86)
+        '        .Purpose_of_import = csv.GetField(Of String)(87)
+        '        .Warehouse_Code = csv.GetField(Of String)(88)
+        '        .Warehouse_Code_2 = csv.GetField(Of String)(89)
+        '        .Warehouse_Name = csv.GetField(Of String)(90)
+        '        .Warehouse_Address = csv.GetField(Of String)(91)
+        '        .Warehouse_Address_2 = csv.GetField(Of String)(92)
+        '        .Warehouse_Address_3 = csv.GetField(Of String)(93)
+        '        .Warehouse_Address_4 = csv.GetField(Of String)(94)
+        '        .Warehouse_Address_5 = csv.GetField(Of String)(95)
+        '        .Remarks_and_Accident = csv.GetField(Of String)(96)
+        '        .Exporter_Code = csv.GetField(Of String)(97)
+        '        .Food_Code = csv.GetField(Of String)(98)
+        '        .Food_Code_2 = csv.GetField(Of String)(99)
+        '        .Brand = csv.GetField(Of String)(100)
+        '        .Brand_2 = csv.GetField(Of String)(101)
+
+        '        .Date_of_production = csv.GetField(Of String)(102)
+        '        .Date_of_expire = csv.GetField(Of String)(103)
+
+        '        .Treatment = csv.GetField(Of String)(104)
+
+        '        .Manufacturer_code = csv.GetField(Of String)(105)
+        '        .Manufacturer_name = csv.GetField(Of String)(106)
+        '        .Manufacturer_address = csv.GetField(Of String)(107)
+        '        .Manufacturer_address_2 = csv.GetField(Of String)(108)
+        '        .Manufacturer_address_3 = csv.GetField(Of String)(109)
+        '        .Manufacturer_address_4 = csv.GetField(Of String)(110)
+        '        .Manufacturer_address_5 = csv.GetField(Of String)(111)
+
+        '    End With
+
+        '    dService.CAInsert(data)
+
+        'End While
+
+        'csv.Dispose()
+        'textReader.Close()
+        'textReader.Dispose()
+
+        Try
+            If Not MoveAfile(FILE_NAME, PerfectPath(getArchivePath(FILE_NAME)) & Path.GetFileName(FILE_NAME)) Then Throw New Exception("Move file error!")
+            lstMsgs("Moved file " & Path.GetFileName(FILE_NAME) & " to " & getArchivePath(FILE_NAME), Me.ListBox1)
+        Catch ex As Exception
+            lstMsgs("Archiving file " & FILE_NAME & " failed!", Me.ListBox1)
+        End Try
+
+    End Sub
+
+    Private Sub ReadCAFile_OLD(ByVal FILE_NAME As String)
         'lstMsgs(FILE_NAME, Me.ListBox1)
         Dim textReader As New StreamReader(FILE_NAME)
         Dim csv = New CsvHelper.CsvReader(textReader)

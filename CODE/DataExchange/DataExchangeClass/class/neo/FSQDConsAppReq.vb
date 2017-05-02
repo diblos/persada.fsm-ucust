@@ -464,6 +464,12 @@ Namespace FSQDConsAppReq
                 Me._Attachments = value
             End Set
         End Property
+
+        Public Sub New()
+            Me._Invoice = New Invoice
+            Me._Attachments = New List(Of Attachment)
+        End Sub
+
     End Class
 
     Public Class Invoice
@@ -546,6 +552,10 @@ Namespace FSQDConsAppReq
                 Me._InvoiceItems = value
             End Set
         End Property
+
+        Public Sub New()
+            Me._InvoiceItems = New List(Of InvoiceItem)
+        End Sub
     End Class
 
     Public Class InvoiceItem
@@ -686,6 +696,12 @@ Namespace FSQDConsAppReq
                 Me._Specifications = value
             End Set
         End Property
+
+        Public Sub New()
+            Me._Permits = New List(Of Permit)
+            Me._Specifications = New List(Of Specification)
+        End Sub
+
     End Class
 
     Public Class Permit
