@@ -143,6 +143,9 @@ Module Module1
             Dim validTag As String = String.Empty
             Dim currTag As String = String.Empty
             Dim FSQD As New DataExchangeClass.FSQDConsAppReq.FSQDDeclaration
+            Dim InvoiceItem As DataExchangeClass.FSQDConsAppReq.InvoiceItem = Nothing
+            Dim Spec As DataExchangeClass.FSQDConsAppReq.Specification = Nothing
+            Dim Attachment As DataExchangeClass.FSQDConsAppReq.Attachment = Nothing
 
             Console.WriteLine(StrDup(5, "=") & " Arr2Object " & StrDup(5, "="))
             Dim counter As Integer = 0, invoiceCount As Integer = 0, invoiceItemCount As Integer = 0, permitCount As Integer = 0, attachementCount As Integer = 0
@@ -158,22 +161,35 @@ Module Module1
                     validTag &= ">" & currTag
                 ElseIf (item.IndexOf("Invoice") >= 0) And (currTag = "FSQDDeclaration") Then
                     currTag = "Invoice"
+                    counter = 0
                 ElseIf (item.IndexOf("InvoiceItems") >= 0) And (currTag = "Invoice") Then
                     invoiceCount += 1
                     currTag = "InvoiceItems"
                 ElseIf (item.IndexOf("InvoiceItem") >= 0) And (currTag = "InvoiceItems") Then
                     invoiceItemCount += 1
                     currTag = "InvoiceItem"
+                    counter = 0
+                    'NEW OBJECT
                 ElseIf (item.IndexOf("Permits") >= 0) And (currTag = "InvoiceItem") Then
                     currTag = "Permits"
                 ElseIf (item.IndexOf("Permit") >= 0) And (currTag = "Permits") Then
                     permitCount += 1
                     currTag = "Permit"
+                    counter = 0
+                    'NEW OBJECT
+                ElseIf (item.IndexOf("Specifications") >= 0) And (currTag = "Permit") Then
+                    currTag = "Specifications"
+                ElseIf (item.IndexOf("Specification") >= 0) And (currTag = "Specifications") Then
+                    currTag = "Specification"
+                    counter = 0
+                    'NEW OBJECT
                 ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Permit") Then
                     currTag = "Attachments"
                 ElseIf (item.IndexOf("Attachment") >= 0) And (currTag = "Attachments") Then
                     attachementCount += 1
                     currTag = "Attachment"
+                    counter = 0
+                    'NEW OBJECT
                 Else
 
                     'Console.WriteLine(validTag)
@@ -181,23 +197,224 @@ Module Module1
                     If validTag = "FSQDConsAppReq>Body>FSQDDeclaration" Then
                         Select Case currTag
                             Case "FSQDDeclaration"
-                                Console.WriteLine(currTag & " : " & item)
-                            Case "Invoice"
-                                Console.WriteLine(currTag & " : " & item)
+                                counter += 1
+                                Dim key As String = String.Empty
+
+                                Select Case counter
+                                    Case 1 'MCKey
+                                        key = "MCKey"
+                                    Case 2 'MCValue
+                                        key = "MCValue"
+                                    Case 3 'CustomFormNumber
+                                        key = "CustomFormNumber"
+                                    Case 4 'TransactionType
+                                        key = "TransactionType"
+                                    Case 5 'RegistrationDate
+                                        key = "RegistrationDate"
+                                    Case 6 'RegistrationTime
+                                        key = "RegistrationTime"
+                                    Case 7 'DeclarantName
+                                        key = "DeclarantName"
+                                    Case 8 'DeclarantICNumber
+                                        key = "DeclarantICNumber"
+                                    Case 9 'DeclarantStatus
+                                        key = "DeclarantStatus"
+                                    Case 10 'TotalNumberOfItem
+                                        key = "TotalNumberOfItem"
+                                    Case 11 'ExporterName
+                                        key = "ExporterName"
+                                    Case 12 'ExporterAddressStreetAndNumberPObox
+                                        key = "ExporterAddressStreetAndNumberPObox"
+                                    Case 13 'ExporterAddressCountry
+                                        key = "ExporterAddressCountry"
+                                    Case 14 'ImporterCode
+                                        key = "ImporterCode"
+                                    Case 15 'ImporterName
+                                        key = "ImporterName"
+                                    Case 16 'ImporterAddressStreetAndNumberPObox
+                                        key = "ImporterAddressStreetAndNumberPObox"
+                                    Case 17 'ImporterAddressCity
+                                        key = "ImporterAddressCity"
+                                    Case 18 'ImporterAddressCountry
+                                        key = "ImporterAddressCountry"
+                                    Case 19 'ImporterAddressCountrySubEntityName
+                                        key = "ImporterAddressCountrySubEntityName"
+                                    Case 20 'ImporterAddressPostcodeIdentification
+                                        key = "ImporterAddressPostcodeIdentification"
+
+                                    Case 21 'AgentCode
+                                        key = "AgentCode"
+                                    Case 22 'AgentName
+                                        key = "AgentName"
+                                    Case 23 'AgentAddressStreetAndNumberPObox
+                                        key = "AgentAddressStreetAndNumberPObox"
+                                    Case 24 'AgentAddressCity
+                                        key = "AgentAddressCity"
+                                    Case 25 'AgentAddressCountry
+                                        key = "AgentAddressCountry"
+                                    Case 26 'AgentAddressCountrySubEntityName
+                                        key = "AgentAddressCountrySubEntityName"
+                                    Case 27 'AgentAddressPostcodeIdentification
+                                        key = "AgentAddressPostcodeIdentification"
+                                    Case 28 'ConsignmentNote
+                                        key = "ConsignmentNote"
+                                    Case 29 'GeneralDescriptionOfGoods
+                                        key = "GeneralDescriptionOfGoods"
+                                    Case 30 'Marks
+                                        key = "Marks"
+                                    Case 31 'ManifestRegistrationNumber
+                                        key = "ManifestRegistrationNumber"
+                                    Case 32 'ModeOfTransport
+                                        key = "ModeOfTransport"
+                                    Case 33 'DateOfImport
+                                        key = "DateOfImport"
+                                    Case 34 'VesselRegistration
+                                        key = "VesselRegistration"
+                                    Case 35 'VoyageNumber
+                                        key = "VoyageNumber"
+                                    Case 36 'VesselName
+                                        key = "VesselName"
+                                    Case 37 'FlightNumber
+                                        key = "FlightNumber"
+                                    Case 38 'FlightDate
+                                        key = "FlightDate"
+                                    Case 39 'PlaceOfImport
+                                        key = "PlaceOfImport"
+                                    Case 40 'PlaceOfLoading
+                                        key = "PlaceOfLoading"
+                                    Case 41 'PortOfTransshipment
+                                        key = "PortOfTransshipment"
+
+                                End Select
+
+                                'Console.WriteLine(currTag & vbTab & counter & " : " & item)
+                                Console.WriteLine(key & " : " & item)
+
+                            Case "Invoice" ' GROUP TAG
+                                counter += 1
+                                Dim key As String = String.Empty
+                                Select Case counter
+                                    Case 1 'PayTo
+                                        key = "PayTo"
+                                    Case 2 'Insurance
+                                        key = "Insurance"
+                                    Case 3 'OtherCharges
+                                        key = "OtherCharges"
+                                    Case 4 'CIF
+                                        key = "CIF"
+                                    Case 5 'FOB
+                                        key = "FOB"
+                                    Case 6 'Freight
+                                        key = "Freight"
+                                    Case 7 'TotalDutyPayable
+                                        key = "TotalDutyPayable"
+
+                                End Select
+                                'Console.WriteLine(currTag & " : " & item)
+                                Console.WriteLine(key & " : " & item)
+
                             Case "InvoiceItems"
                                 Console.WriteLine(currTag & " : " & item)
                             Case "InvoiceItem"
-                                Console.WriteLine(currTag & " : " & item)
-                            Case "Permits"
+                                counter += 1
+                                Dim key As String = String.Empty
+                                Select Case counter
+                                    Case 1 'ItemNumber
+                                        key = "ItemNumber"
+                                    Case 2 'ItemDescription
+                                        key = "ItemDescription"
+                                    Case 3 'HSCode
+                                        key = "HSCode"
+                                    Case 4 'GrossWeightInKGS
+                                        key = "GrossWeightInKGS"
+                                    Case 5 'DeclaredQuantity
+                                        key = "DeclaredQuantity"
+                                    Case 6 'DeclaredUnit
+                                        key = "DeclaredUnit"
+                                    Case 7 'UnitPrice
+                                        key = "UnitPrice"
+                                    Case 8 'TotalPrice
+                                        key = "TotalPrice"
+                                    Case 9 'DutyAmount
+                                        key = "DutyAmount"
+                                    Case 10 'CountryOfOrigin
+                                        key = "CountryOfOrigin"
+                                    Case 11 'CommodityStatus
+                                        key = "CommodityStatus"
+                                End Select
+                                'Console.WriteLine(currTag & " : " & item)
+                                Console.WriteLine(key & " : " & item)
+
+                            Case "Permits" ' GROUP TAG
                                 Console.WriteLine(currTag & " : " & item)
                             Case "Permit"
+                                counter += 1
+                                Dim key As String = String.Empty
+                                Select Case counter
+                                    Case 1 'ImportPermitNumber
+                                        key = "ImportPermitNumber"
+                                    Case 2
+                                    Case 3
+                                    Case 4
+                                    Case 5
+                                End Select
+                                'Console.WriteLine(currTag & " : " & item)
+                                Console.WriteLine(key & " : " & item)
+
+                            Case "Specifications" ' GROUP TAG
                                 Console.WriteLine(currTag & " : " & item)
-                            Case "Attachments"
+                            Case "Specification"
+                                counter += 1
+                                Dim key As String = String.Empty
+                                Select Case counter
+                                    Case 1 'PurposeOfImport
+                                        key = "PurposeOfImport"
+                                    Case 2 'WarehouseCode
+                                        key = "WarehouseCode"
+                                    Case 3 'WarehouseName
+                                        key = "WarehouseName"
+                                    Case 4 'WarehouseAddress
+                                        key = "WarehouseAddress"
+                                    Case 5 'ExporterCode
+                                        key = "ExporterCode"
+                                    Case 6 'FoodCode
+                                        key = "FoodCode"
+                                    Case 7 'Brand
+                                        key = "Brand"
+                                    Case 8 'DateOfProduction
+                                        key = "DateOfProduction"
+                                    Case 9 'DateOfExpire
+                                        key = "DateOfExpire"
+                                    Case 10 'Treatment
+                                        key = "Treatment"
+                                    Case 11 'ManufacturerCode
+                                        key = "ManufacturerCode"
+                                    Case 12 'ManufacturerName
+                                        key = "ManufacturerName"
+                                    Case 13 'ManufacturerAddress
+                                        key = "ManufacturerAddress"
+                                    Case 14 'PreImportRegistrationNo
+                                        key = "PreImportRegistrationNo"
+
+                                End Select
+                                'Console.WriteLine(currTag & " : " & item)
+                                Console.WriteLine(key & " : " & item)
+
+                            Case "Attachments" ' GROUP TAG
                                 Console.WriteLine(currTag & " : " & item)
                             Case "Attachment"
-                                Console.WriteLine(currTag & " : " & item)
+                                counter += 1
+                                Dim key As String = String.Empty
+                                Select Case counter
+                                    Case 1 'FilePath
+                                        key = "FilePath"
+                                    Case 2 'FileContent
+                                        key = "FileContent"
+                                End Select
+                                'Console.WriteLine(currTag & vbTab & attachementCount & " : " & item)
+                                Console.WriteLine(key & " : " & item)
                             Case Else
-                                'Console.WriteLine(currTag & " : " & item)
+                                Console.WriteLine("X" & currTag & " : " & item)
                         End Select
                     Else
                         Throw New Exception("Invalid FSQDConsAppReq Text")
