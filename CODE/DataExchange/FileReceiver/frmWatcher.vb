@@ -10,6 +10,9 @@ Public Class frmWatcher
     Public watchfolder() As FileSystemWatcher
     Public IntervalGuard As New System.Timers.Timer(500)
 
+    Public Const LOGTIMEFORMAT As String = "yyyy-MM-dd HH:mm:ss"
+    Public Const INDENT As String = "  "
+
     Dim myIcon As New System.Drawing.Icon(vmmwatcher.My.Resources.Resources.earthwatcher, vmmwatcher.My.Resources.Resources.earthwatcher.Size)
     Dim dService As New DataExchangeClass.Data
 
@@ -22,26 +25,31 @@ Public Class frmWatcher
 
     Private Sub AddItemsToListBox(ByVal ToListBox As ListBox, _
                                  ByVal AddText As String)
+        If ToListBox.Items.Count > 1000 Then
+            ToListBox.Items.Clear()
+        End If
         ToListBox.Items.Add(AddText)
-        ToListBox.SelectedIndex = ToListBox.Items.Count - 1
+        ToListBox.SetSelected(ToListBox.Items.Count - 1, True)
+        ToListBox.SetSelected(ToListBox.Items.Count - 1, False)
+
     End Sub
 
-    Public Sub lstMsgs(ByVal item As Object, ByVal source As Object)
-        'If Me.ListBox1.Items.Count > 1000 Then
-        '    ListBox1.Items.Clear()
-        'End If
-        'If source.ToString = Nothing Then
-        '    Me.ListBox1.Items.Add(item)
-        '    Me.ListBox1.SetSelected(ListBox1.Items.Count - 1, True)
-        '    Me.ListBox1.SetSelected(ListBox1.Items.Count - 1, False)
-        'Else
-        '    If (source.invokerequired) Then
-        source.invoke( _
-                New AddItemsToListBoxDelegate(AddressOf AddItemsToListBox), _
-                New Object() {source, item})
+    Public Sub lstMsgs(ByVal item As Object)
+        If Me.ListBox1.Items.Count > 1000 Then
+            ListBox1.Items.Clear()
+        End If
+        If Me.ListBox1.ToString = Nothing Then
+            Me.ListBox1.Items.Add(item)
+            Me.ListBox1.SetSelected(ListBox1.Items.Count - 1, True)
+            Me.ListBox1.SetSelected(ListBox1.Items.Count - 1, False)
+        Else
+            If (Me.ListBox1.InvokeRequired) Then
+                Me.ListBox1.Invoke( _
+                        New AddItemsToListBoxDelegate(AddressOf AddItemsToListBox), _
+                        New Object() {Me.ListBox1, item})
 
-        '    End If
-        'End If
+            End If
+        End If
     End Sub
 
 #End Region
@@ -70,7 +78,7 @@ Public Class frmWatcher
         If e.ChangeType = IO.WatcherChangeTypes.Changed Then
             If DEV_MODE = True Then
                 lstMsgs(Now.ToString("yyyy-MM-dd HH:mm:ss") & " File " & Path.GetFileName(e.FullPath) & _
-                        " has been arrived", Me.ListBox1)
+                        " has been arrived")
             End If
         End If
         'If e.ChangeType = IO.WatcherChangeTypes.Created Then
@@ -108,7 +116,7 @@ Public Class frmWatcher
             'lstResults.BeginInvoke((MethodInvoker)delegate() { lstResults.Columns.Clear(); }, null);
 
             lstMsgs(Now.ToString("yyyy-MM-dd HH:mm:ss") & " File" & e.OldName & _
-                    " has been renamed to " & e.Name & vbCrLf, Me.ListBox1)
+                    " has been renamed to " & e.Name & vbCrLf)
         End If
     End Sub
 
@@ -191,11 +199,11 @@ Public Class frmWatcher
     Private Sub CheckStatus(ByVal sender As Object, ByVal e As System.Timers.ElapsedEventArgs)
         IntervalGuard.Stop()
         If DEV_MODE = True Then
-            lstMsgs("TIME CHECK: " & e.SignalTime, Me.ListBox1)
+            lstMsgs("TIME CHECK: " & e.SignalTime)
         End If
         For Each x In APP_STATUS
             If DEV_MODE = True Then
-                lstMsgs(vbTab & x.EXEPath & " : " & x.Time, Me.ListBox1)
+                lstMsgs(vbTab & x.EXEPath & " : " & x.Time)
             End If
             'If DateDiff(DateInterval.Minute, e.SignalTime, x.Time) Then
             'End If
@@ -203,9 +211,9 @@ Public Class frmWatcher
             If DateDiff(DateInterval.Minute, x.Time, e.SignalTime) >= INACTIVE_THRESHOLD_MINUTE Then
                 If FileExists(x.EXEPath) = True Then
                     RestartApp(x)
-                    lstMsgs(vbTab & e.SignalTime.ToString(DATE_FORMAT_DISPLAY) & " RE-SPAWNED: " & GetFileName(x.EXEPath), Me.ListBox1)
+                    lstMsgs(vbTab & e.SignalTime.ToString(DATE_FORMAT_DISPLAY) & " RE-SPAWNED: " & GetFileName(x.EXEPath))
                 Else
-                    lstMsgs(vbTab & e.SignalTime.ToString(DATE_FORMAT_DISPLAY) & " RE-SPAWNED FAILED: " & GetFileName(x.EXEPath) & " isn't exists", Me.ListBox1)
+                    lstMsgs(vbTab & e.SignalTime.ToString(DATE_FORMAT_DISPLAY) & " RE-SPAWNED FAILED: " & GetFileName(x.EXEPath) & " isn't exists")
                 End If
             End If
         Next x
@@ -220,7 +228,7 @@ Public Class frmWatcher
     Private Sub frmWatcher_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
 
         If ProcessesRunning(myName) > 1 Then
-            lstMsgs("Me is running (one instance)", Me.ListBox1)
+            lstMsgs("Me is running (one instance)")
             End
         Else
             'INITIALIZE VALUES
@@ -243,85 +251,15 @@ Public Class frmWatcher
             Me.Icon = myIcon
             Me.Text = myName
             Me.Size = New Size(700, 400)
+
+            ListBox1.ForeColor = Color.LimeGreen
+            ListBox1.BackColor = Color.Black
+
         End If
     End Sub
 #End Region
 
 #Region "Read Files"
-    Private Sub readBatchFile(ByVal FILE_NAME As String)
-
-        Dim TextLine As String = String.Empty
-        Dim tmpTextLine As String = String.Empty
-
-        If System.IO.File.Exists(FILE_NAME) = True Then
-
-            Dim objReader As New System.IO.StreamReader(FILE_NAME)
-
-            Dim startSTR As Integer
-            Dim stopSTR As Integer
-            Dim vmstime As String
-            Dim seqfile As String
-            Dim vmsname As String
-
-            Dim vmslist As New List(Of VMS)
-
-            Try
-                Do While objReader.Peek() <> -1
-
-                    tmpTextLine = objReader.ReadLine()
-                    If tmpTextLine.Contains(LOG_STRING_CHECK) Then
-                        'TextLine = TextLine & tmpTextLine & vbNewLine
-
-                        'TextLine = TextLine & DateTime.ParseExact(tmpTextLine.Split(LOG_SEPARATOR)(0).Trim, LOG_TIME_FORMAT, System.Globalization.DateTimeFormatInfo.InvariantInfo, Globalization.DateTimeStyles.None).ToString & vbNewLine
-
-                        'TextLine = TextLine & tmpTextLine.Split(LOG_SEPARATOR)(0).Trim & vbNewLine
-
-                        'TextLine = TextLine & CDate(reassembleString("8/18/2015 1:35:25 PM")).ToString(LOG_TIME_FORMAT) & vbNewLine
-
-                        'TextLine = TextLine & tmpTextLine.Split(LOG_SEPARATOR)(2) & vbNewLine
-
-                        '===================================================================
-                        vmstime = reassembleString(tmpTextLine.Split(LOG_SEPARATOR)(0).Trim)
-
-                        startSTR = tmpTextLine.Split(LOG_SEPARATOR)(2).IndexOf(LOG_STRING_BEFORE_FILE)
-                        stopSTR = tmpTextLine.Split(LOG_SEPARATOR)(2).IndexOf(LOG_STRING_AFTER_FILE)
-                        seqfile = tmpTextLine.Split(LOG_SEPARATOR)(2).Substring(startSTR + 1, stopSTR - startSTR - 1)
-
-                        startSTR = tmpTextLine.Split(LOG_SEPARATOR)(2).IndexOf(LOG_STRING_BEFORE_NAME)
-                        stopSTR = tmpTextLine.Split(LOG_SEPARATOR)(2).Length - 1
-                        vmsname = tmpTextLine.Split(LOG_SEPARATOR)(2).Substring(startSTR, stopSTR - startSTR).Replace(LOG_STRING_BEFORE_NAME, "").Trim
-
-                        Dim k As New VMS
-                        k.Timestamp = vmstime
-                        k.VMSName = vmsname
-                        k.SeqFile = seqfile
-
-                        addVMS(vmslist, k)
-
-                        'MsgBox(seqfile & "~" & vmsname)
-                        '===================================================================
-
-
-                    End If
-
-                Loop
-
-                If TextLine.Length > 0 Then MsgBox(TextLine)
-
-            Catch ex As Exception
-                lstMsgs(ex.Message, Me.ListBox1)
-            Finally
-                objReader.Dispose()
-            End Try
-
-            processVMS(vmslist)
-
-        Else
-
-            MsgBox("File Does Not Exist")
-
-        End If
-    End Sub
 
     Private Sub ParseFileName(ByVal FILENAME As String)
         Dim tmpName = System.IO.Path.GetFileNameWithoutExtension(FILENAME)
@@ -335,13 +273,13 @@ Public Class frmWatcher
             Case "K1BTC"
                 ReadK1File(FILENAME)
             Case Else
-                lstMsgs("unrecognised file: " & FILENAME, Me.ListBox1)
+                lstMsgs("unrecognised file: " & FILENAME)
         End Select
 
     End Sub
 
     Private Sub ReadCAFile(ByVal FILE_NAME As String)
-        lstMsgs(FILE_NAME, Me.ListBox1)
+        lstMsgs(FILE_NAME)
         'Dim textReader As New StreamReader(FILE_NAME)
         'Dim csv = New CsvHelper.CsvReader(textReader)
         ''Dim records = csv.GetRecords(Of [MyClass])().ToList()
@@ -484,9 +422,9 @@ Public Class frmWatcher
 
         Try
             If Not MoveAfile(FILE_NAME, PerfectPath(getArchivePath(FILE_NAME)) & Path.GetFileName(FILE_NAME)) Then Throw New Exception("Move file error!")
-            lstMsgs("Moved file " & Path.GetFileName(FILE_NAME) & " to " & getArchivePath(FILE_NAME), Me.ListBox1)
+            lstMsgs(Now.ToString(LOGTIMEFORMAT) & INDENT & "Moved file " & Path.GetFileName(FILE_NAME) & " to " & getArchivePath(FILE_NAME))
         Catch ex As Exception
-            lstMsgs("Archiving file " & FILE_NAME & " failed!", Me.ListBox1)
+            lstMsgs(Now.ToString(LOGTIMEFORMAT) & INDENT & "Archiving file " & FILE_NAME & " failed!")
         End Try
 
     End Sub
@@ -635,15 +573,15 @@ Public Class frmWatcher
 
         Try
             If Not MoveAfile(FILE_NAME, PerfectPath(getArchivePath(FILE_NAME)) & Path.GetFileName(FILE_NAME)) Then Throw New Exception("Move file error!")
-            lstMsgs("Moved file " & Path.GetFileName(FILE_NAME) & " to " & getArchivePath(FILE_NAME), Me.ListBox1)
+            lstMsgs("Moved file " & Path.GetFileName(FILE_NAME) & " to " & getArchivePath(FILE_NAME))
         Catch ex As Exception
-            lstMsgs("Archiving file " & FILE_NAME & " failed!", Me.ListBox1)
+            lstMsgs("Archiving file " & FILE_NAME & " failed!")
         End Try
 
     End Sub
 
     Private Sub ReadK1File(ByVal FILE_NAME As String)
-        lstMsgs(FILE_NAME, Me.ListBox1)
+        lstMsgs(FILE_NAME)
     End Sub
 
     Private Function reassembleString(ByVal dateStr As String) As String
@@ -656,118 +594,6 @@ Public Class frmWatcher
             Return dateStr
         End If
 
-    End Function
-
-    Private Sub addVMS(ByRef vmslist As List(Of VMS), ByVal vms As VMS)
-        Dim result As Boolean = False
-        For Each item As VMS In vmslist
-            If (item.SeqFile = vms.SeqFile) And (item.VMSName = vms.VMSName) Then
-                item.Timestamp = vms.Timestamp
-                result = True
-            ElseIf (item.SeqFile <> vms.SeqFile) And (item.VMSName = vms.VMSName) Then
-                item.Timestamp = vms.Timestamp
-                item.SeqFile = vms.SeqFile
-                result = True
-            End If
-        Next
-
-        If result = False Then vmslist.Add(vms)
-
-    End Sub
-
-    Private Sub processVMS(ByRef vmslist As List(Of VMS))
-        For Each item As VMS In vmslist
-            readSeqFile(item)
-        Next
-    End Sub
-
-    Private Function readSeqFile(ByRef vmsObj As VMS) As Object
-        Dim path As String = DATA_SEQUENCE_FOLDER
-        If System.IO.File.Exists(path & vmsObj.SeqFile) = True Then
-            Dim objReader As New System.IO.StreamReader(path & vmsObj.SeqFile)
-
-            Dim TextLine As String = String.Empty
-            Dim tmpTextLine As String
-            Dim fname As String = String.Empty
-            Dim vmspageList As New List(Of VMSPage)
-            Try
-                Do While objReader.Peek() <> -1
-
-                    tmpTextLine = objReader.ReadLine()
-
-                    'TextLine = TextLine & tmpTextLine & vbNewLine
-
-                    '===================================================================
-                    'TextLine = TextLine & tmpTextLine.Split(";")(1) & vbNewLine
-                    fname = tmpTextLine.Split(";")(1)
-                    Dim vmspageObj As New VMSPage(getImage(System.IO.Path.GetFileNameWithoutExtension(vmsObj.SeqFile) & "\" & fname))
-                    vmspageList.Add(vmspageObj)
-                    vmsObj.VMSPages = vmspageList
-                    '===================================================================
-
-
-                Loop
-
-                If TextLine.Length > 0 Then MsgBox(TextLine)
-
-            Catch ex As Exception
-                lstMsgs(ex.Message, Me.ListBox1)
-            Finally
-                objReader.Dispose()
-            End Try
-
-        Else
-            'do nothing
-        End If
-        Return False
-    End Function
-
-    Private Function getImage(ByVal filename As String) As Object 'massive coding will be placed here.
-        Dim nPath As String = DATA_SEQUENCE_FOLDER
-        Try
-            If (isExtensionRight(filename, ".csc")) Then
-
-                If System.IO.File.Exists(nPath & "\" & getCSCPath(filename)) = True Then
-                    'lstMsgs("CSC PAGE YES", Me.ListBox1)
-                    'Return "CSC PAGE YES"
-                    Return Load64Bit(System.IO.Path.Combine(nPath, getCSCPath(filename)))
-                Else
-                    'lstMsgs("CSC PAGE NO", Me.ListBox1
-                    Return Load64Bit(BLANK_BITMAP_PATH)
-                    Return "CSC PAGE NO"
-                End If
-
-            ElseIf (isExtensionRight(filename, ".bmp")) Then
-
-                Dim dPath As String = System.IO.Path.Combine(nPath, System.IO.Path.GetDirectoryName(filename))
-                Dim dFiles As String() = GetFilenameList(PerfectPath(dPath), System.IO.Path.GetFileNameWithoutExtension(filename) & "*.bmp")
-                If dFiles.Length <> 0 Then
-                    Return Load64Bit(System.IO.Path.Combine(System.IO.Path.Combine(nPath, System.IO.Path.GetDirectoryName(filename)), dFiles(0)))
-                Else
-                    Return Load64Bit(BLANK_BITMAP_PATH)
-                End If
-
-            End If
-        Catch ex As Exception
-            'Return "INVALID!"
-            Return BLANK_BITMAP_PATH
-        End Try
-    End Function
-
-    Private Function getCSCPath(ByVal fname As String) As String
-        Return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(fname), System.IO.Path.Combine(System.IO.Path.GetFileNameWithoutExtension(fname), System.IO.Path.GetFileNameWithoutExtension(fname) & ".bmp"))
-    End Function
-
-    Private Function LoadBitmap(ByVal filePath As String) As Bitmap
-        Try
-            Return New Bitmap(filePath)
-        Catch ex As Exception
-            Return New Bitmap(BLANK_BITMAP_PATH)
-        End Try
-    End Function
-
-    Private Function Load64Bit(ByVal filePath As String) As String
-        Return ImageToBase64(New Bitmap(filePath), System.Drawing.Imaging.ImageFormat.Bmp)
     End Function
 
 #End Region
