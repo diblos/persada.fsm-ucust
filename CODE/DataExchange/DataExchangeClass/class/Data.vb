@@ -13,9 +13,348 @@
     Public Shared IM_ID_DEFAULT As String = 3455
     Public Shared EP_ID_DEFAULT As String = 104
     Public Shared SMKTYPE As String = "K1"
+    Public Shared SMKHEADER As String = "SMK001"
     Public Shared UPDATEDBY As String = "Admin"
     Public Shared UPDATEDDATE As String
     Public Shared CERT_ID_DEFAULT As String = "1,2"
+
+    Public Function FSQDInsert(ByVal data As DataExchangeClass.FSQDConsAppReq.FSQDDeclaration) As Integer
+
+        Dim result As Integer = 0
+
+        For Each item In data.Invoice.InvoiceItems
+
+            UPDATEDDATE = Now.ToString(DataExchangeClass.Common.DEFAULT_SQL_DATA_FORMAT)
+            Dim sql As New System.Text.StringBuilder
+
+            sql.Append("INSERT INTO " & SMKCFormTableName)
+            '----------------------------------------------------------------------------------
+            sql.Append(" (")
+            'sql.Append(" [SMK_ID] ") 'Table Key - check stored procedure
+            'sql.Append(" [CFH_ID]")
+            sql.Append(" [SMKType]")
+            sql.Append(" ,[SMKDataHead]")
+            sql.Append(" ,[SMKMsgType]")
+            sql.Append(" ,[SMKMsgMode]")
+            sql.Append(" ,[SMKImpIndicator]")
+            sql.Append(" ,[SMKRefNum]")
+            'sql.Append(" ,[SMKFQCRefNum]")
+            sql.Append(" ,[SMKRegDatetime]")
+            sql.Append(" ,[SMKTotalItems]")
+            sql.Append(" ,[SMKCommodityStatus]")
+            sql.Append(" ,[SMKTransacType]")
+            'sql.Append(" ,[EXP_ID]")
+            sql.Append(" ,[SMKExpName]")
+            sql.Append(" ,[SMKExpAddr]")
+            sql.Append(" ,[IMP_Id]")
+            'sql.Append(" ,[ImpCustRefNo]")
+            sql.Append(" ,[SMKImpCode]")
+            sql.Append(" ,[SMKImpName]")
+            sql.Append(" ,[SMKImpAddr]")
+            sql.Append(" ,[AGCustRefNo]")
+            sql.Append(" ,[SMKAgentCode]")
+            sql.Append(" ,[SMKAgentName]")
+            sql.Append(" ,[SMKAgentAddr]")
+            sql.Append(" ,[SMKTransptMode]")
+            sql.Append(" ,[SMKImpDate]")
+            sql.Append(" ,[SMKVesselReg]")
+            sql.Append(" ,[SMKVoyageNum]")
+            sql.Append(" ,[SMKVesselName]")
+            sql.Append(" ,[SMKFlightNum]")
+            sql.Append(" ,[SMKFlightDate]")
+            'sql.Append(" ,[SMKVechicleNum]")
+            'sql.Append(" ,[SMKTrailerNum]")
+            sql.Append(" ,[SMKImpPlace]")
+            sql.Append(" ,[SMKLoadPlace]")
+            sql.Append(" ,[SMKTranshipmtPort]")
+            sql.Append(" ,[SMKPayTo]")
+            sql.Append(" ,[SMKInsurance]")
+            sql.Append(" ,[SMKOthCharges]")
+            sql.Append(" ,[SMKCIF]")
+            sql.Append(" ,[SMKFOB]")
+            sql.Append(" ,[SMKFreight]")
+            sql.Append(" ,[SMKGrossWeight]")
+            'sql.Append(" ,[SMKNoOfPackages]")
+            'sql.Append(" ,[SMKPackageType]")
+            'sql.Append(" ,[SMKMeasurement]")
+            sql.Append(" ,[SMKConsignmtNote]")
+            sql.Append(" ,[SMKGenGoodsDesc]")
+            sql.Append(" ,[SMKMarksCtnNum]")
+
+            sql.Append(" ,[SMKManifestNum]")
+            'sql.Append(" ,[SMKPermitNum1]")
+            'sql.Append(" ,[SMKPermitNum2]")
+            'sql.Append(" ,[SMKSpecialTreat]")
+            'sql.Append(" ,[SMKTotalImpDutyAmt]")
+
+            sql.Append(" ,[SMKDeclarantICPP]")
+            sql.Append(" ,[SMKDeclarantName]")
+            sql.Append(" ,[SMKDeclarantPost]")
+            'sql.Append(" ,[SMKReplyDataHead]")
+            'sql.Append(" ,[SMKReplyDatetime]")
+            'sql.Append(" ,[SMKReplyOfficer]")
+            'sql.Append(" ,[SMKReplyODesignt]")
+            'sql.Append(" ,[SMKReplyComments]")
+            'sql.Append(" ,[SMKReplyStatus]")
+            'sql.Append(" ,[SMKReplyAction]")
+            'sql.Append(" ,[SMKReplyApprRef]")
+            'sql.Append(" ,[SMKReplyRemarks]")
+            'sql.Append(" ,[AG_ID]")
+            'sql.Append(" ,[AGCode]")
+            'sql.Append(" ,[SMKConsRefNo]")
+
+            'sql.Append(" ,[SMKRemarks]")
+            'sql.Append(" ,[SMKAccident]")
+
+            'sql.Append(" ,[SMKPurpose]")
+            sql.Append(" ,[EP_ID]")
+            'sql.Append(" ,[WH_ID]")
+            'sql.Append(" ,[SMKWHName]")
+            'sql.Append(" ,[SMKWHAddr]")
+            sql.Append(" ,[PStatus]")
+            sql.Append(" ,[RStatus]")
+            sql.Append(" ,[LMBY]")
+            sql.Append(" ,[LMDT]")
+            sql.Append(" ,[UCUSTOM]")
+            sql.Append(" )")
+            '----------------------------------------------------------------------------------
+            sql.Append(" VALUES ")
+            sql.Append(" (")
+            '----------------------------------------------------------------------------------
+            Dim SMKCID As Integer = GetAutonumberKey(SMKCFormTableName, "[SMK_ID]")
+            'sql.Append(" " & SMKCID)
+            'sql.Append(" [CFH_ID]")
+            sql.Append(" '" & SMKTYPE & "'")
+            sql.Append(" ,'" & SMKHEADER & "'")
+            sql.Append(" ,'" & "A" & "'")
+            sql.Append(" ,'" & "C" & "'")
+            sql.Append(" ,'" & data.TransactionType & "'")
+            sql.Append(" ,'" & data.CustomFormNumber & "'")
+            'sql.Append(" ,'" & data.FQC_Preassigned_control_number & "'")
+            sql.Append(" ,'" & data.RegistrationDate & " " & data.RegistrationTime & "'")
+
+            sql.Append(" ,'" & data.TotalNumberOfItem & "'")
+            sql.Append(" ,'" & item.CommodityStatus & "'")
+
+            sql.Append(" ,'" & data.TransactionType & "'")
+            'sql.Append(" ,'" & data.ExporterCode & "'")
+            sql.Append(" ,'" & data.ExporterName.Replace("'", "''") & "'")
+            sql.Append(" ,'" & data.ExporterAddressStreetAndNumberPObox & "'") '-> Form Inline Address
+            sql.Append(" ," & IM_ID_DEFAULT)
+            'sql.Append(" ,[ImpCustRefNo]")
+            sql.Append(" ,'" & data.ImporterCode & "'")
+            sql.Append(" ,'" & data.ImporterName & "'")
+            sql.Append(" ,'" & data.ImporterAddressStreetAndNumberPObox & "'") '-> Form Inline Address
+            sql.Append(" ,'" & AG_REF_NO_DEFAULT & "'")
+            sql.Append(" ,'" & data.AgentCode & "'")
+            sql.Append(" ,'" & data.AgentName & "'")
+            sql.Append(" ,'" & data.AgentAddressStreetAndNumberPObox & "'") '-> Form Inline Address
+            sql.Append(" ,'" & data.ModeOfTransport & "'")
+            sql.Append(" ,'" & data.DateOfImport & "'")
+            sql.Append(" ,'" & data.VesselRegistration & "'")
+            sql.Append(" ,'" & data.VoyageNumber & "'")
+            sql.Append(" ,'" & data.VesselName & "'")
+            sql.Append(" ,'" & data.FlightNumber & "'")
+            sql.Append(" ,'" & data.FlightDate & "'")
+            'sql.Append(" ,'" & data.Vehicle_Lorry_number & "'")
+            'sql.Append(" ,'" & data.Trailer_number & "'")
+            sql.Append(" ,'" & data.PlaceOfImport & "'")
+            sql.Append(" ,'" & data.PlaceOfLoading & "'")
+            sql.Append(" ,'" & data.PortOfTransshipment & "'")
+            sql.Append(" ,'" & data.Invoice.PayTo & "'")
+            sql.Append(" ,'" & data.Invoice.Insurance & "'")
+            sql.Append(" ,'" & data.Invoice.OtherCharges & "'")
+            sql.Append(" ,'" & data.Invoice.CIF & "'")
+            sql.Append(" ,'" & data.Invoice.FOB & "'")
+            sql.Append(" ,'" & data.Invoice.Freight & "'")
+            sql.Append(" ,'" & item.GrossWeightInKGS & "'")
+            'sql.Append(" ,'" & data.number_of_Packages & "'")
+            'sql.Append(" ,'" & data.Type_of_Packages & "'")
+            'sql.Append(" ,'" & data.Measurement & "'")
+            sql.Append(" ,'" & data.ConsignmentNote & "'")
+            sql.Append(" ,'" & data.GeneralDescriptionOfGoods.Replace("'", "''") & "'")
+            sql.Append(" ,'" & data.Marks & "'")
+
+            sql.Append(" ,'" & data.ManifestRegistrationNumber & "'")
+            'sql.Append(" ,'" & data.Import_Permit_number & "'")
+            'sql.Append(" ,'" & data.Import_Permit_number_2 & "'")
+            'sql.Append(" ,'" & data.Special_Treatement & "'")
+            'sql.Append(" ,'" & data.Total_Duty_Payable & "'")
+
+
+
+            sql.Append(" ,'" & data.DeclarantICNumber & "'")
+            sql.Append(" ,'" & data.DeclarantName & "'")
+            sql.Append(" ,'" & data.DeclarantStatus & "'")
+            'sql.Append(" ,[SMKReplyDataHead]")
+            'sql.Append(" ,[SMKReplyDatetime]")
+            'sql.Append(" ,[SMKReplyOfficer]")
+            'sql.Append(" ,[SMKReplyODesignt]")
+            'sql.Append(" ,[SMKReplyComments]")
+            'sql.Append(" ,[SMKReplyStatus]")
+            'sql.Append(" ,[SMKReplyAction]")
+            'sql.Append(" ,[SMKReplyApprRef]")
+            'sql.Append(" ,[SMKReplyRemarks]")
+            'sql.Append(" ,[AG_ID]")
+            'sql.Append(" ,[AGCode]")
+            'sql.Append(" ,[SMKConsRefNo]")
+
+            'sql.Append(" ,'" & data.Remarks_and_Accident & "'") ' Remarks_and_Accident
+            'sql.Append(" ,[SMKAccident]")
+
+            'sql.Append(" ,'" & data.Purpose_of_import & "'")
+            sql.Append(" ,'" & EP_ID_DEFAULT & "'")
+            'sql.Append(" ,'" & data.Warehouse_Code & "'")
+            'sql.Append(" ,'" & data.Warehouse_Name & "'")
+            'sql.Append(" ,'" & data.Warehouse_Address & "'") '-> Form Inline Address
+
+            sql.Append(" ,'N'")
+            sql.Append(" ,'2'")
+            sql.Append(" ,'" & UPDATEDBY & "'")
+            sql.Append(" ,'" & UPDATEDDATE & "'")
+            sql.Append(" ,'Y'")
+            '----------------------------------------------------------------------------------
+            sql.Append(" )")
+
+            Try
+                'MsgBox(sql.ToString)
+                'nEventLOG(sql.ToString)
+                result = result + ExecuteQuery(sql.ToString)
+
+            Catch ex As Exception
+                Throw ex
+            End Try
+
+            sql.Remove(0, sql.Length)
+            '==================================================================================
+
+
+
+            sql.Append("INSERT INTO " & SMKCFormGoodsTableName)
+            '----------------------------------------------------------------------------------
+            sql.Append(" (")
+            'sql.Append(" [CFG_ID]") 'Autonumber
+            sql.Append(" [SMK_ID]")
+            sql.Append(" ,[CFGDataHead]")
+            sql.Append(" ,[CFGK1RegNum]")
+            sql.Append(" ,[CFGItemNum]")
+            sql.Append(" ,[CFGItemDesc]")
+            sql.Append(" ,[CFGHSCode]")
+            sql.Append(" ,[CFGQuantity]")
+            sql.Append(" ,[CFGUOM]")
+            sql.Append(" ,[CFGUnitPrice]")
+            sql.Append(" ,[CFGTotalPrice]")
+            sql.Append(" ,[CFGImpDutyAmt]")
+            'sql.Append(" ,[CFGNoOfPackages]")
+            'sql.Append(" ,[CFGPackageType]")
+            sql.Append(" ,[CFGOriginCtry]")
+            'sql.Append(" ,[CFGQuantity1]")
+            'sql.Append(" ,[CFGUOM1]")
+
+            'sql.Append(" ,[CFGIMGFoodCode]")
+            'sql.Append(" ,[CFGIMGTreatment]")
+            'sql.Append(" ,[CFGMNF_ID]")
+            'sql.Append(" ,[CFGIMGmnfName]")
+            'sql.Append(" ,[CFGIMGmnfAddr]")
+            'sql.Append(" ,[CFGIMGBrand]")
+            'sql.Append(" ,[CFGIMGDateProduce]")
+            'sql.Append(" ,[CFGIMGDateExpiry]")
+
+            'sql.Append(" ,[CFGIMGBatchNum]")
+            'sql.Append(" ,[CFGIMGBarcode]")
+            'sql.Append(" ,[CFGGoodsDesc]")
+            sql.Append(" ,[CFGCertIds]")
+            'sql.Append(" ,[CFGCertNo1]")
+            'sql.Append(" ,[CFGCertNo2]")
+            'sql.Append(" ,[CFGCertNo3]")
+            'sql.Append(" ,[CFGCertNo4]")
+            'sql.Append(" ,[CFGCertNo5]")
+            'sql.Append(" ,[CFGCertNo6]")
+            'sql.Append(" ,[CFGCertNo7]")
+            'sql.Append(" ,[CFGCertNo8]")
+            sql.Append(" ,[CFGIMGCurrLvl]")
+            sql.Append(" ,[PStatus]")
+            'sql.Append(" ,[CFGStatusPurpose]")
+            'sql.Append(" ,[CFGAGNotes]")
+            sql.Append(" ,[RStatus]")
+            sql.Append(" ,[LMBY]")
+            sql.Append(" ,[LMDT]")
+            'sql.Append(" ,[Remarks]")
+            sql.Append(" )")
+            '----------------------------------------------------------------------------------
+            sql.Append(" VALUES ")
+            sql.Append(" (")
+            '----------------------------------------------------------------------------------
+            'sql.Append(" " & cmmn.GetAutonumberKey(SMKCFormGoodsTableName, "[CFG_ID]"))
+            sql.Append(" " & SMKCID)
+            sql.Append(" ,'" & SMKHEADER & "'")
+            sql.Append(" ,'" & data.CustomFormNumber & "'")
+            sql.Append(" ,'" & item.ItemNumber & "'")
+            sql.Append(" ,'" & item.ItemDescription & "'")
+            sql.Append(" ,'" & item.HSCode & "'")
+            sql.Append(" ,'" & item.DeclaredQuantity & "'")
+            sql.Append(" ,'" & item.DeclaredUnit & "'")
+            sql.Append(" ,'" & item.UnitPrice & "'")
+            sql.Append(" ,'" & item.TotalPrice & "'")
+            sql.Append(" ,'" & item.DutyAmount & "'")
+            'sql.Append(" ,'" & data.number_of_Packages_B & "'")
+            'sql.Append(" ,'" & data.Type_of_Packages_B & "'")
+            sql.Append(" ,'" & item.CountryOfOrigin & "'")
+            'sql.Append(" ,'" & data.Declared_Quantity_2 & "'")
+            'sql.Append(" ,'" & data.Declared_unit_2 & "'")
+
+            'sql.Append(" ,'" & data.Food_Code & "'")
+            'sql.Append(" ,'" & data.Treatment & "'")
+            'sql.Append(" ,'" & data.Manufacturer_code & "'")
+            'sql.Append(" ,'" & data.Manufacturer_name & "'")
+            'sql.Append(" ,'" & data.Manufacturer_address & "'") '-> Form Inline Address
+            'sql.Append(" ,'" & data.Brand & "'")
+            'sql.Append(" ,'" & data.Date_of_production & "'")
+            'sql.Append(" ,'" & data.Date_of_expire & "'")
+
+            'sql.Append(" ,[CFGIMGBatchNum]")
+            'sql.Append(" ,[CFGIMGBarcode]")
+            'sql.Append(" ,[CFGGoodsDesc]")
+            sql.Append(" ,'" & CERT_ID_DEFAULT & "'")
+            'sql.Append(" ,[CFGCertNo1]")
+            'sql.Append(" ,[CFGCertNo2]")
+            'sql.Append(" ,[CFGCertNo3]")
+            'sql.Append(" ,[CFGCertNo4]")
+            'sql.Append(" ,[CFGCertNo5]")
+            'sql.Append(" ,[CFGCertNo6]")
+            'sql.Append(" ,[CFGCertNo7]")
+            'sql.Append(" ,[CFGCertNo8]")
+            sql.Append(" ," & 3) 'default Level
+            sql.Append(" ,'N'")
+            'sql.Append(" ,[CFGStatusPurpose]")
+            'sql.Append(" ,[CFGAGNotes]")
+            sql.Append(" ,'2'")
+            sql.Append(" ,'" & UPDATEDBY & "'")
+            sql.Append(" ,'" & UPDATEDDATE & "'")
+            'sql.Append(" ,[Remarks]")
+            '----------------------------------------------------------------------------------
+            sql.Append(" )")
+
+            Try
+                'MsgBox(sql.ToString)
+                'nEventLOG(sql.ToString)
+                result = result + ExecuteQuery(sql.ToString)
+
+                'Dim command As System.Data.Common.DbCommand = db.GetSqlStringCommand(sql.ToString)
+
+                'db.EndExecuteNonQuery(command)
+
+                'command.Connection.Close()
+                'command.Dispose()
+            Catch ex As Exception
+                Throw ex
+            End Try
+
+        Next
+
+        Return result
+
+    End Function
 
     Public Function CAInsert(ByVal data As DataExchangeClass.deprecating.ConsigmentApprovalRequest) As Integer
 
