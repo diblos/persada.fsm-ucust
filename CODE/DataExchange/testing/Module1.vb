@@ -29,9 +29,9 @@ Module Module1
 
         'Testing()
 
-        Reading()
+        'Reading()
 
-        'Writing(WritingOption.FSQDFoodCodeMaster)
+        Writing(WritingOption.FSQDDeclarationResponse)
 
         HappyEnd() 'Wait input to end
     End Sub
@@ -101,7 +101,7 @@ Module Module1
                             str.AppendLine(lineIndent & item.HSCode)
                             str.AppendLine(lineIndent & item.ItemNumber)
                             str.AppendLine(lineIndent & item.ApprovalStatus.ToString)
-                            str.AppendLine(lineIndent & item.ActionCode.ToString)
+                            str.Append(lineIndent & item.ActionCode.ToString)
                         Next
 
                     End With
@@ -119,7 +119,7 @@ Module Module1
                                 str.AppendLine(lineIndent & .FCODescription)
                                 str.AppendLine(lineIndent & .RStatus)
                                 str.AppendLine(lineIndent & .Category)
-                                str.AppendLine(lineIndent & .ProductType)
+                                str.Append(lineIndent & .ProductType)
 
                             End With
 
@@ -129,9 +129,29 @@ Module Module1
 
             End Select
 
-
-
             Console.Write(str.ToString())
+
+            str.Replace(vbNewLine, "|")
+
+            Dim fileName As String = String.Empty
+            Select Case Writing
+                Case WritingOption.FSQDDeclarationResponse
+
+                    fileName = "FSQD" & "_" & "RESCA" & "_" & Now.ToString("yyyyMMddTHHmmss") & "_RES" & ".txt"
+
+                Case WritingOption.FSQDFoodCodeMaster
+
+                    fileName = "FSQD" & "_" & "FC" & "_" & Now.ToString("yyyyMMddTHHmmss") & ".txt"
+
+            End Select
+
+            If Not fileName = String.Empty Then
+                Dim file As System.IO.StreamWriter
+                Dim path As String = My.Application.Info.DirectoryPath
+                file = My.Computer.FileSystem.OpenTextFileWriter(System.IO.Path.Combine(path, fileName), False)
+                file.WriteLine(str.ToString())
+                file.Close()
+            End If
 
         Catch e As Exception
             Console.WriteLine(e.Message)
@@ -544,7 +564,8 @@ Module Module1
                     .MCKey = 0
                     .MCValue = 0
                     .CustomRegistrationNumber = "K122015101004808"
-                    .CommentFromFQC = "0709.60.1000"
+                    '.CommentFromFQC = "0709.60.1000"
+                    .CommentFromFQC = "diperiksa dan dilepaskan"
                     .ProcessDate = "2015-01-21"
                     .InvoiceItems = New List(Of DataExchangeClass.FSQDConsAppRes.InvoiceItem)
                     Dim InvoiceItem As New DataExchangeClass.FSQDConsAppRes.InvoiceItem
