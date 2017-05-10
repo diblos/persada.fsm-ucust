@@ -14,7 +14,7 @@ Public Class frmWatcher
     Public Const INDENT As String = "  "
 
     Dim myIcon As New System.Drawing.Icon(vmmwatcher.My.Resources.Resources.earthwatcher, vmmwatcher.My.Resources.Resources.earthwatcher.Size)
-    Dim dService As New DataExchangeClass.Data
+    Dim WithEvents dService As New DataExchangeClass.Data
 
 #End Region
 #Region "Form / Development"
@@ -219,6 +219,20 @@ Public Class frmWatcher
         Next x
         IntervalGuard.Start()
     End Sub
+
+    Private Sub DataInsertEvent(ByVal eventname As String, ByVal value As String)
+        lstMsgs(Now.ToString(LOGTIMEFORMAT) & INDENT & eventname & ": " & value)
+    End Sub
+
+    Private Sub DataInsertError(ByVal timestamp As Date, ByVal Err As System.Exception)
+        lstMsgs(Now.ToString(LOGTIMEFORMAT) & INDENT & "DataInsertError: " & Err.Message)
+    End Sub
+
+    Private Sub DoubleClickList(sender As Object, e As EventArgs)
+        Dim List As ListBox = DirectCast(sender, ListBox)
+        My.Computer.Clipboard.SetText(List.SelectedItem)
+    End Sub
+
 #End Region
 #Region "Start / Stop"
     Private Sub frmWatcher_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
@@ -245,6 +259,10 @@ Public Class frmWatcher
             'START WATCHER
             '--------------------------------------------------------
             StartWatching()
+
+            AddHandler dService.OnEvent, AddressOf DataInsertEvent
+            AddHandler dService.OnError, AddressOf DataInsertError
+            AddHandler ListBox1.DoubleClick, AddressOf DoubleClickList
 
             'FORM ATTRIBUTES
             '--------------------------------------------------------
@@ -448,12 +466,14 @@ Public Class frmWatcher
                                     Case 20 'ImporterAddressPostcodeIdentification
                                         key = "ImporterAddressPostcodeIdentification"
                                         FSQD.ImporterAddressPostcodeIdentification = item
+
                                     Case 21 'AgentCode
                                         key = "AgentCode"
                                         FSQD.AgentCode = item
-                                    Case 22 'AgentName
+                                    Case 21 'AgentName 'HACKS : Missing AgnetCode
                                         key = "AgentName"
                                         FSQD.AgentCode = item
+
                                     Case 23 'AgentAddressStreetAndNumberPObox
                                         key = "AgentAddressStreetAndNumberPObox"
                                         FSQD.AgentAddressStreetAndNumberPObox = item

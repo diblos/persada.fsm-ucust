@@ -18,6 +18,8 @@
     Public Shared UPDATEDDATE As String
     Public Shared CERT_ID_DEFAULT As String = "1,2"
 
+    Private Const DATETIME_FORMAT As String = "yyyy-MM-dd HH:mm:ss"
+
     Public Function FSQDInsert(ByVal data As DataExchangeClass.FSQDConsAppReq.FSQDDeclaration) As Integer
 
         Dim result As Integer = 0
@@ -129,9 +131,9 @@
             sql.Append(" ,'" & "A" & "'")
             sql.Append(" ,'" & "C" & "'")
             sql.Append(" ,'" & data.TransactionType & "'")
-            sql.Append(" ,'" & data.CustomFormNumber & "'")
+            sql.Append(" ,'" & data.CustomFormNumber.Replace("-", "") & "'")
             'sql.Append(" ,'" & data.FQC_Preassigned_control_number & "'")
-            sql.Append(" ,'" & data.RegistrationDate & " " & data.RegistrationTime & "'")
+            sql.Append(" ,'" & FormValidDateTime(data.RegistrationDate, data.RegistrationTime).ToString(DATETIME_FORMAT) & "'")
 
             sql.Append(" ,'" & data.TotalNumberOfItem & "'")
             sql.Append(" ,'" & item.CommodityStatus & "'")
@@ -245,7 +247,7 @@
             sql.Append(" ,[CFGUnitPrice]")
             sql.Append(" ,[CFGTotalPrice]")
             sql.Append(" ,[CFGImpDutyAmt]")
-            'sql.Append(" ,[CFGNoOfPackages]")
+            sql.Append(" ,[CFGNoOfPackages]")
             'sql.Append(" ,[CFGPackageType]")
             sql.Append(" ,[CFGOriginCtry]")
             'sql.Append(" ,[CFGQuantity1]")
@@ -288,7 +290,7 @@
             'sql.Append(" " & cmmn.GetAutonumberKey(SMKCFormGoodsTableName, "[CFG_ID]"))
             sql.Append(" " & SMKCID)
             sql.Append(" ,'" & SMKHEADER & "'")
-            sql.Append(" ,'" & data.CustomFormNumber & "'")
+            sql.Append(" ,'" & data.CustomFormNumber.Replace("-", "") & "'")
             sql.Append(" ,'" & item.ItemNumber & "'")
             sql.Append(" ,'" & item.ItemDescription & "'")
             sql.Append(" ,'" & item.HSCode & "'")
@@ -297,7 +299,8 @@
             sql.Append(" ,'" & item.UnitPrice & "'")
             sql.Append(" ,'" & item.TotalPrice & "'")
             sql.Append(" ,'" & item.DutyAmount & "'")
-            'sql.Append(" ,'" & data.number_of_Packages_B & "'")
+            sql.Append(" ,'" & 0 & "'") 'CFGNoOfPackages ??
+
             'sql.Append(" ,'" & data.Type_of_Packages_B & "'")
             sql.Append(" ,'" & item.CountryOfOrigin & "'")
             'sql.Append(" ,'" & data.Declared_Quantity_2 & "'")
@@ -759,10 +762,25 @@
 
     Private Function ExecuteQuery(ByVal SQLStr As String) As Integer
         Try
+            RaiseEvent OnEvent("ExecuteQuery", SQLStr)
             Return db.ExecuteNonQuery(System.Data.CommandType.Text, SQLStr)
         Catch ex As Exception
             RaiseEvent OnError(Now, New Exception("ExecuteQuery: " & SQLStr & " : " & ex.Message))
             Return 0
+        End Try
+    End Function
+
+    Private Function FormValidDateTime(ByVal DateString As String, ByVal TimeString As String) As Date
+        Try
+            '20130102:
+            '1657:
+
+            Dim newDate As String = DateString.Insert(6, "-").Insert(4, "-")
+            Dim newTime As String = TimeString.Insert(2, ":")
+
+            Return CDate(newDate & " " & newTime)
+        Catch ex As Exception
+            Return New Date
         End Try
     End Function
 
