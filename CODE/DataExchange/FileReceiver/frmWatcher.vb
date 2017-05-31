@@ -73,6 +73,16 @@ Public Class frmWatcher
         Return arcPath
     End Function
 
+    Private Function getResponsePath(ByVal FilePath As Object) As String
+        Dim arcPath As String = String.Empty
+        For x = 0 To NO_OF_APP - 1
+            If PerfectPath(Path.GetDirectoryName(FilePath)) = PerfectPath(APP_STATUS(x).WatchFolder) Then
+                arcPath = APP_STATUS(x).EXEPath
+            End If
+        Next
+        Return arcPath
+    End Function
+
     Private Sub logchange(ByVal source As Object, ByVal e As  _
                     System.IO.FileSystemEventArgs)
         If e.ChangeType = IO.WatcherChangeTypes.Changed Then
@@ -301,7 +311,8 @@ Public Class frmWatcher
 
         Try
             ' Open the file using a stream reader.
-            Using sr As New StreamReader(FILE_NAME, System.Text.Encoding.GetEncoding("UCS-2"))
+            'Using sr As New StreamReader(FILE_NAME, System.Text.Encoding.GetEncoding("UCS-2"))
+            Using sr As New StreamReader(FILE_NAME, System.Text.Encoding.GetEncoding("UTF-8"))
                 Dim line As String
                 ' Read the stream to a string and write the string to the console.
                 line = sr.ReadToEnd()
@@ -873,6 +884,7 @@ Public Class frmWatcher
         textReader.Dispose()
 
         Try
+            'CopyAfile(FILE_NAME, PerfectPath(getArchivePath(FILE_NAME)) & Path.GetFileName(FILE_NAME).Replace(".", "_RES."))
             If Not MoveAfile(FILE_NAME, PerfectPath(getArchivePath(FILE_NAME)) & Path.GetFileName(FILE_NAME)) Then Throw New Exception("Move file error!")
             lstMsgs("Moved file " & Path.GetFileName(FILE_NAME) & " to " & getArchivePath(FILE_NAME))
         Catch ex As Exception

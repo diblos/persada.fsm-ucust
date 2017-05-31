@@ -14,6 +14,9 @@ Public Class MainForm
     Dim dummyDataCA As DataExchangeClass.deprecating.ConsigmentApprovalResponse
     Dim dummyDataFC As DataExchangeClass.deprecating.FoodCodeMaster
 
+    Dim dummyDataCAb As DataExchangeClass.FSQDConsAppRes.FSQDDeclarationResponse
+    Dim dummyDataFCb As DataExchangeClass.FSQDFoodCodeMaster.FSQDFoodCodeMaster
+
     Dim tmpData As DataTable 'for flag update
 
 #Region "Form Action"
@@ -186,6 +189,7 @@ Public Class MainForm
         Dim k As New DataExchangeClass.Data
 
         Dim newlist As New List(Of DataExchangeClass.deprecating.ConsigmentApprovalResponse)
+        'Dim newlist As New List(Of DataExchangeClass.FSQDConsAppRes.FSQDDeclarationResponse)
         Dim dtCA As DataTable = k.GetResponseData()
 
         For Each row As DataRow In dtCA.Rows
@@ -266,6 +270,8 @@ Public Class MainForm
         Return newlist
 
     End Function
+
+
 
     Private Sub InitializeDummyData()
 

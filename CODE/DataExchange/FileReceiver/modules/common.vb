@@ -59,7 +59,7 @@ Module common
 
             'SET APPLICATION OBJECT VALUES
             '=============================
-            APP_STATUS(x).EXEPath = Nothing
+            APP_STATUS(x).EXEPath = AppSettings("RESPONSE." & x + 1)
             APP_STATUS(x).Time = Now
             APP_STATUS(x).WatchFolder = tmpStr
             tmpStr = AppSettings("ARCHIVE." & x + 1)

@@ -1,7 +1,8 @@
 ﻿Imports System.IO
 
 Module Module1
-    Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\neo\FSQD_RQCA_20161107T164010.txt"
+    'Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\neo\FSQD_RQCA_20161107T164010.txt"
+    Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\neo\fwucustomsfosim-2017\FSQD_RQCA_20170523T085201.txt"
 
     Dim dummyDataCA As DataExchangeClass.deprecating.ConsigmentApprovalResponse
     Dim dummyDataFC As DataExchangeClass.deprecating.FoodCodeMaster
@@ -29,9 +30,9 @@ Module Module1
 
         'Testing()
 
-        'Reading()
+        Reading()
 
-        Writing(WritingOption.FSQDDeclarationResponse)
+        'Writing(WritingOption.FSQDDeclarationResponse)
 
         HappyEnd() 'Wait input to end
     End Sub
@@ -51,7 +52,9 @@ Module Module1
     Public Sub Reading()
         Try
             ' Open the file using a stream reader.
-            Using sr As New StreamReader(textFilePath, System.Text.Encoding.GetEncoding("UCS-2"))
+            'Dim TextEncoding As String = "UCS-2"
+            Dim TextEncoding As String = "UTF-8"
+            Using sr As New StreamReader(textFilePath, System.Text.Encoding.GetEncoding(TextEncoding))
                 Dim line As String
                 ' Read the stream to a string and write the string to the console.
                 line = sr.ReadToEnd()
@@ -98,8 +101,8 @@ Module Module1
                         str.AppendLine("InvoiceItems:")
                         For Each item In .InvoiceItems
                             str.AppendLine("InvoiceItem:")
-                            str.AppendLine(lineIndent & item.HSCode)
                             str.AppendLine(lineIndent & item.ItemNumber)
+                            str.AppendLine(lineIndent & item.HSCode)
                             str.AppendLine(lineIndent & item.ApprovalStatus.ToString)
                             str.Append(lineIndent & item.ActionCode.ToString)
                         Next
@@ -563,16 +566,16 @@ Module Module1
 
                     .MCKey = 0
                     .MCValue = 0
-                    .CustomRegistrationNumber = "K122015101004808"
+                    .CustomRegistrationNumber = "B1FE00169662015"
                     '.CommentFromFQC = "0709.60.1000"
                     .CommentFromFQC = "diperiksa dan dilepaskan"
-                    .ProcessDate = "2015-01-21"
+                    .ProcessDate = "2017-05-12"
                     .InvoiceItems = New List(Of DataExchangeClass.FSQDConsAppRes.InvoiceItem)
                     Dim InvoiceItem As New DataExchangeClass.FSQDConsAppRes.InvoiceItem
                     With InvoiceItem
-                        .HSCode = "1902.19.900"
                         .ItemNumber = 1
-                        .ApprovalStatus = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumApprovalStatus.N
+                        .HSCode = "040410910"
+                        .ApprovalStatus = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumApprovalStatus.R 'N is no more, R instead
                         .ActionCode = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumActionCode.R
                     End With
 
@@ -628,7 +631,7 @@ Module Module1
                     .Processing_officer_name_2 = ""
                     .Officer_Designation = "PPKP U29"
                     .Comment_from_FQC = ""
-                    .Approval_Status = "N"
+                    .Approval_Status = "N" ' N is no more (replace R)
                     .Action_code = "R"
                     .Remarks = "Konsaimen diperiksa dan dilepaskan"
                     .Approval_reference_no = ""
