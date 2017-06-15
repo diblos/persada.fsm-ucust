@@ -163,11 +163,18 @@ Module Module1
 
     Private Function Arr2Object(ByVal arrString() As String) As DataExchangeClass.FSQDConsAppReq.FSQDDeclaration
 
+        Dim FSQA As New DataExchangeClass.FSQDConsAppReq.FSQDConsAppReq
+
+        Dim Header As New DataExchangeClass.Header.HeaderType
+        Dim Party As New DataExchangeClass.Header.Party
+
         Dim FSQD As New DataExchangeClass.FSQDConsAppReq.FSQDDeclaration
         Dim InvoiceItem As DataExchangeClass.FSQDConsAppReq.InvoiceItem = Nothing
         Dim Permit As DataExchangeClass.FSQDConsAppReq.Permit = Nothing
         Dim Spec As DataExchangeClass.FSQDConsAppReq.Specification = Nothing
         Dim Attachment As DataExchangeClass.FSQDConsAppReq.Attachment = Nothing
+
+
 
         Try
 
@@ -180,7 +187,15 @@ Module Module1
                 If (item.IndexOf("FSQDConsAppReq") >= 0) And (currTag = String.Empty) Then
                     currTag = "FSQDConsAppReq"
                     validTag &= currTag
-                ElseIf (item.IndexOf("Body") >= 0) And (currTag = "FSQDConsAppReq") Then
+                    '
+                ElseIf (item.IndexOf("Header") >= 0) And (currTag = "FSQDConsAppReq") Then
+                    currTag = "Header"
+                    validTag &= ">" & currTag
+                ElseIf (item.IndexOf("Party") >= 0) And (currTag = "Header") Then
+                    currTag = "Party"
+                    validTag &= ">" & currTag
+                    '
+                ElseIf (item.IndexOf("Body") >= 0) And (currTag = "Party") Then
                     currTag = "Body"
                     validTag &= ">" & currTag
                 ElseIf (item.IndexOf("FSQDDeclaration") >= 0) And (currTag = "Body") Then
@@ -226,8 +241,12 @@ Module Module1
 
                     'Console.WriteLine(validTag)
 
-                    If validTag = "FSQDConsAppReq>Body>FSQDDeclaration" Then
+                    If validTag = "FSQDConsAppReq>Header>Body>FSQDDeclaration" Then
                         Select Case currTag
+                            Case "Header"
+                                counter += 1
+
+
                             Case "FSQDDeclaration"
                                 counter += 1
                                 Dim key As String = String.Empty
