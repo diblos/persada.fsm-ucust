@@ -35,6 +35,16 @@ Namespace FSQDConsAppReq
             Air = 4
         End Enum
 
+        Private _HeaderObj As Object
+        Public Property HeaderObj() As Object
+            Get
+                Return Me._HeaderObj
+            End Get
+            Set(ByVal value As Object)
+                Me._HeaderObj = value
+            End Set
+        End Property
+
         Private _MCKey As String
         Public Property MCKey() As String
             Get
