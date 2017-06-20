@@ -20,9 +20,37 @@
 
     Private Const DATETIME_FORMAT As String = "yyyy-MM-dd HH:mm:ss"
 
+    Public Function InsertParty(ByVal data As DataExchangeClass.FSQDConsAppReq.FSQDDeclaration)
+        Dim result As Integer = 0
+        Try
+            Dim sql As New System.Text.StringBuilder
+
+            sql.Append("INSERT INTO TmpParty")
+            sql.Append("(")
+            sql.Append("[CFGK1RegNum],")
+            sql.Append("[BATCHID],")
+            sql.Append("[LMDT]")
+            sql.Append(" )")
+            '----------------------------------------------------------------------------------
+            sql.Append(" VALUES ")
+            sql.Append(" (")
+            sql.Append("'" & data.CustomFormNumber.Replace("-", "") & "',")
+            sql.Append("'" & data.HeaderObj.batchID & "',")
+            sql.Append("'" & Now.ToString(DATETIME_FORMAT) & "'")
+            sql.Append(")")
+
+            result = result + ExecuteQuery(sql.ToString)
+        Catch ex As Exception
+            result = 0
+        End Try
+        Return result
+    End Function
+
     Public Function FSQDInsert(ByVal data As DataExchangeClass.FSQDConsAppReq.FSQDDeclaration) As Integer
 
         Dim result As Integer = 0
+
+        Dim test As New System.Text.StringBuilder
 
         For Each item In data.Invoice.InvoiceItems
 
@@ -152,7 +180,7 @@
             sql.Append(" ,'" & data.AgentName & "'")
             sql.Append(" ,'" & data.AgentAddressStreetAndNumberPObox & "'") '-> Form Inline Address
             sql.Append(" ,'" & data.ModeOfTransport & "'")
-            sql.Append(" ,'" & data.DateOfImport & "'")
+            sql.Append(" ,'" & FormValidDateTime(data.DateOfImport, "0000").ToString(DATETIME_FORMAT) & "'") 'sql.Append(" ,'" & data.DateOfImport & "'")'
             sql.Append(" ,'" & data.VesselRegistration & "'")
             sql.Append(" ,'" & data.VoyageNumber & "'")
             sql.Append(" ,'" & data.VesselName & "'")
@@ -218,6 +246,102 @@
             '----------------------------------------------------------------------------------
             sql.Append(" )")
 
+            '===================================================================================
+
+            'test.AppendLine(" " & SMKCID)
+            'test.AppendLine(" [CFH_ID]")
+            test.AppendLine(" [SMKType] = '" & SMKTYPE & "'")
+            test.AppendLine(" [SMKDataHead]='" & SMKHEADER & "'")
+            test.AppendLine(" [SMKMsgType]='" & "A" & "'")
+            test.AppendLine(" [SMKMsgMode]='" & "C" & "'")
+            test.AppendLine(" [SMKImpIndicator]='" & data.TransactionType & "'")
+            test.AppendLine(" [SMKRefNum]='" & data.CustomFormNumber.Replace("-", "") & "'")
+            'test.AppendLine(" ,'" & data.FQC_Preassigned_control_number & "'")
+            test.AppendLine(" [SMKRegDatetime]='" & FormValidDateTime(data.RegistrationDate, data.RegistrationTime).ToString(DATETIME_FORMAT) & "'")
+
+            test.AppendLine(" [SMKTotalItems]='" & data.TotalNumberOfItem & "'")
+            test.AppendLine(" [SMKCommodityStatus]='" & item.CommodityStatus & "'")
+
+            test.AppendLine(" [SMKTransacType]='" & data.TransactionType & "'")
+            'test.AppendLine(" ,'" & data.ExporterCode & "'")
+            test.AppendLine(" [SMKExpName]='" & data.ExporterName.Replace("'", "''") & "'")
+            test.AppendLine(" [SMKExpAddr]='" & data.ExporterAddressStreetAndNumberPObox & "'") '-> Form Inline Address
+            test.AppendLine(" [IMP_Id]" & IM_ID_DEFAULT)
+            'test.AppendLine(" ,[ImpCustRefNo]")
+            test.AppendLine(" [SMKImpCode]='" & data.ImporterCode & "'")
+            test.AppendLine(" [SMKImpName]'" & data.ImporterName & "'")
+            test.AppendLine(" [SMKImpAddr]='" & data.ImporterAddressStreetAndNumberPObox & "'") '-> Form Inline Address
+            test.AppendLine(" [AGCustRefNo]='" & AG_REF_NO_DEFAULT & "'")
+            test.AppendLine(" [SMKAgentCode]='" & data.AgentCode & "'")
+            test.AppendLine(" [SMKAgentName]='" & data.AgentName & "'")
+            test.AppendLine(" [SMKAgentAddr]='" & data.AgentAddressStreetAndNumberPObox & "'") '-> Form Inline Address
+            test.AppendLine(" [SMKTransptMode]='" & data.ModeOfTransport & "'")
+            test.AppendLine(" [SMKImpDate]='" & FormValidDateTime(data.DateOfImport, "0000").ToString(DATETIME_FORMAT) & "'")
+            test.AppendLine(" [SMKVesselReg]='" & data.VesselRegistration & "'")
+            test.AppendLine(" [SMKVoyageNum]='" & data.VoyageNumber & "'")
+            test.AppendLine(" [SMKVesselName]='" & data.VesselName & "'")
+            test.AppendLine(" [SMKFlightNum]='" & data.FlightNumber & "'")
+            test.AppendLine(" [SMKFlightDate]='" & data.FlightDate & "'")
+            'test.AppendLine(" ,'" & data.Vehicle_Lorry_number & "'")
+            'test.AppendLine(" ,'" & data.Trailer_number & "'")
+            test.AppendLine(" [SMKImpPlace]='" & data.PlaceOfImport & "'")
+            test.AppendLine(" [SMKLoadPlace]='" & data.PlaceOfLoading & "'")
+            test.AppendLine(" [SMKTranshipmtPort]='" & data.PortOfTransshipment & "'")
+            test.AppendLine(" [SMKPayTo]='" & data.Invoice.PayTo & "'")
+            test.AppendLine(" [SMKInsurance]='" & data.Invoice.Insurance & "'")
+            test.AppendLine(" [SMKOthCharges]='" & data.Invoice.OtherCharges & "'")
+            test.AppendLine(" [SMKCIF]='" & data.Invoice.CIF & "'")
+            test.AppendLine(" [SMKFOB]='" & data.Invoice.FOB & "'")
+            test.AppendLine(" [SMKFreight]='" & data.Invoice.Freight & "'")
+            test.AppendLine(" [SMKGrossWeight]='" & item.GrossWeightInKGS & "'")
+            'test.AppendLine(" ,'" & data.number_of_Packages & "'")
+            'test.AppendLine(" ,'" & data.Type_of_Packages & "'")
+            'test.AppendLine(" ,'" & data.Measurement & "'")
+            test.AppendLine(" [SMKConsignmtNote]='" & data.ConsignmentNote & "'")
+            test.AppendLine(" [SMKGenGoodsDesc]='" & data.GeneralDescriptionOfGoods.Replace("'", "''") & "'")
+            test.AppendLine(" [SMKMarksCtnNum]='" & data.Marks & "'")
+
+            test.AppendLine(" [SMKManifestNum]='" & data.ManifestRegistrationNumber & "'")
+            'test.AppendLine(" ,'" & data.Import_Permit_number & "'")
+            'test.AppendLine(" ,'" & data.Import_Permit_number_2 & "'")
+            'test.AppendLine(" ,'" & data.Special_Treatement & "'")
+            'test.AppendLine(" ,'" & data.Total_Duty_Payable & "'")
+
+
+
+            test.AppendLine(" [SMKDeclarantICPP]='" & data.DeclarantICNumber & "'")
+            test.AppendLine(" [SMKDeclarantName]='" & data.DeclarantName & "'")
+            test.AppendLine(" [SMKDeclarantPost]='" & data.DeclarantStatus & "'")
+            'test.AppendLine(" ,[SMKReplyDataHead]")
+            'test.AppendLine(" ,[SMKReplyDatetime]")
+            'test.AppendLine(" ,[SMKReplyOfficer]")
+            'test.AppendLine(" ,[SMKReplyODesignt]")
+            'test.AppendLine(" ,[SMKReplyComments]")
+            'test.AppendLine(" ,[SMKReplyStatus]")
+            'test.AppendLine(" ,[SMKReplyAction]")
+            'test.AppendLine(" ,[SMKReplyApprRef]")
+            'test.AppendLine(" ,[SMKReplyRemarks]")
+            'test.AppendLine(" ,[AG_ID]")
+            'test.AppendLine(" ,[AGCode]")
+            'test.AppendLine(" ,[SMKConsRefNo]")
+
+            'test.AppendLine(" ,'" & data.Remarks_and_Accident & "'") ' Remarks_and_Accident
+            'test.AppendLine(" ,[SMKAccident]")
+
+            'test.AppendLine(" ,'" & data.Purpose_of_import & "'")
+            test.AppendLine(" [EP_ID]='" & EP_ID_DEFAULT & "'")
+            'test.AppendLine(" ,'" & data.Warehouse_Code & "'")
+            'test.AppendLine(" ,'" & data.Warehouse_Name & "'")
+            'test.AppendLine(" ,'" & data.Warehouse_Address & "'") '-> Form Inline Address
+
+            test.AppendLine(" [PStatus]='N'")
+            test.AppendLine(" [RStatus]='2'")
+            test.AppendLine(" [LMBY]='" & UPDATEDBY & "'")
+            test.AppendLine(" [LMDT]='" & UPDATEDDATE & "'")
+            test.AppendLine(" [UCUSTOM]='Y'")
+
+
+            '====================================================================================
             Try
                 'MsgBox(sql.ToString)
                 'nEventLOG(sql.ToString)
@@ -352,6 +476,8 @@
             Catch ex As Exception
                 Throw ex
             End Try
+
+            If result > 0 Then InsertParty(data)
 
         Next
 

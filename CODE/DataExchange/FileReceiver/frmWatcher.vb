@@ -347,6 +347,8 @@ Public Class frmWatcher
 
     Private Function Arr2Object(ByVal arrString() As String) As DataExchangeClass.FSQDConsAppReq.FSQDDeclaration
 
+        Dim Header As New DataExchangeClass.Header.NewHeader
+
         Dim FSQD As New DataExchangeClass.FSQDConsAppReq.FSQDDeclaration
         Dim InvoiceItem As DataExchangeClass.FSQDConsAppReq.InvoiceItem = Nothing
         Dim Permit As DataExchangeClass.FSQDConsAppReq.Permit = Nothing
@@ -364,7 +366,15 @@ Public Class frmWatcher
                 If (item.IndexOf("FSQDConsAppReq") >= 0) And (currTag = String.Empty) Then
                     currTag = "FSQDConsAppReq"
                     validTag &= currTag
-                ElseIf (item.IndexOf("Body") >= 0) And (currTag = "FSQDConsAppReq") Then
+                    '
+                ElseIf (item.IndexOf("Header") >= 0) And (currTag = "FSQDConsAppReq") Then
+                    currTag = "Header"
+                    validTag &= ">" & currTag
+                ElseIf (item.IndexOf("Party") >= 0) And (currTag = "Header") Then
+                    currTag = "Party"
+                    validTag &= ">" & currTag
+                    '
+                ElseIf (item.IndexOf("Body") >= 0) And (currTag = "Party") Then
                     currTag = "Body"
                     validTag &= ">" & currTag
                 ElseIf (item.IndexOf("FSQDDeclaration") >= 0) And (currTag = "Body") Then
@@ -408,322 +418,371 @@ Public Class frmWatcher
                     Attachment = New DataExchangeClass.FSQDConsAppReq.Attachment
                 Else
 
-                    'Console.WriteLine(validTag)
+                    Select Case currTag
+                        Case "Party"
+                            counter += 1
+                            Dim key As String = String.Empty
+                            Select Case counter
+                                Case 1
+                                    key = "party_code"
+                                    Header.party_code = item
+                                Case 2
+                                    key = "party_location"
+                                    Header.party_location = item
+                                Case 3
+                                    key = "party_name"
+                                    Header.party_name = item
+                                Case 4
+                                    key = "userName"
+                                    Header.userName = item
+                                Case 5
+                                    key = "password"
+                                    Header.password = item
+                                Case 6
+                                    key = "securityToken"
+                                    Header.securityToken = item
+                                Case 7
+                                    key = "txnDateTime"
+                                    Header.txnDateTime = item
+                                Case 8
+                                    key = "batchID"
+                                    Header.batchID = item
+                                Case 9
+                                    key = "refBatchID"
+                                    Header.refBatchID = item
+                                Case 10
+                                    key = "fileName"
+                                    Header.fileName = item
+                                Case 11
+                                    key = "currentDateTime"
+                                    Header.currentDateTime = item
+                                Case 12
+                                    key = "transportType"
+                                    Header.transportType = item
+                                Case 13
+                                    key = "priority"
+                                    Header.priority = item
+                                    'Case 14
+                                    '    key = "btsPartyName"
+                                    '    Header.btsPartyName = item
+                                Case 14
+                                    key = "messageType"
+                                    Header.messageType = item
+                                Case 15
+                                    key = "requestType"
+                                    Header.requestType = item
 
-                    If validTag = "FSQDConsAppReq>Body>FSQDDeclaration" Then
-                        Select Case currTag
-                            Case "FSQDDeclaration"
-                                counter += 1
-                                Dim key As String = String.Empty
+                                    'LAST ITEM
+                                    counter = 0 'RESET COUNTER
 
-                                Select Case counter
-                                    Case 1 'MCKey
-                                        key = "MCKey"
-                                        FSQD.MCKey = item
-                                    Case 2 'MCValue
-                                        key = "MCValue"
-                                        FSQD.MCValue = item
-                                    Case 3 'CustomFormNumber
-                                        key = "CustomFormNumber"
-                                        FSQD.CustomFormNumber = item
-                                    Case 4 'TransactionType
-                                        key = "TransactionType"
-                                        FSQD.TransactionType = item
-                                    Case 5 'RegistrationDate
-                                        key = "RegistrationDate"
-                                        FSQD.RegistrationDate = item
-                                    Case 6 'RegistrationTime
-                                        key = "RegistrationTime"
-                                        FSQD.RegistrationTime = item
-                                    Case 7 'DeclarantName
-                                        key = "DeclarantName"
-                                        FSQD.DeclarantName = item
-                                    Case 8 'DeclarantICNumber
-                                        key = "DeclarantICNumber"
-                                        FSQD.DeclarantICNumber = item
-                                    Case 9 'DeclarantStatus
-                                        key = "DeclarantStatus"
-                                        FSQD.DeclarantStatus = item
-                                    Case 10 'TotalNumberOfItem
-                                        key = "TotalNumberOfItem"
-                                        FSQD.TotalNumberOfItem = item
-                                    Case 11 'ExporterName
-                                        key = "ExporterName"
-                                        FSQD.ExporterName = item
-                                    Case 12 'ExporterAddressStreetAndNumberPObox
-                                        key = "ExporterAddressStreetAndNumberPObox"
-                                        FSQD.ExporterAddressStreetAndNumberPObox = item
-                                    Case 13 'ExporterAddressCountry
-                                        key = "ExporterAddressCountry"
-                                        FSQD.ExporterAddressCountry = item
-                                    Case 14 'ImporterCode
-                                        key = "ImporterCode"
-                                        FSQD.ImporterCode = item
-                                    Case 15 'ImporterName
-                                        key = "ImporterName"
-                                        FSQD.ImporterName = item
-                                    Case 16 'ImporterAddressStreetAndNumberPObox
-                                        key = "ImporterAddressStreetAndNumberPObox"
-                                        FSQD.ImporterAddressStreetAndNumberPObox = item
-                                    Case 17 'ImporterAddressCity
-                                        key = "ImporterAddressCity"
-                                        FSQD.ImporterAddressCity = item
-                                    Case 18 'ImporterAddressCountry
-                                        key = "ImporterAddressCountry"
-                                        FSQD.ImporterAddressCountry = item
-                                    Case 19 'ImporterAddressCountrySubEntityName
-                                        key = "ImporterAddressCountrySubEntityName"
-                                        FSQD.ImporterAddressCountrySubEntityName = item
-                                    Case 20 'ImporterAddressPostcodeIdentification
-                                        key = "ImporterAddressPostcodeIdentification"
-                                        FSQD.ImporterAddressPostcodeIdentification = item
+                                Case 17
+                                    Console.Write(" " & counter)
+                            End Select
+                        Case "FSQDDeclaration"
+                            counter += 1
+                            Dim key As String = String.Empty
 
-                                    Case 21 'AgentCode
-                                        key = "AgentCode"
-                                        FSQD.AgentCode = item
-                                    Case 21 'AgentName 'HACKS : Missing AgnetCode
-                                        key = "AgentName"
-                                        FSQD.AgentCode = item
+                            Select Case counter
+                                Case 1 'MCKey
+                                    key = "MCKey"
+                                    FSQD.MCKey = item
+                                Case 2 'MCValue
+                                    key = "MCValue"
+                                    FSQD.MCValue = item
+                                Case 3 'CustomFormNumber
+                                    key = "CustomFormNumber"
+                                    FSQD.CustomFormNumber = item
+                                Case 4 'TransactionType
+                                    key = "TransactionType"
+                                    FSQD.TransactionType = item
+                                Case 5 'RegistrationDate
+                                    key = "RegistrationDate"
+                                    FSQD.RegistrationDate = item
+                                Case 6 'RegistrationTime
+                                    key = "RegistrationTime"
+                                    FSQD.RegistrationTime = item
+                                Case 7 'DeclarantName
+                                    key = "DeclarantName"
+                                    FSQD.DeclarantName = item
+                                Case 8 'DeclarantICNumber
+                                    key = "DeclarantICNumber"
+                                    FSQD.DeclarantICNumber = item
+                                Case 9 'DeclarantStatus
+                                    key = "DeclarantStatus"
+                                    FSQD.DeclarantStatus = item
+                                Case 10 'TotalNumberOfItem
+                                    key = "TotalNumberOfItem"
+                                    FSQD.TotalNumberOfItem = item
+                                Case 11 'ExporterName
+                                    key = "ExporterName"
+                                    FSQD.ExporterName = item
+                                Case 12 'ExporterAddressStreetAndNumberPObox
+                                    key = "ExporterAddressStreetAndNumberPObox"
+                                    FSQD.ExporterAddressStreetAndNumberPObox = item
+                                Case 13 'ExporterAddressCountry
+                                    key = "ExporterAddressCountry"
+                                    FSQD.ExporterAddressCountry = item
+                                Case 14 'ImporterCode
+                                    key = "ImporterCode"
+                                    FSQD.ImporterCode = item
+                                Case 15 'ImporterName
+                                    key = "ImporterName"
+                                    FSQD.ImporterName = item
+                                Case 16 'ImporterAddressStreetAndNumberPObox
+                                    key = "ImporterAddressStreetAndNumberPObox"
+                                    FSQD.ImporterAddressStreetAndNumberPObox = item
+                                Case 17 'ImporterAddressCity
+                                    key = "ImporterAddressCity"
+                                    FSQD.ImporterAddressCity = item
+                                Case 18 'ImporterAddressCountry
+                                    key = "ImporterAddressCountry"
+                                    FSQD.ImporterAddressCountry = item
+                                Case 19 'ImporterAddressCountrySubEntityName
+                                    key = "ImporterAddressCountrySubEntityName"
+                                    FSQD.ImporterAddressCountrySubEntityName = item
+                                Case 20 'ImporterAddressPostcodeIdentification
+                                    key = "ImporterAddressPostcodeIdentification"
+                                    FSQD.ImporterAddressPostcodeIdentification = item
+                                Case 21 'AgentCode
+                                    key = "AgentCode"
+                                    FSQD.AgentCode = item
+                                Case 22 'AgentName
+                                    key = "AgentName"
+                                    FSQD.AgentName = item
+                                Case 23 'AgentAddressStreetAndNumberPObox
+                                    key = "AgentAddressStreetAndNumberPObox"
+                                    FSQD.AgentAddressStreetAndNumberPObox = item
+                                Case 24 'AgentAddressCity
+                                    key = "AgentAddressCity"
+                                    FSQD.AgentAddressCity = item
+                                Case 25 'AgentAddressCountry
+                                    key = "AgentAddressCountry"
+                                    FSQD.AgentAddressCountry = item
+                                Case 26 'AgentAddressCountrySubEntityName
+                                    key = "AgentAddressCountrySubEntityName"
+                                    FSQD.AgentAddressCountrySubEntityName = item
+                                Case 27 'AgentAddressPostcodeIdentification
+                                    key = "AgentAddressPostcodeIdentification"
+                                    FSQD.AgentAddressPostcodeIdentification = item
+                                Case 28 'ConsignmentNote
+                                    key = "ConsignmentNote"
+                                    FSQD.ConsignmentNote = item
+                                Case 29 'GeneralDescriptionOfGoods
+                                    key = "GeneralDescriptionOfGoods"
+                                    FSQD.GeneralDescriptionOfGoods = item
+                                Case 30 'Marks
+                                    key = "Marks"
+                                    FSQD.Marks = item
+                                Case 31 'ManifestRegistrationNumber
+                                    key = "ManifestRegistrationNumber"
+                                    FSQD.ManifestRegistrationNumber = item
+                                Case 32 'ModeOfTransport
+                                    key = "ModeOfTransport"
+                                    FSQD.ModeOfTransport = item
+                                Case 33 'DateOfImport
+                                    key = "DateOfImport"
+                                    FSQD.DateOfImport = item
+                                Case 34 'VesselRegistration
+                                    key = "VesselRegistration"
+                                    FSQD.VesselRegistration = item
+                                Case 35 'VoyageNumber
+                                    key = "VoyageNumber"
+                                    FSQD.VoyageNumber = item
+                                Case 36 'VesselName
+                                    key = "VesselName"
+                                    FSQD.VesselName = item
+                                Case 37 'FlightNumber
+                                    key = "FlightNumber"
+                                    FSQD.FlightNumber = item
+                                Case 38 'FlightDate
+                                    key = "FlightDate"
+                                    FSQD.FlightDate = item
+                                Case 39 'PlaceOfImport
+                                    key = "PlaceOfImport"
+                                    FSQD.PlaceOfImport = item
+                                Case 40 'PlaceOfLoading
+                                    key = "PlaceOfLoading"
+                                    FSQD.PlaceOfLoading = item
+                                Case 41 'PortOfTransshipment
+                                    key = "PortOfTransshipment"
+                                    FSQD.PortOfTransshipment = item
 
-                                    Case 23 'AgentAddressStreetAndNumberPObox
-                                        key = "AgentAddressStreetAndNumberPObox"
-                                        FSQD.AgentAddressStreetAndNumberPObox = item
-                                    Case 24 'AgentAddressCity
-                                        key = "AgentAddressCity"
-                                        FSQD.AgentAddressCity = item
-                                    Case 25 'AgentAddressCountry
-                                        key = "AgentAddressCountry"
-                                        FSQD.AgentAddressCountry = item
-                                    Case 26 'AgentAddressCountrySubEntityName
-                                        key = "AgentAddressCountrySubEntityName"
-                                        FSQD.AgentAddressCountrySubEntityName = item
-                                    Case 27 'AgentAddressPostcodeIdentification
-                                        key = "AgentAddressPostcodeIdentification"
-                                        FSQD.AgentAddressPostcodeIdentification = item
-                                    Case 28 'ConsignmentNote
-                                        key = "ConsignmentNote"
-                                        FSQD.ConsignmentNote = item
-                                    Case 29 'GeneralDescriptionOfGoods
-                                        key = "GeneralDescriptionOfGoods"
-                                        FSQD.GeneralDescriptionOfGoods = item
-                                    Case 30 'Marks
-                                        key = "Marks"
-                                        FSQD.Marks = item
-                                    Case 31 'ManifestRegistrationNumber
-                                        key = "ManifestRegistrationNumber"
-                                        FSQD.ManifestRegistrationNumber = item
-                                    Case 32 'ModeOfTransport
-                                        key = "ModeOfTransport"
-                                        FSQD.ModeOfTransport = item
-                                    Case 33 'DateOfImport
-                                        key = "DateOfImport"
-                                        FSQD.DateOfImport = item
-                                    Case 34 'VesselRegistration
-                                        key = "VesselRegistration"
-                                        FSQD.VesselRegistration = item
-                                    Case 35 'VoyageNumber
-                                        key = "VoyageNumber"
-                                        FSQD.VoyageNumber = item
-                                    Case 36 'VesselName
-                                        key = "VesselName"
-                                        FSQD.VesselName = item
-                                    Case 37 'FlightNumber
-                                        key = "FlightNumber"
-                                        FSQD.FlightNumber = item
-                                    Case 38 'FlightDate
-                                        key = "FlightDate"
-                                        FSQD.FlightDate = item
-                                    Case 39 'PlaceOfImport
-                                        key = "PlaceOfImport"
-                                        FSQD.PlaceOfImport = item
-                                    Case 40 'PlaceOfLoading
-                                        key = "PlaceOfLoading"
-                                        FSQD.PlaceOfLoading = item
-                                    Case 41 'PortOfTransshipment
-                                        key = "PortOfTransshipment"
-                                        FSQD.PortOfTransshipment = item
+                            End Select
 
-                                End Select
+                            'Console.WriteLine(currTag & vbTab & counter & " : " & item)
+                            Console.WriteLine(key & " : " & item)
 
-                                'Console.WriteLine(currTag & vbTab & counter & " : " & item)
-                                Console.WriteLine(key & " : " & item)
+                        Case "Invoice" ' GROUP TAG
+                            counter += 1
+                            Dim key As String = String.Empty
+                            Select Case counter
+                                Case 1 'PayTo
+                                    key = "PayTo"
+                                    FSQD.Invoice.PayTo = item
+                                Case 2 'Insurance
+                                    key = "Insurance"
+                                    FSQD.Invoice.Insurance = item
+                                Case 3 'OtherCharges
+                                    key = "OtherCharges"
+                                    FSQD.Invoice.OtherCharges = item
+                                Case 4 'CIF
+                                    key = "CIF"
+                                    FSQD.Invoice.CIF = item
+                                Case 5 'FOB
+                                    key = "FOB"
+                                    FSQD.Invoice.FOB = item
+                                Case 6 'Freight
+                                    key = "Freight"
+                                    FSQD.Invoice.Freight = item
+                                Case 7 'TotalDutyPayable
+                                    key = "TotalDutyPayable"
+                                    FSQD.Invoice.TotalDutyPayable = item
 
-                            Case "Invoice" ' GROUP TAG
-                                counter += 1
-                                Dim key As String = String.Empty
-                                Select Case counter
-                                    Case 1 'PayTo
-                                        key = "PayTo"
-                                        FSQD.Invoice.PayTo = item
-                                    Case 2 'Insurance
-                                        key = "Insurance"
-                                        FSQD.Invoice.Insurance = item
-                                    Case 3 'OtherCharges
-                                        key = "OtherCharges"
-                                        FSQD.Invoice.OtherCharges = item
-                                    Case 4 'CIF
-                                        key = "CIF"
-                                        FSQD.Invoice.CIF = item
-                                    Case 5 'FOB
-                                        key = "FOB"
-                                        FSQD.Invoice.FOB = item
-                                    Case 6 'Freight
-                                        key = "Freight"
-                                        FSQD.Invoice.Freight = item
-                                    Case 7 'TotalDutyPayable
-                                        key = "TotalDutyPayable"
-                                        FSQD.Invoice.TotalDutyPayable = item
+                            End Select
+                            'Console.WriteLine(currTag & " : " & item)
+                            Console.WriteLine(key & " : " & item)
 
-                                End Select
-                                'Console.WriteLine(currTag & " : " & item)
-                                Console.WriteLine(key & " : " & item)
+                        Case "InvoiceItems"
+                            Console.WriteLine(currTag & " : " & item)
+                        Case "InvoiceItem"
+                            counter += 1
+                            Dim key As String = String.Empty
+                            Select Case counter
+                                Case 1 'ItemNumber
+                                    key = "ItemNumber"
+                                    InvoiceItem.ItemNumber = item
+                                Case 2 'ItemDescription
+                                    key = "ItemDescription"
+                                    InvoiceItem.ItemDescription = item
+                                Case 3 'HSCode
+                                    key = "HSCode"
+                                    InvoiceItem.HSCode = item
+                                Case 4 'GrossWeightInKGS
+                                    key = "GrossWeightInKGS"
+                                    InvoiceItem.GrossWeightInKGS = item
+                                Case 5 'DeclaredQuantity
+                                    key = "DeclaredQuantity"
+                                    InvoiceItem.DeclaredQuantity = item
+                                Case 6 'DeclaredUnit
+                                    key = "DeclaredUnit"
+                                    InvoiceItem.DeclaredUnit = item
+                                Case 7 'UnitPrice
+                                    key = "UnitPrice"
+                                    InvoiceItem.UnitPrice = item
+                                Case 8 'TotalPrice
+                                    key = "TotalPrice"
+                                    InvoiceItem.TotalPrice = item
+                                Case 9 'DutyAmount
+                                    key = "DutyAmount"
+                                    InvoiceItem.DutyAmount = item
+                                Case 10 'CountryOfOrigin
+                                    key = "CountryOfOrigin"
+                                    InvoiceItem.CountryOfOrigin = item
+                                Case 11 'CommodityStatus
+                                    key = "CommodityStatus"
+                                    InvoiceItem.CommodityStatus = IIf(item = DataExchangeClass.FSQDConsAppReq.InvoiceItem.enumCommodityStatus.D.ToString, _
+                                                                      DataExchangeClass.FSQDConsAppReq.InvoiceItem.enumCommodityStatus.D, _
+                                                                      DataExchangeClass.FSQDConsAppReq.InvoiceItem.enumCommodityStatus.ND)
 
-                            Case "InvoiceItems"
-                                Console.WriteLine(currTag & " : " & item)
-                            Case "InvoiceItem"
-                                counter += 1
-                                Dim key As String = String.Empty
-                                Select Case counter
-                                    Case 1 'ItemNumber
-                                        key = "ItemNumber"
-                                        InvoiceItem.ItemNumber = item
-                                    Case 2 'ItemDescription
-                                        key = "ItemDescription"
-                                        InvoiceItem.ItemDescription = item
-                                    Case 3 'HSCode
-                                        key = "HSCode"
-                                        InvoiceItem.HSCode = item
-                                    Case 4 'GrossWeightInKGS
-                                        key = "GrossWeightInKGS"
-                                        InvoiceItem.GrossWeightInKGS = item
-                                    Case 5 'DeclaredQuantity
-                                        key = "DeclaredQuantity"
-                                        InvoiceItem.DeclaredQuantity = item
-                                    Case 6 'DeclaredUnit
-                                        key = "DeclaredUnit"
-                                        InvoiceItem.DeclaredUnit = item
-                                    Case 7 'UnitPrice
-                                        key = "UnitPrice"
-                                        InvoiceItem.UnitPrice = item
-                                    Case 8 'TotalPrice
-                                        key = "TotalPrice"
-                                        InvoiceItem.TotalPrice = item
-                                    Case 9 'DutyAmount
-                                        key = "DutyAmount"
-                                        InvoiceItem.DutyAmount = item
-                                    Case 10 'CountryOfOrigin
-                                        key = "CountryOfOrigin"
-                                        InvoiceItem.CountryOfOrigin = item
-                                    Case 11 'CommodityStatus
-                                        key = "CommodityStatus"
-                                        InvoiceItem.CommodityStatus = IIf(item = DataExchangeClass.FSQDConsAppReq.InvoiceItem.enumCommodityStatus.D.ToString, _
-                                                                          DataExchangeClass.FSQDConsAppReq.InvoiceItem.enumCommodityStatus.D, _
-                                                                          DataExchangeClass.FSQDConsAppReq.InvoiceItem.enumCommodityStatus.ND)
+                                    FSQD.Invoice.InvoiceItems.Add(InvoiceItem)
+                            End Select
+                            'Console.WriteLine(currTag & " : " & item)
+                            Console.WriteLine(key & " : " & item)
 
-                                        FSQD.Invoice.InvoiceItems.Add(InvoiceItem)
-                                End Select
-                                'Console.WriteLine(currTag & " : " & item)
-                                Console.WriteLine(key & " : " & item)
+                        Case "Permits" ' GROUP TAG
+                            Console.WriteLine(currTag & " : " & item)
+                        Case "Permit"
+                            counter += 1
+                            Dim key As String = String.Empty
+                            Select Case counter
+                                Case 1 'ImportPermitNumber
+                                    key = "ImportPermitNumber"
+                                    Permit.ImportPermitNumber = item
 
-                            Case "Permits" ' GROUP TAG
-                                Console.WriteLine(currTag & " : " & item)
-                            Case "Permit"
-                                counter += 1
-                                Dim key As String = String.Empty
-                                Select Case counter
-                                    Case 1 'ImportPermitNumber
-                                        key = "ImportPermitNumber"
-                                        Permit.ImportPermitNumber = item
+                                    InvoiceItem.Permits.Add(Permit)
 
-                                        InvoiceItem.Permits.Add(Permit)
+                                Case 2
+                                Case 3
+                                Case 4
+                                Case 5
+                            End Select
+                            'Console.WriteLine(currTag & " : " & item)
+                            Console.WriteLine(key & " : " & item)
 
-                                    Case 2
-                                    Case 3
-                                    Case 4
-                                    Case 5
-                                End Select
-                                'Console.WriteLine(currTag & " : " & item)
-                                Console.WriteLine(key & " : " & item)
+                        Case "Specifications" ' GROUP TAG
+                            Console.WriteLine(currTag & " : " & item)
+                        Case "Specification"
+                            counter += 1
+                            Dim key As String = String.Empty
+                            Select Case counter
+                                Case 1 'PurposeOfImport
+                                    key = "PurposeOfImport"
+                                    Spec.PurposeOfImport = item
+                                Case 2 'WarehouseCode
+                                    key = "WarehouseCode"
+                                    Spec.WarehouseCode = item
+                                Case 3 'WarehouseName
+                                    key = "WarehouseName"
+                                    Spec.WarehouseName = item
+                                Case 4 'WarehouseAddress
+                                    key = "WarehouseAddress"
+                                    Spec.WarehouseAddress = item
+                                Case 5 'ExporterCode
+                                    key = "ExporterCode"
+                                    Spec.ExporterCode = item
+                                Case 6 'FoodCode
+                                    key = "FoodCode"
+                                    Spec.FoodCode = item
+                                Case 7 'Brand
+                                    key = "Brand"
+                                    Spec.Brand = item
+                                Case 8 'DateOfProduction
+                                    key = "DateOfProduction"
+                                    Spec.DateOfProduction = item
+                                Case 9 'DateOfExpire
+                                    key = "DateOfExpire"
+                                    Spec.DateOfExpire = item
+                                Case 10 'Treatment
+                                    key = "Treatment"
+                                    Spec.Treatment = item
+                                Case 11 'ManufacturerCode
+                                    key = "ManufacturerCode"
+                                    Spec.ManufacturerCode = item
+                                Case 12 'ManufacturerName
+                                    key = "ManufacturerName"
+                                    Spec.ManufacturerName = item
+                                Case 13 'ManufacturerAddress
+                                    key = "ManufacturerAddress"
+                                    Spec.ManufacturerAddress = item
+                                Case 14 'PreImportRegistrationNo
+                                    key = "PreImportRegistrationNo"
+                                    Spec.PreImportRegistrationNo = item
 
-                            Case "Specifications" ' GROUP TAG
-                                Console.WriteLine(currTag & " : " & item)
-                            Case "Specification"
-                                counter += 1
-                                Dim key As String = String.Empty
-                                Select Case counter
-                                    Case 1 'PurposeOfImport
-                                        key = "PurposeOfImport"
-                                        Spec.PurposeOfImport = item
-                                    Case 2 'WarehouseCode
-                                        key = "WarehouseCode"
-                                        Spec.WarehouseCode = item
-                                    Case 3 'WarehouseName
-                                        key = "WarehouseName"
-                                        Spec.WarehouseName = item
-                                    Case 4 'WarehouseAddress
-                                        key = "WarehouseAddress"
-                                        Spec.WarehouseAddress = item
-                                    Case 5 'ExporterCode
-                                        key = "ExporterCode"
-                                        Spec.ExporterCode = item
-                                    Case 6 'FoodCode
-                                        key = "FoodCode"
-                                        Spec.FoodCode = item
-                                    Case 7 'Brand
-                                        key = "Brand"
-                                        Spec.Brand = item
-                                    Case 8 'DateOfProduction
-                                        key = "DateOfProduction"
-                                        Spec.DateOfProduction = item
-                                    Case 9 'DateOfExpire
-                                        key = "DateOfExpire"
-                                        Spec.DateOfExpire = item
-                                    Case 10 'Treatment
-                                        key = "Treatment"
-                                        Spec.Treatment = item
-                                    Case 11 'ManufacturerCode
-                                        key = "ManufacturerCode"
-                                        Spec.ManufacturerCode = item
-                                    Case 12 'ManufacturerName
-                                        key = "ManufacturerName"
-                                        Spec.ManufacturerName = item
-                                    Case 13 'ManufacturerAddress
-                                        key = "ManufacturerAddress"
-                                        Spec.ManufacturerAddress = item
-                                    Case 14 'PreImportRegistrationNo
-                                        key = "PreImportRegistrationNo"
-                                        Spec.PreImportRegistrationNo = item
+                                    InvoiceItem.Specifications.Add(Spec)
 
-                                        InvoiceItem.Specifications.Add(Spec)
+                            End Select
+                            'Console.WriteLine(currTag & " : " & item)
+                            Console.WriteLine(key & " : " & item)
 
-                                End Select
-                                'Console.WriteLine(currTag & " : " & item)
-                                Console.WriteLine(key & " : " & item)
-
-                            Case "Attachments" ' GROUP TAG
-                                Console.WriteLine(currTag & " : " & item)
-                            Case "Attachment"
-                                counter += 1
-                                Dim key As String = String.Empty
-                                Select Case counter
-                                    Case 1 'FilePath
-                                        key = "FilePath"
-                                        Attachment.FilePath = item
-                                    Case 2 'FileContent
-                                        key = "FileContent"
-                                        Attachment.FileContent = item
-                                        FSQD.Attachments.Add(Attachment)
-                                End Select
-                                'Console.WriteLine(currTag & vbTab & attachementCount & " : " & item)
-                                Console.WriteLine(key & " : " & item)
-                            Case Else
-                                Console.WriteLine("X" & currTag & " : " & item)
-                        End Select
-                    Else
-                        Throw New Exception("Invalid FSQDConsAppReq Text")
-                    End If
-
-
+                        Case "Attachments" ' GROUP TAG
+                            Console.WriteLine(currTag & " : " & item)
+                        Case "Attachment"
+                            counter += 1
+                            Dim key As String = String.Empty
+                            Select Case counter
+                                Case 1 'FilePath
+                                    key = "FilePath"
+                                    Attachment.FilePath = item
+                                Case 2 'FileContent
+                                    key = "FileContent"
+                                    Attachment.FileContent = item
+                                    FSQD.Attachments.Add(Attachment)
+                            End Select
+                            'Console.WriteLine(currTag & vbTab & attachementCount & " : " & item)
+                            Console.WriteLine(key & " : " & item)
+                        Case Else
+                            Console.WriteLine("X" & currTag & " : " & item)
+                    End Select
 
                 End If
 
@@ -734,12 +793,15 @@ Public Class frmWatcher
             Next
 
         Catch ex As Exception
-            lstMsgs(Now.ToString(LOGTIMEFORMAT) & INDENT & ex.Message)
+            Console.WriteLine(ex.Message)
         End Try
+
+        FSQD.HeaderObj = Header
 
         Return FSQD
 
     End Function
+
 
     Private Sub ReadCAFile_OLD(ByVal FILE_NAME As String)
         'lstMsgs(FILE_NAME, Me.ListBox1)

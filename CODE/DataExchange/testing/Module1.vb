@@ -30,9 +30,9 @@ Module Module1
 
         'Testing()
 
-        Reading()
+        'Reading()
 
-        'Writing(WritingOption.FSQDDeclarationResponse)
+        Writing(WritingOption.FSQDDeclarationResponse)
 
         HappyEnd() 'Wait input to end
     End Sub
@@ -87,13 +87,34 @@ Module Module1
         Try
 
             InitializeDummyData(Writing)
-            Dim lineIndent As String = StrDup(2, " ")
+            Dim lineIndent As String = vbTab 'StrDup(2, " ")
             Dim str As New System.Text.StringBuilder
+
+            Dim g As Guid = Guid.NewGuid()
 
             Select Case Writing
                 Case WritingOption.FSQDDeclarationResponse
                     With dummyDataCAb
                         str.AppendLine("FSQDConsAppRes:")
+                        str.AppendLine("Header:")
+
+                        str.AppendLine("<empty>") '1
+                        str.AppendLine("<empty>") '2
+                        str.AppendLine("<empty>") '3
+                        str.AppendLine("<empty>") '4
+                        str.AppendLine("<empty>") '5
+                        str.AppendLine("<empty>") '6
+                        str.AppendLine("<empty>") '7
+                        str.AppendLine(g.ToString.ToUpper) 'Guid / other unique identifier per file
+                        str.AppendLine("320AE4CA-17DF-495E-B402-A789D278C33C") 'refers to previous file batchID
+                        str.AppendLine("<empty>")
+                        str.AppendLine(Now.ToString("yyyy-MM-ddTHH:mm:ss")) 'yyyyMMddTHHmmss
+                        str.AppendLine("<empty>")
+                        str.AppendLine(False)
+                        str.AppendLine("<empty>")
+                        str.AppendLine("FSQDConsAppRes")
+                        str.AppendLine("RES")
+
                         str.AppendLine("Body:")
                         str.AppendLine("FSQDDeclarationResponse:")
                         str.AppendLine(lineIndent & "MCKey_" & .MCKey.ToString)
@@ -106,8 +127,10 @@ Module Module1
                         str.AppendLine("InvoiceItems:")
                         For Each item In .InvoiceItems
                             str.AppendLine("InvoiceItem:")
-                            str.AppendLine(lineIndent & item.ItemNumber)
+
                             str.AppendLine(lineIndent & item.HSCode)
+                            str.AppendLine(lineIndent & item.ItemNumber)
+
                             str.AppendLine(lineIndent & item.ApprovalStatus.ToString)
                             str.Append(lineIndent & item.ActionCode.ToString)
                         Next
@@ -140,6 +163,8 @@ Module Module1
             Console.Write(str.ToString())
 
             str.Replace(vbNewLine, "|")
+            str.Replace("<empty>", "")
+            str.Replace(vbTab, "")
 
             Dim fileName As String = String.Empty
             Select Case Writing
@@ -835,7 +860,7 @@ Module Module1
                                     FSQD.AgentCode = item
                                 Case 22 'AgentName
                                     key = "AgentName"
-                                    FSQD.AgentCode = item
+                                    FSQD.AgentName = item
                                 Case 23 'AgentAddressStreetAndNumberPObox
                                     key = "AgentAddressStreetAndNumberPObox"
                                     FSQD.AgentAddressStreetAndNumberPObox = item

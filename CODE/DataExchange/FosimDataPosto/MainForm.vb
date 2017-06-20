@@ -174,6 +174,125 @@ Public Class MainForm
         GC.Collect()
     End Sub
 
+    Public Enum WritingOption
+        FSQDDeclarationResponse
+        FSQDFoodCodeMaster
+    End Enum
+
+    Function GenerateTextFile(ByVal data As Object, ByVal ServiceCode As String, Optional isResponse As Boolean = False) As String
+        Dim FilenameStr As String = String.Empty
+
+        Dim Writing As WritingOption
+        If ServiceCode = "FC" Then
+            Writing = WritingOption.FSQDFoodCodeMaster
+        Else
+            Writing = WritingOption.FSQDDeclarationResponse
+        End If
+
+        Try
+            Dim lineIndent As String = vbTab 'StrDup(2, " ")
+            Dim str As New System.Text.StringBuilder
+
+            Dim g As Guid = Guid.NewGuid()
+
+            Select Case Writing
+                Case WritingOption.FSQDDeclarationResponse
+                    With dummyDataCAb
+                        str.AppendLine("FSQDConsAppRes:")
+                        str.AppendLine("Header:")
+
+                        str.AppendLine("<empty>") '1
+                        str.AppendLine("<empty>") '2
+                        str.AppendLine("<empty>") '3
+                        str.AppendLine("<empty>") '4
+                        str.AppendLine("<empty>") '5
+                        str.AppendLine("<empty>") '6
+                        str.AppendLine("<empty>") '7
+                        str.AppendLine(g.ToString.ToUpper) 'Guid / other unique identifier per file
+                        str.AppendLine("320AE4CA-17DF-495E-B402-A789D278C33C") 'refers to previous file batchID
+                        str.AppendLine("<empty>")
+                        str.AppendLine(Now.ToString("yyyy-MM-ddTHH:mm:ss")) 'yyyyMMddTHHmmss
+                        str.AppendLine("<empty>")
+                        str.AppendLine(False)
+                        str.AppendLine("<empty>")
+                        str.AppendLine("FSQDConsAppRes")
+                        str.AppendLine("RES")
+
+                        str.AppendLine("Body:")
+                        str.AppendLine("FSQDDeclarationResponse:")
+                        str.AppendLine(lineIndent & "MCKey_" & .MCKey.ToString)
+                        str.AppendLine(lineIndent & "MCValue_" & .MCValue.ToString)
+
+                        str.AppendLine(lineIndent & .CustomRegistrationNumber)
+                        str.AppendLine(lineIndent & .CommentFromFQC)
+                        str.AppendLine(lineIndent & .ProcessDate)
+
+                        str.AppendLine("InvoiceItems:")
+                        For Each item In .InvoiceItems
+                            str.AppendLine("InvoiceItem:")
+
+                            str.AppendLine(lineIndent & item.HSCode)
+                            str.AppendLine(lineIndent & item.ItemNumber)
+
+                            str.AppendLine(lineIndent & item.ApprovalStatus.ToString)
+                            str.Append(lineIndent & item.ActionCode.ToString)
+                        Next
+
+                    End With
+
+                Case WritingOption.FSQDFoodCodeMaster
+                    With dummyDataFCb
+                        str.AppendLine("FSQDFoodCodeMaster:")
+                        str.AppendLine("Body:")
+                        str.AppendLine("FoodCodeMaster:")
+                        For Each item In .Body
+                            str.AppendLine("FoodCode:")
+                            With item.FoodCode
+
+                                str.AppendLine(lineIndent & .FCOCode)
+                                str.AppendLine(lineIndent & .FCODescription)
+                                str.AppendLine(lineIndent & .RStatus)
+                                str.AppendLine(lineIndent & .Category)
+                                str.Append(lineIndent & .ProductType)
+
+                            End With
+
+                        Next
+
+                    End With
+
+            End Select
+
+            Console.Write(str.ToString())
+
+            str.Replace(vbNewLine, "|")
+            str.Replace("<empty>", "")
+            str.Replace(vbTab, "")
+
+            Select Case Writing
+                Case WritingOption.FSQDDeclarationResponse
+
+                    FilenameStr = AgencyName & "_" & "RESCA" & "_" & Now.ToString("yyyyMMddTHHmmss") & "_RES" & ".txt"
+
+                Case WritingOption.FSQDFoodCodeMaster
+
+                    FilenameStr = AgencyName & "_" & "FC" & "_" & Now.ToString("yyyyMMddTHHmmss") & ".txt"
+
+            End Select
+
+            If Not FilenameStr = String.Empty Then
+                Dim file As System.IO.StreamWriter
+                Dim path As String = My.Application.Info.DirectoryPath
+                file = My.Computer.FileSystem.OpenTextFileWriter(System.IO.Path.Combine(path, FilenameStr), False)
+                file.WriteLine(str.ToString())
+                file.Close()
+            End If
+        Catch ex As Exception
+            lstMsgs(ex.Message)
+        End Try
+        Return FilenameStr
+    End Function
+
 #End Region
 
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -182,6 +301,9 @@ Public Class MainForm
 
         Me.Text = WINDOWS_TEXT_TITLE
         ReadConfiguration()
+
+        RadioFTP.Checked = True
+        RadioWS.Enabled = False
 
     End Sub
 
@@ -271,10 +393,9 @@ Public Class MainForm
 
     End Function
 
-
-
     Private Sub InitializeDummyData()
 
+        '=============================================================================================================================
         'DataHeader	customreg	FQC	IMGLine	HScode	IMGCurrLvl	IMGFoodCode	LMBY	LMDT	IMHReplyDesign	IMGAGNotes	IMGPStatus	IMGStatusPurpose	IMHReplyRemarks
         'FQC001	K122015101004808	0709.60.1000 	3	NULL	5	V0103523	MOHD SUHAIMIE B. NOH	2015-01-21 19:57:23.647			R	R	Konsaimen diperiksa dan dilepaskan
         dummyDataCA = New DataExchangeClass.deprecating.ConsigmentApprovalResponse
@@ -301,7 +422,27 @@ Public Class MainForm
             .Approval_reference_no_2 = ""
 
         End With
+        '-------------------------------------------------------------------------------------------------------------------------------
+        dummyDataCAb = New DataExchangeClass.FSQDConsAppRes.FSQDDeclarationResponse
+        With dummyDataCAb
+            .MCKey = 0
+            .MCValue = 0
+            .CustomRegistrationNumber = "B1FE00169662015"
+            '.CommentFromFQC = "0709.60.1000"
+            .CommentFromFQC = "diperiksa dan dilepaskan"
+            .ProcessDate = "2017-05-12"
+            .InvoiceItems = New List(Of DataExchangeClass.FSQDConsAppRes.InvoiceItem)
+            Dim InvoiceItem As New DataExchangeClass.FSQDConsAppRes.InvoiceItem
+            With InvoiceItem
+                .ItemNumber = 1
+                .HSCode = "040410910"
+                .ApprovalStatus = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumApprovalStatus.R 'N is no more, R instead
+                .ActionCode = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumActionCode.R
+            End With
+            .InvoiceItems.Add(InvoiceItem)
+        End With
 
+        '=============================================================================================================================
         'FCOCode	FCODescription	HS_ID	RStatus	LMBY	LMDT
         'A0301001	Food Colouring Substance - Allura Red Ac (16035)	2413	2	ADMIN	2005-11-17 13:15:04.000
         dummyDataFC = New DataExchangeClass.deprecating.FoodCodeMaster
@@ -313,6 +454,22 @@ Public Class MainForm
             .LastModifiedBy = "ADMIN"
             .LastModifiedDate = "2005-11-14 14:31:29.727"
         End With
+        '-------------------------------------------------------------------------------------------------------------------------------
+        dummyDataFCb = New DataExchangeClass.FSQDFoodCodeMaster.FSQDFoodCodeMaster
+        With dummyDataFCb
+            .Body = New List(Of DataExchangeClass.FSQDFoodCodeMaster.FoodCodeMaster)
+            Dim FC As New DataExchangeClass.FSQDFoodCodeMaster.FoodCodeMaster
+            FC.FoodCode = New DataExchangeClass.FSQDFoodCodeMaster.FoodCode
+            With FC.FoodCode
+                .FCOCode = "A0301502"
+                .FCODescription = "Food Colouring Substance - Amaranth (16185)"
+                .RStatus = 2
+                .Category = Nothing
+                .ProductType = Nothing
+            End With
+            .Body.Add(FC)
+        End With
+        '=============================================================================================================================
 
     End Sub
 
