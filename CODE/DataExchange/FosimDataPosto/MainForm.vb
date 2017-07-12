@@ -107,12 +107,14 @@ Public Class MainForm
                 'The batch file will then upload into uCustoms sFTP Server for the use of the system.
                 '-------------------------------------------------------------------------------------------------
                 lstMsgs("Sending Consigment Approval Response Data to uCustom FTP Folder")
-                If CheckBoxDB.Checked Then
-                    tmpData = Nothing
-                    fileName = GenerateCVS(LoadCAData, "RESCA", True) 'from DB
-                Else
-                    fileName = GenerateCVS(dummyDataCA, "RESCA", True) '1 dummy
-                End If
+                'If CheckBoxDB.Checked Then
+                '    tmpData = Nothing
+                '    fileName = GenerateCVS(LoadCAData, "RESCA", True) 'from DB
+                'Else
+                '    fileName = GenerateCVS(dummyDataCA, "RESCA", True) '1 dummy
+                'End If
+
+                fileName = GenerateTextFile(dummyDataCAb, "RESCA")
 
                 If Not fileName = Nothing Then
                     Try
@@ -140,11 +142,13 @@ Public Class MainForm
                 '-------------------------------------------------------------------------------------------------
                 tmpData = Nothing
                 lstMsgs("Sending Food Master File Data to uCustom FTP Folder")
-                If CheckBoxDB.Checked Then
-                    fileName = GenerateCVS(LoadFCData, "FC") 'from DB
-                Else
-                    fileName = GenerateCVS(dummyDataFC, "FC") '1 dummy
-                End If
+                'If CheckBoxDB.Checked Then
+                '    fileName = GenerateCVS(LoadFCData, "FC") 'from DB
+                'Else
+                '    fileName = GenerateCVS(dummyDataFC, "FC") '1 dummy
+                'End If
+
+                fileName = GenerateTextFile(dummyDataFCb, "FC")
 
                 If Not fileName = Nothing Then
                     Try

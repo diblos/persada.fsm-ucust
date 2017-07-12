@@ -32,7 +32,7 @@ Module Module1
 
         'Reading()
 
-        Writing(WritingOption.FSQDDeclarationResponse)
+        Writing(WritingOption.FSQDFoodCodeMaster)
 
         HappyEnd() 'Wait input to end
     End Sub
