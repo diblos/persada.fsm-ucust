@@ -397,6 +397,34 @@ Public Class MainForm
 
     End Function
 
+    Private Function LoadFCDataB() As List(Of DataExchangeClass.FSQDFoodCodeMaster.FSQDFoodCodeMaster)
+        Dim k As New DataExchangeClass.Data
+
+        Dim newlist As New List(Of DataExchangeClass.FSQDFoodCodeMaster.FSQDFoodCodeMaster)
+        Dim dtFC As DataTable = k.GetFoodCodeData()
+
+        For Each row As DataRow In dtFC.Rows
+            Dim tmpObj As New DataExchangeClass.FSQDFoodCodeMaster.FSQDFoodCodeMaster
+            With tmpObj
+                '.FCOCode = row("FCOCode")
+                '.FCODescription = row("FCODescription")
+                '.HS_ID = row("HS_ID")
+                '.RStatus = row("RStatus")
+                '.LastModifiedBy = row("LMBY")
+                '.LastModifiedDate = row("LMDT")
+
+
+
+            End With
+            newlist.Add(tmpObj)
+        Next
+
+        tmpData = dtFC.Copy
+
+        Return newlist
+
+    End Function
+
     Private Sub InitializeDummyData()
 
         '=============================================================================================================================

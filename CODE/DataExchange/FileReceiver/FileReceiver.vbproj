@@ -116,12 +116,6 @@
     <Compile Include="ProjectInstaller.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="watcher.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="watcher.Designer.vb">
-      <DependentUpon>watcher.vb</DependentUpon>
-    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -132,6 +126,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="watcher.Designer.vb">
+      <DependentUpon>watcher.vb</DependentUpon>
+    </Compile>
+    <Compile Include="watcher.vb">
+      <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
