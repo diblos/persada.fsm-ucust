@@ -1,8 +1,8 @@
 ﻿Imports System.IO
 
 Module Module1
-    'Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\neo\FSQD_RQCA_20161107T164010.txt"
-    Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\neo\fwucustomsfosim-2017\FSQD_RQCA_20170523T085201.txt"
+    Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\20170814\FSQD_RQCA_20170814T121800.txt"
+    'Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\neo\fwucustomsfosim-2017\FSQD_RQCA_20170523T085201.txt"
 
     Dim dummyDataCA As DataExchangeClass.deprecating.ConsigmentApprovalResponse
     Dim dummyDataFC As DataExchangeClass.deprecating.FoodCodeMaster
@@ -30,9 +30,9 @@ Module Module1
 
         'Testing()
 
-        'Reading()
+        Reading()
 
-        Writing(WritingOption.FSQDFoodCodeMaster)
+        'Writing(WritingOption.FSQDFoodCodeMaster)
 
         HappyEnd() 'Wait input to end
     End Sub
