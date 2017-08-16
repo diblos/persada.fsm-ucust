@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 
 Module Module1
-    Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\20170814\FSQD_RQCA_20170814T121800.txt"
+    Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\20170816\FSQD_RQCA_20170814T171303.txt"
     'Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\neo\fwucustomsfosim-2017\FSQD_RQCA_20170523T085201.txt"
 
     Dim dummyDataCA As DataExchangeClass.deprecating.ConsigmentApprovalResponse
@@ -667,14 +667,15 @@ Module Module1
         Dim Spec As DataExchangeClass.FSQDConsAppReq.Specification = Nothing
         Dim Attachment As DataExchangeClass.FSQDConsAppReq.Attachment = Nothing
 
-        Try
+        Dim validTag As String = String.Empty
+        Dim currTag As String = String.Empty
 
-            Dim validTag As String = String.Empty
-            Dim currTag As String = String.Empty
+        Try
 
             Console.WriteLine(StrDup(5, "=") & " Arr2Object " & StrDup(5, "="))
             Dim counter As Integer = 0, invoiceCount As Integer = 0, invoiceItemCount As Integer = 0, permitCount As Integer = 0, attachementCount As Integer = 0
             For Each item In arrString
+
                 If (item.IndexOf("FSQDConsAppReq") >= 0) And (currTag = String.Empty) Then
                     currTag = "FSQDConsAppReq"
                     validTag &= currTag
@@ -824,7 +825,7 @@ Module Module1
                                     FSQD.DeclarantStatus = item
                                 Case 10 'TotalNumberOfItem
                                     key = "TotalNumberOfItem"
-                                    FSQD.TotalNumberOfItem = item
+                                    FSQD.TotalNumberOfItem = IIf(item = String.Empty, 0, item) '$$$
                                 Case 11 'ExporterName
                                     key = "ExporterName"
                                     FSQD.ExporterName = item
@@ -890,7 +891,7 @@ Module Module1
                                     FSQD.ManifestRegistrationNumber = item
                                 Case 32 'ModeOfTransport
                                     key = "ModeOfTransport"
-                                    FSQD.ModeOfTransport = item
+                                    FSQD.ModeOfTransport = IIf(item = String.Empty, 0, item) '$$$
                                 Case 33 'DateOfImport
                                     key = "DateOfImport"
                                     FSQD.DateOfImport = item
@@ -933,22 +934,22 @@ Module Module1
                                     FSQD.Invoice.PayTo = item
                                 Case 2 'Insurance
                                     key = "Insurance"
-                                    FSQD.Invoice.Insurance = item
+                                    FSQD.Invoice.Insurance = IIf(item = String.Empty, 0, item) '$$$
                                 Case 3 'OtherCharges
                                     key = "OtherCharges"
-                                    FSQD.Invoice.OtherCharges = item
+                                    FSQD.Invoice.OtherCharges = IIf(item = String.Empty, 0, item) '$$$
                                 Case 4 'CIF
                                     key = "CIF"
-                                    FSQD.Invoice.CIF = item
+                                    FSQD.Invoice.CIF = IIf(item = String.Empty, 0, item) '$$$
                                 Case 5 'FOB
                                     key = "FOB"
-                                    FSQD.Invoice.FOB = item
+                                    FSQD.Invoice.FOB = IIf(item = String.Empty, 0, item) '$$$
                                 Case 6 'Freight
                                     key = "Freight"
-                                    FSQD.Invoice.Freight = item
+                                    FSQD.Invoice.Freight = IIf(item = String.Empty, 0, item) '$$$
                                 Case 7 'TotalDutyPayable
                                     key = "TotalDutyPayable"
-                                    FSQD.Invoice.TotalDutyPayable = item
+                                    FSQD.Invoice.TotalDutyPayable = IIf(item = String.Empty, 0, item) '$$$
 
                             End Select
                             'Console.WriteLine(currTag & " : " & item)
@@ -962,7 +963,7 @@ Module Module1
                             Select Case counter
                                 Case 1 'ItemNumber
                                     key = "ItemNumber"
-                                    InvoiceItem.ItemNumber = item
+                                    InvoiceItem.ItemNumber = IIf(item = String.Empty, 0, item) '$$$
                                 Case 2 'ItemDescription
                                     key = "ItemDescription"
                                     InvoiceItem.ItemDescription = item
@@ -971,22 +972,22 @@ Module Module1
                                     InvoiceItem.HSCode = item
                                 Case 4 'GrossWeightInKGS
                                     key = "GrossWeightInKGS"
-                                    InvoiceItem.GrossWeightInKGS = item
+                                    InvoiceItem.GrossWeightInKGS = IIf(item = String.Empty, 0, item) '$$$
                                 Case 5 'DeclaredQuantity
                                     key = "DeclaredQuantity"
-                                    InvoiceItem.DeclaredQuantity = item
+                                    InvoiceItem.DeclaredQuantity = IIf(item = String.Empty, 0, item) '$$$
                                 Case 6 'DeclaredUnit
                                     key = "DeclaredUnit"
                                     InvoiceItem.DeclaredUnit = item
                                 Case 7 'UnitPrice
                                     key = "UnitPrice"
-                                    InvoiceItem.UnitPrice = item
+                                    InvoiceItem.UnitPrice = IIf(item = String.Empty, 0, item) '$$$
                                 Case 8 'TotalPrice
                                     key = "TotalPrice"
-                                    InvoiceItem.TotalPrice = item
+                                    InvoiceItem.TotalPrice = IIf(item = String.Empty, 0, item) '$$$
                                 Case 9 'DutyAmount
                                     key = "DutyAmount"
-                                    InvoiceItem.DutyAmount = item
+                                    InvoiceItem.DutyAmount = IIf(item = String.Empty, 0, item) '$$$
                                 Case 10 'CountryOfOrigin
                                     key = "CountryOfOrigin"
                                     InvoiceItem.CountryOfOrigin = item
@@ -998,6 +999,9 @@ Module Module1
 
                                     FSQD.Invoice.InvoiceItems.Add(InvoiceItem)
                             End Select
+
+                            Debug.Print(key)
+
                             'Console.WriteLine(currTag & " : " & item)
                             Console.WriteLine(key & " : " & item)
 
@@ -1105,6 +1109,8 @@ Module Module1
             Next
 
         Catch ex As Exception
+            Debug.Print(validTag)
+            Debug.Print(currTag)
             Console.WriteLine(ex.Message)
         End Try
 
