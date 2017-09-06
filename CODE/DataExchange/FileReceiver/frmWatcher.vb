@@ -662,7 +662,11 @@ Public Class frmWatcher
                                     InvoiceItem.GrossWeightInKGS = item
                                 Case 5 'DeclaredQuantity
                                     key = "DeclaredQuantity"
-                                    InvoiceItem.DeclaredQuantity = item
+                                    Try
+                                        InvoiceItem.DeclaredQuantity = item
+                                    Catch ex As Exception
+                                        InvoiceItem.DeclaredQuantity = 0
+                                    End Try
                                 Case 6 'DeclaredUnit
                                     key = "DeclaredUnit"
                                     InvoiceItem.DeclaredUnit = item

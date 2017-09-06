@@ -34,7 +34,7 @@
             '----------------------------------------------------------------------------------
             sql.Append(" VALUES ")
             sql.Append(" (")
-            sql.Append("'" & data.CustomFormNumber.Replace("-", "") & "',")
+            sql.Append("'" & data.CustomFormNumber & "',")
             sql.Append("'" & data.HeaderObj.batchID & "',")
             sql.Append("'" & Now.ToString(DATETIME_FORMAT) & "'")
             sql.Append(")")
@@ -159,7 +159,8 @@
             sql.Append(" ,'" & "A" & "'")
             sql.Append(" ,'" & "C" & "'")
             sql.Append(" ,'" & data.TransactionType & "'")
-            sql.Append(" ,'" & data.CustomFormNumber.Replace("-", "") & "'")
+            'sql.Append(" ,'" & data.CustomFormNumber.Replace("-", "") & "'")
+            sql.Append(" ,'" & data.CustomFormNumber & "'")
             'sql.Append(" ,'" & data.FQC_Preassigned_control_number & "'")
             sql.Append(" ,'" & FormValidDateTime(data.RegistrationDate, data.RegistrationTime).ToString(DATETIME_FORMAT) & "'")
 
@@ -169,21 +170,21 @@
             sql.Append(" ,'" & data.TransactionType & "'")
             'sql.Append(" ,'" & data.ExporterCode & "'")
             sql.Append(" ,'" & data.ExporterName.Replace("'", "''") & "'")
-            sql.Append(" ,'" & data.ExporterAddressStreetAndNumberPObox & "'") '-> Form Inline Address
+            sql.Append(" ,'" & data.ExporterAddressStreetAndNumberPObox.Replace("'", "''") & "'") '-> Form Inline Address
             sql.Append(" ," & IM_ID_DEFAULT)
             'sql.Append(" ,[ImpCustRefNo]")
             sql.Append(" ,'" & data.ImporterCode & "'")
-            sql.Append(" ,'" & data.ImporterName & "'")
-            sql.Append(" ,'" & data.ImporterAddressStreetAndNumberPObox & "'") '-> Form Inline Address
+            sql.Append(" ,'" & data.ImporterName.Replace("'", "''") & "'")
+            sql.Append(" ,'" & data.ImporterAddressStreetAndNumberPObox.Replace("'", "''") & "'") '-> Form Inline Address
             sql.Append(" ,'" & AG_REF_NO_DEFAULT & "'")
             sql.Append(" ,'" & data.AgentCode & "'")
-            sql.Append(" ,'" & data.AgentName & "'")
-            sql.Append(" ,'" & data.AgentAddressStreetAndNumberPObox & "'") '-> Form Inline Address
+            sql.Append(" ,'" & data.AgentName.Replace("'", "''") & "'")
+            sql.Append(" ,'" & data.AgentAddressStreetAndNumberPObox.Replace("'", "''") & "'") '-> Form Inline Address
             sql.Append(" ,'" & data.ModeOfTransport & "'")
             sql.Append(" ,'" & FormValidDateTime(data.DateOfImport, "0000").ToString(DATETIME_FORMAT) & "'") 'sql.Append(" ,'" & data.DateOfImport & "'")'
             sql.Append(" ,'" & data.VesselRegistration & "'")
             sql.Append(" ,'" & data.VoyageNumber & "'")
-            sql.Append(" ,'" & data.VesselName & "'")
+            sql.Append(" ,'" & data.VesselName.Replace("'", "''") & "'")
             sql.Append(" ,'" & data.FlightNumber & "'")
             sql.Append(" ,'" & data.FlightDate & "'")
             'sql.Append(" ,'" & data.Vehicle_Lorry_number & "'")
@@ -214,7 +215,7 @@
 
 
             sql.Append(" ,'" & data.DeclarantICNumber & "'")
-            sql.Append(" ,'" & data.DeclarantName & "'")
+            sql.Append(" ,'" & data.DeclarantName.Replace("'", "''") & "'")
             sql.Append(" ,'" & data.DeclarantStatus & "'")
             'sql.Append(" ,[SMKReplyDataHead]")
             'sql.Append(" ,[SMKReplyDatetime]")
@@ -255,7 +256,7 @@
             test.AppendLine(" [SMKMsgType]='" & "A" & "'")
             test.AppendLine(" [SMKMsgMode]='" & "C" & "'")
             test.AppendLine(" [SMKImpIndicator]='" & data.TransactionType & "'")
-            test.AppendLine(" [SMKRefNum]='" & data.CustomFormNumber.Replace("-", "") & "'")
+            test.AppendLine(" [SMKRefNum]='" & data.CustomFormNumber & "'")
             'test.AppendLine(" ,'" & data.FQC_Preassigned_control_number & "'")
             test.AppendLine(" [SMKRegDatetime]='" & FormValidDateTime(data.RegistrationDate, data.RegistrationTime).ToString(DATETIME_FORMAT) & "'")
 
@@ -414,7 +415,7 @@
             'sql.Append(" " & cmmn.GetAutonumberKey(SMKCFormGoodsTableName, "[CFG_ID]"))
             sql.Append(" " & SMKCID)
             sql.Append(" ,'" & SMKHEADER & "'")
-            sql.Append(" ,'" & data.CustomFormNumber.Replace("-", "") & "'")
+            sql.Append(" ,'" & data.CustomFormNumber & "'")
             sql.Append(" ,'" & item.ItemNumber & "'")
             sql.Append(" ,'" & item.ItemDescription & "'")
             sql.Append(" ,'" & item.HSCode & "'")

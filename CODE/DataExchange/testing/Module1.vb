@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 
 Module Module1
-    Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\20170816\FSQD_RQCA_20170814T171303.txt"
+    Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\20170824\FSQD_RQCA_20170817T174720.txt"
     'Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\neo\fwucustomsfosim-2017\FSQD_RQCA_20170523T085201.txt"
 
     Dim dummyDataCA As DataExchangeClass.deprecating.ConsigmentApprovalResponse
@@ -975,7 +975,12 @@ Module Module1
                                     InvoiceItem.GrossWeightInKGS = IIf(item = String.Empty, 0, item) '$$$
                                 Case 5 'DeclaredQuantity
                                     key = "DeclaredQuantity"
-                                    InvoiceItem.DeclaredQuantity = IIf(item = String.Empty, 0, item) '$$$
+                                    Try
+                                        InvoiceItem.DeclaredQuantity = IIf(item = String.Empty, 0, item) '$$$
+                                    Catch ex As Exception
+                                        InvoiceItem.DeclaredQuantity = 0
+                                    End Try
+
                                 Case 6 'DeclaredUnit
                                     key = "DeclaredUnit"
                                     InvoiceItem.DeclaredUnit = item
