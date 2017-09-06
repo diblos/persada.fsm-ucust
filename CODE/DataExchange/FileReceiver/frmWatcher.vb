@@ -657,26 +657,26 @@ Public Class frmWatcher
                                 Case 3 'HSCode
                                     key = "HSCode"
                                     InvoiceItem.HSCode = item
-                                Case 4 'GrossWeightInKGS
+                                Case 9 'GrossWeightInKGS
                                     key = "GrossWeightInKGS"
                                     InvoiceItem.GrossWeightInKGS = item
-                                Case 5 'DeclaredQuantity
+                                Case 4 'DeclaredQuantity
                                     key = "DeclaredQuantity"
                                     Try
                                         InvoiceItem.DeclaredQuantity = item
                                     Catch ex As Exception
                                         InvoiceItem.DeclaredQuantity = 0
                                     End Try
-                                Case 6 'DeclaredUnit
+                                Case 5 'DeclaredUnit
                                     key = "DeclaredUnit"
                                     InvoiceItem.DeclaredUnit = item
-                                Case 7 'UnitPrice
+                                Case 6 'UnitPrice
                                     key = "UnitPrice"
                                     InvoiceItem.UnitPrice = item
-                                Case 8 'TotalPrice
+                                Case 7 'TotalPrice
                                     key = "TotalPrice"
                                     InvoiceItem.TotalPrice = item
-                                Case 9 'DutyAmount
+                                Case 8 'DutyAmount
                                     key = "DutyAmount"
                                     InvoiceItem.DutyAmount = item
                                 Case 10 'CountryOfOrigin

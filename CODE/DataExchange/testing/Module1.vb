@@ -970,10 +970,10 @@ Module Module1
                                 Case 3 'HSCode
                                     key = "HSCode"
                                     InvoiceItem.HSCode = item
-                                Case 4 'GrossWeightInKGS
+                                Case 9 'GrossWeightInKGS
                                     key = "GrossWeightInKGS"
                                     InvoiceItem.GrossWeightInKGS = IIf(item = String.Empty, 0, item) '$$$
-                                Case 5 'DeclaredQuantity
+                                Case 4 'DeclaredQuantity
                                     key = "DeclaredQuantity"
                                     Try
                                         InvoiceItem.DeclaredQuantity = IIf(item = String.Empty, 0, item) '$$$
@@ -981,16 +981,16 @@ Module Module1
                                         InvoiceItem.DeclaredQuantity = 0
                                     End Try
 
-                                Case 6 'DeclaredUnit
+                                Case 5 'DeclaredUnit
                                     key = "DeclaredUnit"
                                     InvoiceItem.DeclaredUnit = item
-                                Case 7 'UnitPrice
+                                Case 6 'UnitPrice
                                     key = "UnitPrice"
                                     InvoiceItem.UnitPrice = IIf(item = String.Empty, 0, item) '$$$
-                                Case 8 'TotalPrice
+                                Case 7 'TotalPrice
                                     key = "TotalPrice"
                                     InvoiceItem.TotalPrice = IIf(item = String.Empty, 0, item) '$$$
-                                Case 9 'DutyAmount
+                                Case 8 'DutyAmount
                                     key = "DutyAmount"
                                     InvoiceItem.DutyAmount = IIf(item = String.Empty, 0, item) '$$$
                                 Case 10 'CountryOfOrigin
