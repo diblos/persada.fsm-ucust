@@ -66,13 +66,13 @@
             sql.Append(" ,[SMKDataHead]")
             sql.Append(" ,[SMKMsgType]")
             sql.Append(" ,[SMKMsgMode]")
-            sql.Append(" ,[SMKImpIndicator]")
+            sql.Append(" ,[SMKImpIndicator]") '[SMKImpIndicator]
             sql.Append(" ,[SMKRefNum]")
             'sql.Append(" ,[SMKFQCRefNum]")
             sql.Append(" ,[SMKRegDatetime]")
             sql.Append(" ,[SMKTotalItems]")
             sql.Append(" ,[SMKCommodityStatus]")
-            sql.Append(" ,[SMKTransacType]")
+            sql.Append(" ,[SMKTransacType]") '[SMKTransacType]
             'sql.Append(" ,[EXP_ID]")
             sql.Append(" ,[SMKExpName]")
             sql.Append(" ,[SMKExpAddr]")
@@ -158,7 +158,13 @@
             sql.Append(" ,'" & SMKHEADER & "'")
             sql.Append(" ,'" & "A" & "'")
             sql.Append(" ,'" & "C" & "'")
-            sql.Append(" ,'" & data.TransactionType & "'")
+
+            Try
+                sql.Append(" ,'" & CInt(data.TransactionType) & "'") '[SMKTransacType]
+            Catch ex As Exception
+                sql.Append(" ,'" & 0 & "'") '[SMKTransacType]
+            End Try
+
             'sql.Append(" ,'" & data.CustomFormNumber.Replace("-", "") & "'")
             sql.Append(" ,'" & data.CustomFormNumber & "'")
             'sql.Append(" ,'" & data.FQC_Preassigned_control_number & "'")
@@ -167,7 +173,12 @@
             sql.Append(" ,'" & data.TotalNumberOfItem & "'")
             sql.Append(" ,'" & item.CommodityStatus & "'")
 
-            sql.Append(" ,'" & data.TransactionType & "'")
+            Try
+                sql.Append(" ,'" & CInt(data.TransactionType) & "'") 'SMKTransacType
+            Catch ex As Exception
+                sql.Append(" ,'" & 0 & "'") 'SMKTransacType
+            End Try
+
             'sql.Append(" ,'" & data.ExporterCode & "'")
             sql.Append(" ,'" & data.ExporterName.Replace("'", "''") & "'")
             sql.Append(" ,'" & data.ExporterAddressStreetAndNumberPObox.Replace("'", "''") & "'") '-> Form Inline Address
