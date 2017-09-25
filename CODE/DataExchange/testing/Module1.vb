@@ -6,7 +6,10 @@ Module Module1
 
     Dim dummyDataCA As DataExchangeClass.deprecating.ConsigmentApprovalResponse
     Dim dummyDataFC As DataExchangeClass.deprecating.FoodCodeMaster
+
     Dim dummyDataCAb As DataExchangeClass.FSQDConsAppRes.FSQDDeclarationResponse
+    Dim LoadDataCAb As DataExchangeClass.FSQDConsAppRes.FSQDDeclarationResponse
+
     Dim dummyDataFCb As DataExchangeClass.FSQDFoodCodeMaster.FSQDFoodCodeMaster
 
     Public Enum WritingOption
@@ -30,9 +33,9 @@ Module Module1
 
         'Testing()
 
-        Reading()
+        'Reading()
 
-        'Writing(WritingOption.FSQDFoodCodeMaster)
+        Writing(WritingOption.FSQDDeclarationResponse)
 
         HappyEnd() 'Wait input to end
     End Sub
@@ -106,7 +109,7 @@ Module Module1
                         str.AppendLine("<empty>") '6
                         str.AppendLine("<empty>") '7
                         str.AppendLine(g.ToString.ToUpper) 'Guid / other unique identifier per file
-                        str.AppendLine("320AE4CA-17DF-495E-B402-A789D278C33C") 'refers to previous file batchID
+                        str.AppendLine(.PrevGUID) 'refers to previous file batchID
                         str.AppendLine("<empty>")
                         str.AppendLine(Now.ToString("yyyy-MM-ddTHH:mm:ss")) 'yyyyMMddTHHmmss
                         str.AppendLine("<empty>")
@@ -1132,10 +1135,12 @@ Module Module1
                 'DataHeader	customreg	FQC	IMGLine	HScode	IMGCurrLvl	IMGFoodCode	LMBY	LMDT	IMHReplyDesign	IMGAGNotes	IMGPStatus	IMGStatusPurpose	IMHReplyRemarks
                 'FQC001	K122015101004808	0709.60.1000 	3	NULL	5	V0103523	MOHD SUHAIMIE B. NOH	2015-01-21 19:57:23.647			R	R	Konsaimen diperiksa dan dilepaskan
                 dummyDataCAb = New DataExchangeClass.FSQDConsAppRes.FSQDDeclarationResponse
+
                 With dummyDataCAb
 
                     .MCKey = 0
                     .MCValue = 0
+                    .PrevGUID = "320AE4CA-17DF-495E-B402-A789D278C33C"
                     .CustomRegistrationNumber = "B1FE00169662015"
                     '.CommentFromFQC = "0709.60.1000"
                     .CommentFromFQC = "diperiksa dan dilepaskan"
@@ -1145,13 +1150,48 @@ Module Module1
                     With InvoiceItem
                         .ItemNumber = 1
                         .HSCode = "040410910"
-                        .ApprovalStatus = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumApprovalStatus.R 'N is no more, R instead
-                        .ActionCode = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumActionCode.R
+                        .ApprovalStatus = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumApprovalStatus.R.ToString  'N is no more, R instead
+                        .ActionCode = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumActionCode.R.ToString
                     End With
 
                     .InvoiceItems.Add(InvoiceItem)
 
                 End With
+
+                LoadDataCAb = New DataExchangeClass.FSQDConsAppRes.FSQDDeclarationResponse
+                Dim DEC As New DataExchangeClass.Data
+                Dim icmimport As DataTable = DEC.GetICMImport
+                If icmimport.Rows.Count > 0 Then
+                    With LoadDataCAb
+
+                        .MCKey = 0
+                        .MCValue = 0
+                        .PrevGUID = icmimport.Rows(0).Item("BATCHID")
+                        .CustomRegistrationNumber = icmimport.Rows(0).Item("IMHK1RefNum")
+                        '.CommentFromFQC = "0709.60.1000"
+                        .CommentFromFQC = icmimport.Rows(0).Item("IMHReplyRemarks")
+                        .ProcessDate = icmimport.Rows(0).Item("LMDT")
+                        .InvoiceItems = New List(Of DataExchangeClass.FSQDConsAppRes.InvoiceItem)
+                        Dim icmimportgood As DataTable = DEC.GetICMImportGoods(icmimport.Rows(0).Item("IMH_ID"))
+                        If icmimportgood.Rows.Count > 0 Then
+
+                            For Each row As DataRow In icmimportgood.Rows
+
+                                Dim InvoiceItem As New DataExchangeClass.FSQDConsAppRes.InvoiceItem
+                                With InvoiceItem
+                                    .ItemNumber = row.Item("IMGLine")
+                                    .HSCode = row.Item("IMGTariffCode")
+                                    .ApprovalStatus = row.Item("ApprovalStatus")
+                                    .ActionCode = row.Item("ActionCode")
+                                End With
+
+                                .InvoiceItems.Add(InvoiceItem)
+
+                            Next
+
+                        End If
+                    End With
+                End If
 
             Case WritingOption.FSQDFoodCodeMaster
                 'FCOCode	FCODescription	HS_ID	RStatus	LMBY	LMDT

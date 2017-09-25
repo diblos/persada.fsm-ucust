@@ -468,7 +468,7 @@ Public Class MainForm
             With InvoiceItem
                 .ItemNumber = 1
                 .HSCode = "040410910"
-                .ApprovalStatus = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumApprovalStatus.R 'N is no more, R instead
+                .ApprovalStatus = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumApprovalStatus.R  'N is no more, R instead
                 .ActionCode = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumActionCode.R
             End With
             .InvoiceItems.Add(InvoiceItem)

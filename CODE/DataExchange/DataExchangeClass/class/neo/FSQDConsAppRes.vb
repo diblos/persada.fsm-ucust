@@ -78,6 +78,16 @@ Namespace FSQDConsAppRes
             End Set
         End Property
 
+        Private _PrevGUID As String
+        Public Property PrevGUID() As String
+            Get
+                Return Me._PrevGUID
+            End Get
+            Set(ByVal value As String)
+                Me._PrevGUID = value
+            End Set
+        End Property
+
         Private _InvoiceItems As List(Of InvoiceItem)
         Public Property InvoiceItems() As List(Of InvoiceItem)
             Get
@@ -94,7 +104,7 @@ Namespace FSQDConsAppRes
         Enum enumApprovalStatus
             <Description("Approved")> A
             <Description("Rejection")> R
-            <Description("Not applicable")> N
+            '<Description("Not applicable")> N
             <Description("Request Inspection")> I
             <Description("Conditional Release")> C
         End Enum
@@ -127,25 +137,47 @@ Namespace FSQDConsAppRes
         End Property
 
         Private _ApprovalStatus As enumApprovalStatus
-        Public Property ApprovalStatus() As enumApprovalStatus
+        Public Property ApprovalStatus() As Object
             Get
                 Return Me._ApprovalStatus
             End Get
-            Set(ByVal value As enumApprovalStatus)
-                Me._ApprovalStatus = value
+            Set(ByVal value As Object)
+                Select Case value
+                    Case enumApprovalStatus.A.ToString
+                        Me._ApprovalStatus = enumApprovalStatus.A
+                    Case enumApprovalStatus.C.ToString
+                        Me._ApprovalStatus = enumApprovalStatus.C
+                    Case enumApprovalStatus.I.ToString
+                        Me._ApprovalStatus = enumApprovalStatus.I
+                    Case Else
+                        Me._ApprovalStatus = enumApprovalStatus.R
+                End Select
+
             End Set
         End Property
 
         'In case of Approval status is inspection, the action is I - phyisical inspection, S - sampling, D - document inspection In case of Approval status is rejection, the action is  R - Re-export"
         Private _ActionCode As enumActionCode
-        Public Property ActionCode() As enumActionCode
+        Public Property ActionCode() As Object
             Get
                 Return Me._ActionCode
             End Get
-            Set(ByVal value As enumActionCode)
-                Me._ActionCode = value
+            Set(ByVal value As Object)
+                Select Case value
+                    Case enumActionCode.D.ToString
+                        Me._ActionCode = enumActionCode.D
+                    Case enumActionCode.I.ToString
+                        Me._ActionCode = enumActionCode.I
+                    Case enumActionCode.R.ToString
+                        Me._ActionCode = enumActionCode.R
+                    Case enumActionCode.S.ToString
+                        Me._ActionCode = enumActionCode.S
+                End Select
+
             End Set
         End Property
+
+
     End Class
 
 End Namespace

@@ -855,6 +855,76 @@
         End Try
     End Function
 
+    Public Function GetICMImport() As DataTable
+        Dim sql As New System.Text.StringBuilder
+        'sql.Append(" SELECT TOP 100 ")
+        'sql.Append(" [IMG_ID]")
+        'sql.Append(" ,'FQC001' AS DataHeader ")
+        'sql.Append(" ,(select [IMHK1RefNum]  from [ICMImport] where IMH_ID=a.IMH_ID ) customreg ")
+        'sql.Append(" ,[IMGTariffCode] FQC ")
+        'sql.Append(" ,IMGLine ")
+        'sql.Append(" ,(select CFGHSCode from SMKCFormGoods where SMK_ID in (select SMK_ID  from [ICMImport] where IMH_ID=a.IMH_ID) ) HScode ")
+        'sql.Append(" ,IMGCurrLvl ")
+        'sql.Append(" ,IMGFoodCode")
+        'sql.Append(" , LMBY")
+        'sql.Append(" ,LMDT ")
+        'sql.Append(" ,(select [IMHReplyODesignt] from [ICMImport] where IMH_ID=a.IMH_ID ) IMHReplyDesign ")
+        'sql.Append(" ,[IMGAGNotes] ")
+        'sql.Append(" ,IMGPStatus ")
+        'sql.Append(" ,[IMGStatusPurpose] ")
+        'sql.Append(" ,(select [IMHReplyRemarks] from [ICMImport] where IMH_ID=a.IMH_ID ) IMHReplyRemarks ")
+        'sql.Append(" ,flag ")
+        'sql.Append(" ,'F' as bool ") 'dummy for process
+        'sql.Append("  FROM [ICMImportGoods] a ")
+        'sql.Append("  where IMGpstatus in ('R','NA','D','J') ")
+        'sql.Append("  and (flag is null or flag<>'C') ")
+        'sql.Append(" order by [IMG_ID] ")
+
+
+        sql.Append(" SELECT IMH_ID, SMK_ID, IMHK1RefNum,BATCHID, IMHReplyRemarks, IMHPStatus, CONVERT(char(10), B.LMDT,126) LMDT FROM ICMImport B, ")
+        sql.Append(" TmpParty H ")
+        sql.Append(" WHERE H.CFGK1RegNum = B.IMHK1RefNum ")
+        sql.Append(" AND (B.UCUSTOM = 'Y' AND B.flag IS NULL AND B.IMHPStatus = 'A') ")
+
+        Try
+            Return db.ExecuteDataSet(System.Data.CommandType.Text, sql.ToString).Tables(0)
+        Catch ex As Exception
+            RaiseEvent OnError(Now, New Exception("GetResponseData: " & sql.ToString & " : " & ex.Message))
+            Return New DataTable
+        End Try
+    End Function
+
+    Public Function GetICMImportGoods(ByVal Key As Integer) As DataTable
+        Dim sql As New System.Text.StringBuilder
+
+        sql.Append(" SELECT IMGLine, IMGTariffCode, CASE WHEN IMGPStatus = 'R' THEN 'A' WHEN IMGPStatus = 'J' THEN 'R' ELSE IMGPStatus END AS ApprovalStatus, ")
+        sql.Append(" CASE WHEN IMGStatusPurpose = 'PI' THEN 'I' WHEN IMGStatusPurpose = 'PIS' THEN 'I' WHEN IMGStatusPurpose = 'S' THEN 'S' ELSE IMGStatusPurpose END ")
+        sql.Append(" AS ActionCode FROM ICMImportGoods WHERE IMH_ID=" & Key)
+
+        Try
+            Return db.ExecuteDataSet(System.Data.CommandType.Text, sql.ToString).Tables(0)
+        Catch ex As Exception
+            RaiseEvent OnError(Now, New Exception("GetResponseData: " & sql.ToString & " : " & ex.Message))
+            Return New DataTable
+        End Try
+    End Function
+
+    Public Function SetICMImportFlag(ByVal Key As Integer) As Integer
+        Dim sql As New System.Text.StringBuilder
+
+        sql.Append(" UPDATE ICMImport SET flag='C' WHERE IMH_ID='" & Key & "'; ")
+        Return ExecuteQuery(sql.ToString)
+      
+    End Function
+
+    Public Function SetICMImportGoodsFlag(ByVal Key As Integer) As Integer
+        Dim sql As New System.Text.StringBuilder
+
+        sql.Append(" UPDATE ICMImportGoods SET flag='C' WHERE IMH_ID='" & Key & "'; ")
+        Return ExecuteQuery(sql.ToString)
+
+    End Function
+
     Public Function GetFoodCodeData() As DataTable
         Dim sql As New System.Text.StringBuilder
         
