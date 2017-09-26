@@ -900,6 +900,7 @@
         sql.Append(" SELECT IMGLine, IMGTariffCode, CASE WHEN IMGPStatus = 'R' THEN 'A' WHEN IMGPStatus = 'J' THEN 'R' ELSE IMGPStatus END AS ApprovalStatus, ")
         sql.Append(" CASE WHEN IMGStatusPurpose = 'PI' THEN 'I' WHEN IMGStatusPurpose = 'PIS' THEN 'I' WHEN IMGStatusPurpose = 'S' THEN 'S' ELSE IMGStatusPurpose END ")
         sql.Append(" AS ActionCode FROM ICMImportGoods WHERE IMH_ID=" & Key)
+        sql.Append(" ORDER BY IMGLine ASC ")
 
         Try
             Return db.ExecuteDataSet(System.Data.CommandType.Text, sql.ToString).Tables(0)

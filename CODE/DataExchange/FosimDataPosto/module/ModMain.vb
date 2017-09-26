@@ -19,6 +19,8 @@ Module ModMain
     Public FC_FTP_FOLDER_PATH = "C:\Users\lenovo\Desktop\workspace\ucustom\test\FC_INBOUND"
     Public CA_FTP_FOLDER_PATH = "C:\Users\lenovo\Desktop\workspace\ucustom\test\FoSIM_CA_OUTBOUND"
 
+    Public AUTO_MODE As Boolean
+
     Public Sub ReadConfiguration()
         If Not AppSettings("WEB.SERVICE.ASMX.URL") = "" Then WEB_SERVICE_ASMX_URL = AppSettings("WEB.SERVICE.ASMX.URL")
         If Not AppSettings("FTP.SERVER") = "" Then ftpServ = AppSettings("FTP.SERVER")
@@ -27,6 +29,13 @@ Module ModMain
 
         If Not AppSettings("FC.FTP.FOLDER.PATH") = "" Then FC_FTP_FOLDER_PATH = AppSettings("FC.FTP.FOLDER.PATH")
         If Not AppSettings("CA.FTP.FOLDER.PATH") = "" Then CA_FTP_FOLDER_PATH = AppSettings("CA.FTP.FOLDER.PATH")
+
+        If Not AppSettings("AUTO.MODE") = "" Then
+            AUTO_MODE = AppSettings("AUTO.MODE")
+        Else
+            AUTO_MODE = True
+        End If
+
     End Sub
 
     Public Sub UploadFtpFile(folderName As String, fileName As String)

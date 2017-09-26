@@ -17,6 +17,8 @@ Public Class MainForm
     Dim dummyDataCAb As DataExchangeClass.FSQDConsAppRes.FSQDDeclarationResponse
     Dim dummyDataFCb As DataExchangeClass.FSQDFoodCodeMaster.FSQDFoodCodeMaster
 
+    Dim routineTimer As System.Timers.Timer
+
     Dim tmpData As DataTable 'for flag update
 
 #Region "Form Action"
@@ -99,7 +101,7 @@ Public Class MainForm
             '=================================================================================================
             'BATCH
             '=================================================================================================
-            Dim fileName As String
+            Dim fileName As New List(Of String)
             If RadioCA.Checked Then
                 'CONSIGNMENT APPROVAL RESPONSE [FOSIM TO UCUSTOM]
                 '=================================================================================================
@@ -107,33 +109,39 @@ Public Class MainForm
                 'The batch file will then upload into uCustoms sFTP Server for the use of the system.
                 '-------------------------------------------------------------------------------------------------
                 lstMsgs("Sending Consigment Approval Response Data to uCustom FTP Folder")
-                'If CheckBoxDB.Checked Then
-                '    tmpData = Nothing
-                '    fileName = GenerateCVS(LoadCAData, "RESCA", True) 'from DB
-                'Else
-                '    fileName = GenerateCVS(dummyDataCA, "RESCA", True) '1 dummy
-                'End If
+                If CheckBoxDB.Checked Then
+                    tmpData = Nothing
+                    'fileName = GenerateCVS(LoadCAData, "RESCA", True) 'from DB
+                    Dim CADatabList As List(Of DataExchangeClass.FSQDConsAppRes.FSQDDeclarationResponse) = LoadCADatab()
+                    For Each item In CADatabList
+                        fileName.Add(GenerateTextFile(item, "RESCA"))
+                    Next
+                Else
+                    'fileName = GenerateCVS(dummyDataCA, "RESCA", True) '1 dummy
+                    fileName.Add(GenerateTextFile(dummyDataCAb, "RESCA"))
+                End If
 
-                fileName = GenerateTextFile(dummyDataCAb, "RESCA")
-
-                If Not fileName = Nothing Then
+                For Each File In fileName
                     Try
-                        lstMsgs("Created: " & fileName)
+                        lstMsgs("Created: " & File)
                         'UploadFtpFile("FoSIM_CA_OUTBOUND", fileName)
-                        MoveAfile(fileName, PerfectPath(CA_FTP_FOLDER_PATH) & Path.GetFileName(fileName))
-                        lstMsgs("Uploaded: " & fileName & " to " & Path.GetFileName(CA_FTP_FOLDER_PATH))
+                        MoveAfile(File, PerfectPath(CA_FTP_FOLDER_PATH) & Path.GetFileName(File))
+                        lstMsgs("Uploaded: " & File & " to " & Path.GetFileName(CA_FTP_FOLDER_PATH))
                         If Not IsNothing(tmpData) Then
                             lstMsgs("Updating flags...")
                             Dim k As New DataExchangeClass.Data
                             For Each x As DataRow In tmpData.Rows
-                                k.UpdateSMKCFlag(x("IMG_ID"), x("flag"))
+                                'k.UpdateSMKCFlag(x("IMG_ID"), x("flag"))
+                                k.SetICMImportFlag(x("IMH_ID"))
+                                k.SetICMImportGoodsFlag(x("IMH_ID"))
                                 Application.DoEvents()
                             Next
                         End If
                     Catch ex As Exception
                         lstMsgs(ex.Message)
                     End Try
-                End If
+                Next
+
             Else
                 'FOOD CODE MASTER FILE [FOSIM TO UCUSTOM]
                 '=================================================================================================
@@ -148,14 +156,14 @@ Public Class MainForm
                 '    fileName = GenerateCVS(dummyDataFC, "FC") '1 dummy
                 'End If
 
-                fileName = GenerateTextFile(dummyDataFCb, "FC")
+                fileName.Add(GenerateTextFile(dummyDataFCb, "FC"))
 
-                If Not fileName = Nothing Then
+                For Each File In fileName
                     Try
-                        lstMsgs("Created: " & fileName)
+                        lstMsgs("Created: " & File)
                         'UploadFtpFile("UC_CD_INBOUND", fileName)
-                        MoveAfile(fileName, PerfectPath(FC_FTP_FOLDER_PATH) & Path.GetFileName(fileName))
-                        lstMsgs("Uploaded: " & fileName & " to " & Path.GetFileName(FC_FTP_FOLDER_PATH))
+                        MoveAfile(File, PerfectPath(FC_FTP_FOLDER_PATH) & Path.GetFileName(File))
+                        lstMsgs("Uploaded: " & File & " to " & Path.GetFileName(FC_FTP_FOLDER_PATH))
                         If Not IsNothing(tmpData) Then
                             lstMsgs("Updating flags...")
                             Dim k As New DataExchangeClass.Data
@@ -167,7 +175,7 @@ Public Class MainForm
                     Catch ex As Exception
                         lstMsgs(ex.Message)
                     End Try
-                End If
+                Next
                 '=================================================================================================
             End If
             
@@ -201,7 +209,7 @@ Public Class MainForm
 
             Select Case Writing
                 Case WritingOption.FSQDDeclarationResponse
-                    With dummyDataCAb
+                    With data
                         str.AppendLine("FSQDConsAppRes:")
                         str.AppendLine("Header:")
 
@@ -213,7 +221,7 @@ Public Class MainForm
                         str.AppendLine("<empty>") '6
                         str.AppendLine("<empty>") '7
                         str.AppendLine(g.ToString.ToUpper) 'Guid / other unique identifier per file
-                        str.AppendLine("320AE4CA-17DF-495E-B402-A789D278C33C") 'refers to previous file batchID
+                        str.AppendLine(.PrevGUID) 'refers to previous file batchID
                         str.AppendLine("<empty>")
                         str.AppendLine(Now.ToString("yyyy-MM-ddTHH:mm:ss")) 'yyyyMMddTHHmmss
                         str.AppendLine("<empty>")
@@ -235,17 +243,18 @@ Public Class MainForm
                         For Each item In .InvoiceItems
                             str.AppendLine("InvoiceItem:")
 
-                            str.AppendLine(lineIndent & item.HSCode)
                             str.AppendLine(lineIndent & item.ItemNumber)
+                            str.AppendLine(lineIndent & item.HSCode)
 
                             str.AppendLine(lineIndent & item.ApprovalStatus.ToString)
-                            str.Append(lineIndent & item.ActionCode.ToString)
+                            'str.Append(lineIndent & item.ActionCode.ToString)
+                            str.Append(lineIndent & IIf(item.ActionCode.ToString = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumActionCode.X.ToString, "", item.ActionCode.ToString))
                         Next
 
                     End With
 
                 Case WritingOption.FSQDFoodCodeMaster
-                    With dummyDataFCb
+                    With data
                         str.AppendLine("FSQDFoodCodeMaster:")
                         str.AppendLine("Body:")
                         str.AppendLine("FoodCodeMaster:")
@@ -297,7 +306,12 @@ Public Class MainForm
         Return FilenameStr
     End Function
 
-#End Region
+    Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        If AUTO_MODE = True Then
+            routineTimer.Stop()
+            routineTimer.Dispose()
+        End If
+    End Sub
 
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         nSize = Me.Size
@@ -306,9 +320,29 @@ Public Class MainForm
         Me.Text = WINDOWS_TEXT_TITLE
         ReadConfiguration()
 
+
         RadioFTP.Checked = True
         RadioWS.Enabled = False
 
+        If AUTO_MODE = True Then
+            GroupBox1.Enabled = False
+            GroupBox3.Enabled = False
+            CheckBoxDB.Checked = True
+            RadioCA.Checked = True
+            routineTimer = New System.Timers.Timer(60000)
+            AddHandler routineTimer.Elapsed, AddressOf RoutineElapsed
+            routineTimer.Start()
+        End If
+
+    End Sub
+
+#End Region
+
+
+
+    Private Sub RoutineElapsed(sender As Object, e As System.Timers.ElapsedEventArgs)
+        'lstMsgs(Now.Second)
+        ButtonSend_Click(Nothing, Nothing)
     End Sub
 
     Private Function LoadCAData() As List(Of DataExchangeClass.deprecating.ConsigmentApprovalResponse)
@@ -367,6 +401,54 @@ Public Class MainForm
         Next
 
         tmpData = dtCA.Copy
+
+        Return newlist
+
+    End Function
+
+    Private Function LoadCADatab() As List(Of DataExchangeClass.FSQDConsAppRes.FSQDDeclarationResponse)
+        Dim DEC As New DataExchangeClass.Data
+        Dim newlist As New List(Of DataExchangeClass.FSQDConsAppRes.FSQDDeclarationResponse)
+
+        Dim dtICMImport As DataTable = DEC.GetICMImport
+
+        For Each CARow As DataRow In dtICMImport.Rows
+
+            Dim LoadDataCAb As New DataExchangeClass.FSQDConsAppRes.FSQDDeclarationResponse
+            With LoadDataCAb
+
+                .MCKey = 0
+                .MCValue = 0
+                .PrevGUID = CARow.Item("BATCHID")
+                .CustomRegistrationNumber = CARow.Item("IMHK1RefNum")
+                '.CommentFromFQC = "0709.60.1000"
+                .CommentFromFQC = CARow.Item("IMHReplyRemarks")
+                .ProcessDate = CARow.Item("LMDT")
+                .InvoiceItems = New List(Of DataExchangeClass.FSQDConsAppRes.InvoiceItem)
+                Dim icmimportgood As DataTable = DEC.GetICMImportGoods(CARow.Item("IMH_ID"))
+                If icmimportgood.Rows.Count > 0 Then
+
+                    For Each rowY As DataRow In icmimportgood.Rows
+
+                        Dim InvoiceItem As New DataExchangeClass.FSQDConsAppRes.InvoiceItem
+                        With InvoiceItem
+                            .ItemNumber = rowY.Item("IMGLine")
+                            .HSCode = rowY.Item("IMGTariffCode")
+                            .ApprovalStatus = rowY.Item("ApprovalStatus")
+                            .ActionCode = rowY.Item("ActionCode")
+                        End With
+
+                        .InvoiceItems.Add(InvoiceItem)
+
+                    Next
+
+                End If
+            End With
+
+            newlist.Add(LoadDataCAb)
+        Next
+
+        tmpData = dtICMImport.Copy
 
         Return newlist
 
@@ -459,6 +541,7 @@ Public Class MainForm
         With dummyDataCAb
             .MCKey = 0
             .MCValue = 0
+            .PrevGUID = "320AE4CA-17DF-495E-B402-A789D278C33C"
             .CustomRegistrationNumber = "B1FE00169662015"
             '.CommentFromFQC = "0709.60.1000"
             .CommentFromFQC = "diperiksa dan dilepaskan"
@@ -468,8 +551,8 @@ Public Class MainForm
             With InvoiceItem
                 .ItemNumber = 1
                 .HSCode = "040410910"
-                .ApprovalStatus = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumApprovalStatus.R  'N is no more, R instead
-                .ActionCode = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumActionCode.R
+                .ApprovalStatus = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumApprovalStatus.R.ToString   'N is no more, R instead
+                .ActionCode = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumActionCode.R.ToString
             End With
             .InvoiceItems.Add(InvoiceItem)
         End With

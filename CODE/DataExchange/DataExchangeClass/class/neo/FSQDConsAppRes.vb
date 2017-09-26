@@ -114,6 +114,7 @@ Namespace FSQDConsAppRes
             <Description("sampling")> S
             <Description("document inspection")> D
             <Description("Re-export")> R
+            <Description("none")> X
         End Enum
 
         Private _ItemNumber As Integer
@@ -172,6 +173,8 @@ Namespace FSQDConsAppRes
                         Me._ActionCode = enumActionCode.R
                     Case enumActionCode.S.ToString
                         Me._ActionCode = enumActionCode.S
+                    Case Else
+                        Me._ActionCode = enumActionCode.X
                 End Select
 
             End Set

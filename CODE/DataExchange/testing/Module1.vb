@@ -97,7 +97,7 @@ Module Module1
 
             Select Case Writing
                 Case WritingOption.FSQDDeclarationResponse
-                    With dummyDataCAb
+                    With LoadDataCAb
                         str.AppendLine("FSQDConsAppRes:")
                         str.AppendLine("Header:")
 
@@ -131,11 +131,11 @@ Module Module1
                         For Each item In .InvoiceItems
                             str.AppendLine("InvoiceItem:")
 
-                            str.AppendLine(lineIndent & item.HSCode)
                             str.AppendLine(lineIndent & item.ItemNumber)
+                            str.AppendLine(lineIndent & item.HSCode)
 
                             str.AppendLine(lineIndent & item.ApprovalStatus.ToString)
-                            str.Append(lineIndent & item.ActionCode.ToString)
+                            str.Append(lineIndent & IIf(item.ActionCode.ToString = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumActionCode.X.ToString, "", item.ActionCode.ToString))
                         Next
 
                     End With
