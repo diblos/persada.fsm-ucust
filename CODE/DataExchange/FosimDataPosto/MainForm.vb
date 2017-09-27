@@ -232,8 +232,8 @@ Public Class MainForm
 
                         str.AppendLine("Body:")
                         str.AppendLine("FSQDDeclarationResponse:")
-                        str.AppendLine(lineIndent & "MCKey_" & .MCKey.ToString)
-                        str.AppendLine(lineIndent & "MCValue_" & .MCValue.ToString)
+                        'str.AppendLine(lineIndent & "MCKey_" & .MCKey.ToString)
+                        'str.AppendLine(lineIndent & "MCValue_" & .MCValue.ToString)
 
                         str.AppendLine(lineIndent & .CustomRegistrationNumber)
                         str.AppendLine(lineIndent & .CommentFromFQC)

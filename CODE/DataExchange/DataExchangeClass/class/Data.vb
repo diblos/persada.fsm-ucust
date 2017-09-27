@@ -882,7 +882,7 @@
 
 
         sql.Append(" SELECT IMH_ID, SMK_ID, IMHK1RefNum,BATCHID, IMHReplyRemarks, IMHPStatus, CONVERT(char(10), B.LMDT,126) LMDT FROM ICMImport B, ")
-        sql.Append(" TmpParty H ")
+        sql.Append(" (SELECT TOP 1 CFGK1RegNum,BATCHID FROM TmpParty ORDER BY TP_ID DESC) H ")
         sql.Append(" WHERE H.CFGK1RegNum = B.IMHK1RefNum ")
         sql.Append(" AND (B.UCUSTOM = 'Y' AND B.flag IS NULL AND B.IMHPStatus = 'A') ")
 
