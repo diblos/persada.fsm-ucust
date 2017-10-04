@@ -424,6 +424,7 @@
             sql.Append(" (")
             '----------------------------------------------------------------------------------
             'sql.Append(" " & cmmn.GetAutonumberKey(SMKCFormGoodsTableName, "[CFG_ID]"))
+            SMKCID = GetAutonumberKey(SMKCFormTableName, "[SMK_ID]", "[SMKRefNum]='" & data.CustomFormNumber & "'") '20171004
             sql.Append(" " & SMKCID)
             sql.Append(" ,'" & SMKHEADER & "'")
             sql.Append(" ,'" & data.CustomFormNumber & "'")
@@ -804,10 +805,10 @@
 
     End Function
 
-    Private Function GetAutonumberKey(ByVal TableName As String, ByVal TableCol As String) As Integer
+    Private Function GetAutonumberKey(ByVal TableName As String, ByVal TableCol As String, Optional Filter As String = Nothing) As Integer
         Dim number As Integer = 1
         Dim sql As String = _
-        "SELECT MAX(" & TableCol & ")  AS [MAX] FROM " & TableName
+        "SELECT MAX(" & TableCol & ")  AS [MAX] FROM " & TableName & IIf(Filter = Nothing, "", " WHERE " & Filter)
 
         Dim command As System.Data.Common.DbCommand = db.GetSqlStringCommand(sql)
         Try
