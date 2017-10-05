@@ -813,7 +813,9 @@
         Dim command As System.Data.Common.DbCommand = db.GetSqlStringCommand(sql)
         Try
             number = db.ExecuteDataSet(command).Tables(0).Rows(0).Item("MAX")
-            Return number + 1
+
+            Return IIf(Filter = Nothing, number + 1, number)
+
         Catch ex As Exception
             RaiseEvent OnError(Now, New Exception("GetAutonumberKey: " & ex.Message))
             Return number
@@ -990,7 +992,7 @@
 
             Return CDate(newDate & " " & newTime)
         Catch ex As Exception
-            Return New Date
+            Return New Date(1970, 1, 1, 0, 0, 1) '1970-01-01 00:00:01
         End Try
     End Function
 
