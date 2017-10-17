@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 
 Module Module1
-    Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\20170824\FSQD_RQCA_20170817T174720.txt"
+    Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\20171005\FSQD_RQCA_20171002T173757.txt"
     'Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\neo\fwucustomsfosim-2017\FSQD_RQCA_20170523T085201.txt"
 
     Dim dummyDataCA As DataExchangeClass.deprecating.ConsigmentApprovalResponse
@@ -33,9 +33,9 @@ Module Module1
 
         'Testing()
 
-        'Reading()
+        Reading()
 
-        Writing(WritingOption.FSQDDeclarationResponse)
+        'Writing(WritingOption.FSQDDeclarationResponse)
 
         HappyEnd() 'Wait input to end
     End Sub
@@ -77,7 +77,9 @@ Module Module1
                 Next
 
                 'Arr2Object_OLD(tmp)
-                Arr2Object_NEW(tmp)
+                'Arr2Object_NEW(tmp)
+                Dim we As DataExchangeClass.FSQDConsAppReq.FSQDDeclaration = Arr2Object_NEW(tmp)
+                Console.WriteLine("station = " & we.getCustomStation)
 
             End Using
         Catch e As Exception

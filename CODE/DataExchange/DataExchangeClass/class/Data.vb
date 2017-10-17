@@ -245,7 +245,7 @@
             'sql.Append(" ,[SMKAccident]")
 
             'sql.Append(" ,'" & data.Purpose_of_import & "'")
-            sql.Append(" ,'" & EP_ID_DEFAULT & "'")
+            sql.Append(" ,'" & GetEntryPointID(data.getCustomStation) & "'") 'sql.Append(" ,'" & EP_ID_DEFAULT & "'")
             'sql.Append(" ,'" & data.Warehouse_Code & "'")
             'sql.Append(" ,'" & data.Warehouse_Name & "'")
             'sql.Append(" ,'" & data.Warehouse_Address & "'") '-> Form Inline Address
@@ -815,6 +815,26 @@
             number = db.ExecuteDataSet(command).Tables(0).Rows(0).Item("MAX")
 
             Return IIf(Filter = Nothing, number + 1, number)
+
+        Catch ex As Exception
+            RaiseEvent OnError(Now, New Exception("GetAutonumberKey: " & ex.Message))
+            Return number
+        Finally
+            command.Connection.Close()
+            command.Dispose()
+        End Try
+    End Function
+
+    Private Function GetEntryPointID(ByVal CustomStation As String) As Integer
+        Dim number As Integer = 999
+        Dim sql As String = _
+        "SELECT EP_ID FROM ADMEntryPoint WHERE STT_ID = (SELECT STT_ID FROM CODStation WHERE STTCode = '" & CustomStation & "' AND RStatus = '2') AND RStatus = '2';"
+
+        Dim command As System.Data.Common.DbCommand = db.GetSqlStringCommand(sql)
+        Try
+            number = db.ExecuteDataSet(command).Tables(0).Rows(0).Item("EP_ID")
+
+            Return number
 
         Catch ex As Exception
             RaiseEvent OnError(Now, New Exception("GetAutonumberKey: " & ex.Message))

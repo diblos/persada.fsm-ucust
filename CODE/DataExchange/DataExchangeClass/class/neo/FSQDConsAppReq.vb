@@ -75,6 +75,18 @@ Namespace FSQDConsAppReq
             End Set
         End Property
 
+        Public ReadOnly Property getCustomStation() As String
+            Get
+                Dim x As String = String.Empty
+                Try
+                    x = Me._CustomFormNumber.Split("-")(2)
+                Catch ex As Exception
+                    x = "999"
+                End Try
+                Return x
+            End Get
+        End Property
+
         Private _TransactionType As String ' 1-3
         Public Property TransactionType() As String
             Get

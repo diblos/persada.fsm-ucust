@@ -54,7 +54,11 @@ Namespace FSQDConsAppRes
                 Return Me._CustomRegistrationNumber
             End Get
             Set(ByVal value As String)
-                Me._CustomRegistrationNumber = value
+                Try
+                    Me._CustomRegistrationNumber = Trim(value)
+                Catch ex As Exception
+                    Me._CustomRegistrationNumber = value
+                End Try
             End Set
         End Property
 
