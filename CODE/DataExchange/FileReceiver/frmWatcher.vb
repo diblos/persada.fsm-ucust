@@ -154,13 +154,14 @@ Public Class frmWatcher
             '             NotifyFilters.LastWrite Or _
             '             NotifyFilters.FileName Or _
             '             NotifyFilters.DirectoryName)
-            watchfolder(x).NotifyFilter = IO.NotifyFilters.DirectoryName
+            'watchfolder(x).NotifyFilter = IO.NotifyFilters.DirectoryName
             'watchfolder(x).NotifyFilter = watchfolder(x).NotifyFilter Or _
             '                              IO.NotifyFilters.LastWrite
-            watchfolder(x).NotifyFilter = (NotifyFilters.LastAccess Or _
-             NotifyFilters.LastWrite Or _
-             NotifyFilters.FileName Or _
-             NotifyFilters.DirectoryName)
+            'watchfolder(x).NotifyFilter = (NotifyFilters.LastAccess Or _
+            ' NotifyFilters.LastWrite Or _
+            ' NotifyFilters.FileName Or _
+            ' NotifyFilters.DirectoryName)
+            watchfolder(x).NotifyFilter = (NotifyFilters.FileName)
             '-------------------------------------------------------------
             ' add the handler to each event
 
@@ -310,6 +311,8 @@ Public Class frmWatcher
         lstMsgs(FILE_NAME)
 
         Try
+
+            File.SetAttributes(FILE_NAME, FileAttributes.Normal)
             ' Open the file using a stream reader.
             'Using sr As New StreamReader(FILE_NAME, System.Text.Encoding.GetEncoding("UCS-2"))
             Using sr As New StreamReader(FILE_NAME, System.Text.Encoding.GetEncoding("UTF-8"))
@@ -330,8 +333,9 @@ Public Class frmWatcher
                 Dim NewData As DataExchangeClass.FSQDConsAppReq.FSQDDeclaration = Arr2Object(tmp)
 
                 dService.FSQDInsert(NewData)
-
+                sr.Close()
             End Using
+
         Catch e As Exception
             lstMsgs(Now.ToString(LOGTIMEFORMAT) & INDENT & e.Message)
         End Try
