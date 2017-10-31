@@ -52,6 +52,9 @@
 
         Dim test As New System.Text.StringBuilder
 
+        Dim SMKFORM_CTRL As Boolean = False
+        Dim TMPPARTY_CTRL As Boolean = False
+
         For Each item In data.Invoice.InvoiceItems
 
             UPDATEDDATE = Now.ToString(DataExchangeClass.Common.DEFAULT_SQL_DATA_FORMAT)
@@ -357,7 +360,10 @@
             Try
                 'MsgBox(sql.ToString)
                 'nEventLOG(sql.ToString)
-                result = result + ExecuteQuery(sql.ToString)
+                If Not SMKFORM_CTRL Then ' ONLY SINGLE ENTRY IN SMKFORM TABLE
+                    SMKFORM_CTRL = True
+                    result = result + ExecuteQuery(sql.ToString)
+                End If
 
             Catch ex As Exception
                 Throw ex
@@ -490,7 +496,11 @@
                 Throw ex
             End Try
 
-            If result > 0 Then InsertParty(data)
+            If result > 0 And TMPPARTY_CTRL = False Then
+                TMPPARTY_CTRL = True
+                InsertParty(data)
+            End If
+
 
         Next
 

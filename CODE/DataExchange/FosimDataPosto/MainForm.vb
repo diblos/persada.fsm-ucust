@@ -225,7 +225,7 @@ Public Class MainForm
                         str.AppendLine("<empty>")
                         str.AppendLine(Now.ToString("yyyy-MM-ddTHH:mm:ss")) 'yyyyMMddTHHmmss
                         str.AppendLine("<empty>")
-                        str.AppendLine(False)
+                        str.AppendLine("false") 'hardcode doe
                         str.AppendLine("<empty>")
                         str.AppendLine("FSQDConsAppRes")
                         str.AppendLine("RES")

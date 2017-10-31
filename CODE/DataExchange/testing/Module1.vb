@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 
 Module Module1
-    Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\20171005\FSQD_RQCA_20171002T173757.txt"
+    Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\20171019\FSQD_RQCA_20171011T191018.txt"
     'Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\neo\fwucustomsfosim-2017\FSQD_RQCA_20170523T085201.txt"
 
     Dim dummyDataCA As DataExchangeClass.deprecating.ConsigmentApprovalResponse
@@ -726,6 +726,13 @@ Module Module1
                     counter = 0
                     'NEW OBJECT
                     Spec = New DataExchangeClass.FSQDConsAppReq.Specification
+                ElseIf (item.IndexOf("InvoiceItem") >= 0) And (currTag = "Specification") Then 'Next InvoiceItem '2017-10-30
+                    invoiceItemCount += 1
+                    currTag = "InvoiceItem"
+                    counter = 0
+                    'NEW OBJECT
+                    InvoiceItem = New DataExchangeClass.FSQDConsAppReq.InvoiceItem
+
                 ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Permit") Then
                     currTag = "Attachments"
                 ElseIf (item.IndexOf("Attachment") >= 0) And (currTag = "Attachments") Then
@@ -1010,7 +1017,7 @@ Module Module1
                                     FSQD.Invoice.InvoiceItems.Add(InvoiceItem)
                             End Select
 
-                            Debug.Print(key)
+                            'Debug.Print(key)
 
                             'Console.WriteLine(currTag & " : " & item)
                             Console.WriteLine(key & " : " & item)

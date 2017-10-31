@@ -412,6 +412,13 @@ Public Class frmWatcher
                     counter = 0
                     'NEW OBJECT
                     Spec = New DataExchangeClass.FSQDConsAppReq.Specification
+                ElseIf (item.IndexOf("InvoiceItem") >= 0) And (currTag = "Specification") Then 'Next InvoiceItem '2017-10-30
+                    invoiceItemCount += 1
+                    currTag = "InvoiceItem"
+                    counter = 0
+                    'NEW OBJECT
+                    InvoiceItem = New DataExchangeClass.FSQDConsAppReq.InvoiceItem
+
                 ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Permit") Then
                     currTag = "Attachments"
                 ElseIf (item.IndexOf("Attachment") >= 0) And (currTag = "Attachments") Then
