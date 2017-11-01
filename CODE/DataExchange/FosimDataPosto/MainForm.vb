@@ -249,6 +249,8 @@ Public Class MainForm
                             str.AppendLine(lineIndent & item.ApprovalStatus.ToString)
                             'str.Append(lineIndent & item.ActionCode.ToString)
                             str.Append(lineIndent & IIf(item.ActionCode.ToString = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumActionCode.X.ToString, "", item.ActionCode.ToString))
+
+                            str.AppendLine(String.Empty) 'for multiple invoice item separator
                         Next
 
                     End With

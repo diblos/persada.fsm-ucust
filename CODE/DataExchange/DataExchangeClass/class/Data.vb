@@ -501,6 +501,27 @@
                 InsertParty(data)
             End If
 
+            'Missing items by hazree
+            ' CFGGrossWeight >
+            ' CFGImpPermitNo > permit
+            ' CFGPurposeImp
+            ' CFGWarehouseCode
+            ' CFGWarehouseName
+            ' CFGWarehouseAdd
+            ' CFGExpCode
+            ' CFGFoodCode
+            ' CFGIMGBrand
+            ' CFGIMGDateProduce
+            ' CFGIMGDateExpiry
+            ' CFGTreatment
+            ' CFGManuCode
+            ' CFGIMGmnfName
+            ' CFGIMGmnfAddr
+            ' CFGDistributorName
+            ' CFGDistributorAdd
+            ' CFGPreImpRegNo
+            ' CFGCommodityStatus >
+
 
         Next
 
