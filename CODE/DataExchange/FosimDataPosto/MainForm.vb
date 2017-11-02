@@ -284,6 +284,9 @@ Public Class MainForm
             str.Replace("<empty>", "")
             str.Replace(vbTab, "")
 
+            'THIS LINE REMOVE/DELETE LAST CHARACTER FROM STRINGBUILDER.
+            str.Remove(str.Length - 1, 1)
+
             Select Case Writing
                 Case WritingOption.FSQDDeclarationResponse
 
