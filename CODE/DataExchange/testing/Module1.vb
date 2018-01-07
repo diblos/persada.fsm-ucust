@@ -733,7 +733,8 @@ Module Module1
                     'NEW OBJECT
                     InvoiceItem = New DataExchangeClass.FSQDConsAppReq.InvoiceItem
 
-                ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Permit") Then
+                ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Specification") Then
+                    'ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Permit") Then
                     currTag = "Attachments"
                 ElseIf (item.IndexOf("Attachment") >= 0) And (currTag = "Attachments") Then
                     attachementCount += 1

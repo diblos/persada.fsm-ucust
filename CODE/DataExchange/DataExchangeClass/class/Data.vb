@@ -24,8 +24,43 @@
         Dim result As Integer = 0
         Try
             Dim sql As New System.Text.StringBuilder
+            '==================================================================================
+            'sql.Append("INSERT INTO TmpParty")
+            'sql.Append("(")
+            'sql.Append("[CFGK1RegNum],")
+            'sql.Append("[BATCHID],")
+            'sql.Append("[LMDT]")
+            'sql.Append(" )")
+            ''----------------------------------------------------------------------------------
+            'sql.Append(" VALUES ")
+            'sql.Append(" (")
+            'sql.Append("'" & data.CustomFormNumber & "',")
+            'sql.Append("'" & data.HeaderObj.batchID & "',")
+            'sql.Append("'" & Now.ToString(DATETIME_FORMAT) & "'")
+            'sql.Append(")")
+            '==================================================================================
 
-            sql.Append("INSERT INTO TmpParty")
+            'SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+            'BEGIN TRANSACTION;
+            'UPDATE dbo.table SET ... WHERE PK = @PK;
+            'IF @@ROWCOUNT = 0
+            '                BEGIN()
+            '  INSERT dbo.table(PK, ...) SELECT @PK, ...;
+            '                End
+            'COMMIT TRANSACTION;
+
+            sql.AppendLine("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;")
+            sql.AppendLine("BEGIN TRANSACTION;")
+
+            sql.AppendLine("UPDATE [fdb].[dbo].[TmpParty] SET ")
+            sql.Append("[CFGK1RegNum] = '" & data.CustomFormNumber & "',")
+            sql.Append("[BATCHID] = '" & data.HeaderObj.batchID & "',")
+            sql.Append("[LMDT] = '" & Now.ToString(DATETIME_FORMAT) & "' WHERE [BATCHID] = '" & data.HeaderObj.batchID & "';")
+
+            sql.AppendLine("IF @@ROWCOUNT = 0")
+            sql.AppendLine("BEGIN")
+
+            sql.AppendLine("INSERT INTO TmpParty")
             sql.Append("(")
             sql.Append("[CFGK1RegNum],")
             sql.Append("[BATCHID],")
@@ -37,8 +72,12 @@
             sql.Append("'" & data.CustomFormNumber & "',")
             sql.Append("'" & data.HeaderObj.batchID & "',")
             sql.Append("'" & Now.ToString(DATETIME_FORMAT) & "'")
-            sql.Append(")")
+            sql.Append(");")
 
+            sql.AppendLine("END")
+            sql.AppendLine("COMMIT TRANSACTION;")
+
+            '==================================================================================
             result = result + ExecuteQuery(sql.ToString)
         Catch ex As Exception
             result = 0
@@ -149,6 +188,10 @@
             sql.Append(" ,[LMBY]")
             sql.Append(" ,[LMDT]")
             sql.Append(" ,[UCUSTOM]")
+
+            sql.Append(" ,[SMKFilePath]")
+            sql.Append(" ,[SMKFileContent]")
+
             sql.Append(" )")
             '----------------------------------------------------------------------------------
             sql.Append(" VALUES ")
@@ -258,6 +301,15 @@
             sql.Append(" ,'" & UPDATEDBY & "'")
             sql.Append(" ,'" & UPDATEDDATE & "'")
             sql.Append(" ,'Y'")
+
+            If data.Attachments.Count > 0 Then
+                For Each att In data.Attachments
+                    sql.Append(" ,'" & att.FilePath & "'")
+                    sql.Append(" ,'" & att.FileContent & "'")
+                    Exit For 'TABLE CURRENTLY ACCEPT 1 ATTACHMENT
+                Next
+            End If
+
             '----------------------------------------------------------------------------------
             sql.Append(" )")
 
@@ -527,6 +579,26 @@
 
         Return result
 
+    End Function
+
+    Public Function CheckBatchID(ByVal BatchID As String) As Boolean
+        Dim Result As Boolean = False
+        Try
+            Dim SQL As String = "SELECT count(1) as COUNTER FROM TmpParty WHERE BATCHID='" & BatchID & "';"
+            Dim dt As DataTable = db.ExecuteDataSet(System.Data.CommandType.Text, SQL).Tables(0)
+            If dt.Rows.Count > 0 Then
+                If dt.Rows(0).Item("COUNTER") > 0 Then
+                    Result = True
+                Else
+                    Result = False
+                End If
+            Else
+                Result = False
+            End If
+        Catch ex As Exception
+            Result = False
+        End Try
+        Return Result
     End Function
 
     Public Function CAInsert(ByVal data As DataExchangeClass.deprecating.ConsigmentApprovalRequest) As Integer

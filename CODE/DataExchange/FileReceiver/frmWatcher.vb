@@ -332,7 +332,11 @@ Public Class frmWatcher
 
                 Dim NewData As DataExchangeClass.FSQDConsAppReq.FSQDDeclaration = Arr2Object(tmp)
 
-                dService.FSQDInsert(NewData)
+                Dim Header As DataExchangeClass.Header.NewHeader = DirectCast(NewData.HeaderObj, DataExchangeClass.Header.NewHeader)
+                If dService.CheckBatchID(Header.batchID) = False Then
+                    dService.FSQDInsert(NewData)
+                End If
+
                 sr.Close()
             End Using
 
@@ -419,7 +423,8 @@ Public Class frmWatcher
                     'NEW OBJECT
                     InvoiceItem = New DataExchangeClass.FSQDConsAppReq.InvoiceItem
 
-                ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Permit") Then
+                ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Specification") Then
+                    'ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Permit") Then
                     currTag = "Attachments"
                 ElseIf (item.IndexOf("Attachment") >= 0) And (currTag = "Attachments") Then
                     attachementCount += 1
