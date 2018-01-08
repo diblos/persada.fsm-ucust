@@ -33,9 +33,12 @@ Module Module1
 
         'Testing()
 
-        Reading()
+        'Reading()
 
         'Writing(WritingOption.FSQDDeclarationResponse)
+
+        Dim s As Date = CDate("31-12-2017")
+        Console.WriteLine(s.ToString("yyyy-MMM-dd"))
 
         HappyEnd() 'Wait input to end
     End Sub

@@ -476,6 +476,30 @@
             sql.Append(" ,[LMBY]")
             sql.Append(" ,[LMDT]")
             'sql.Append(" ,[Remarks]")
+
+            '========
+            sql.Append(" ,[CFGGrossWeight]")
+            sql.Append(" ,[CFGImpPermitNo]")
+            sql.Append(" ,[CFGPurposeImp]")
+            sql.Append(" ,[CFGWarehouseCode]")
+            sql.Append(" ,[CFGWarehouseName]")
+            sql.Append(" ,[CFGWarehouseAdd]")
+            sql.Append(" ,[CFGExpCode]")
+            sql.Append(" ,[CFGIMGBrand]")
+            sql.Append(" ,[CFGIMGDateProduce]")
+            sql.Append(" ,[CFGIMGDateExpiry]")
+            sql.Append(" ,[CFGTreatment]")
+            sql.Append(" ,[CFGManuCode]")
+            sql.Append(" ,[CFGIMGmnfName]")
+            sql.Append(" ,[CFGIMGmnfAddr]")
+
+            sql.Append(" ,[CFGPreImpRegNo]")
+
+            sql.Append(" ,[CFGDistributorName]")
+            sql.Append(" ,[CFGDistributorAdd]")
+
+            sql.Append(" ,[CFGCommodityStatus]")
+            '========
             sql.Append(" )")
             '----------------------------------------------------------------------------------
             sql.Append(" VALUES ")
@@ -530,6 +554,74 @@
             sql.Append(" ,'" & UPDATEDBY & "'")
             sql.Append(" ,'" & UPDATEDDATE & "'")
             'sql.Append(" ,[Remarks]")
+
+            '========
+            'CFGGrossWeight
+            sql.Append(" ,'" & item.GrossWeightInKGS & "'")
+            If item.Permits.Count > 0 Then
+                For Each permit In item.Permits
+                    'CFGImpPermitNo
+                    sql.Append(" ,'" & permit.ImportPermitNumber & "'")
+                    Exit For
+                Next
+            Else
+                sql.Append(" ,''") 'NULL
+            End If
+            If item.Specifications.Count > 0 Then
+                For Each spec In item.Specifications
+                    'CFGPurposeImp
+                    sql.Append(" ,'" & spec.PurposeOfImport & "'")
+                    'CFGWarehouseCode
+                    sql.Append(" ,'" & spec.WarehouseCode & "'")
+                    'CFGWarehouseName
+                    sql.Append(" ,'" & spec.WarehouseName & "'")
+                    'CFGWarehouseAdd
+                    sql.Append(" ,'" & spec.WarehouseAddress & "'")
+                    'CFGExpCode
+                    sql.Append(" ,'" & spec.ExporterCode & "'")
+                    'CFGIMGBrand
+                    sql.Append(" ,'" & spec.Brand & "'")
+                    'CFGIMGDateProduce
+                    Dim s As Date = CDate(spec.DateOfProduction)
+                    sql.Append(" ,'" & s.ToString("yyyy-MM-dd") & "'") 'dd-mm-yyyy
+                    'CFGIMGDateExpiry
+                    s = CDate(spec.DateOfExpire)
+                    sql.Append(" ,'" & s.ToString("yyyy-MM-dd") & "'") 'dd-mm-yyyy
+                    'CFGTreatment
+                    sql.Append(" ,'" & spec.Treatment & "'")
+                    'CFGManuCode
+                    sql.Append(" ,'" & spec.ManufacturerCode & "'")
+                    'CFGIMGmnfName
+                    sql.Append(" ,'" & spec.ManufacturerName & "'")
+                    'CFGIMGmnfAddr
+                    sql.Append(" ,'" & spec.ManufacturerAddress & "'")
+                    'CFGPreImpRegNo
+                    sql.Append(" ,'" & spec.PreImportRegistrationNo & "'")
+                    Exit For
+                Next
+            Else
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,'" & FormValidDateTime("19700101", "0001") & "'") 'NULL datetime
+                sql.Append(" ,'" & FormValidDateTime("19700101", "0001") & "'") 'NULL datetime
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+            End If
+            
+            'CFGDistributorName
+            sql.Append(" ,''") 'NULL
+            'CFGDistributorAdd
+            sql.Append(" ,''") 'NULL
+            'CFGCommodityStatus
+            sql.Append(" ,'" & item.CommodityStatus & "'")
+            '========
             '----------------------------------------------------------------------------------
             sql.Append(" )")
 
