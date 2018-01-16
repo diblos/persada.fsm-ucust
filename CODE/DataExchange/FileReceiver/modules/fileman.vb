@@ -250,7 +250,17 @@ Module fileman
     Public Function MoveAfile(ByVal FileToCopy As String, ByVal NewCopy As String)
         Try
             If System.IO.File.Exists(FileToCopy) = True Then
-                System.IO.File.Move(FileToCopy, NewCopy)
+
+                Dim fileCount As Integer = 0
+                Dim tmpNewCopy As String = NewCopy
+                Do While (System.IO.File.Exists(tmpNewCopy))
+
+                    fileCount += 1
+                    tmpNewCopy = Path.Combine(Path.GetDirectoryName(NewCopy), Path.GetFileNameWithoutExtension(NewCopy) + IIf(fileCount > 0, "(" + fileCount.ToString() + ")", "") + Path.GetExtension(NewCopy))
+
+                Loop
+
+                System.IO.File.Move(FileToCopy, tmpNewCopy)
                 Return True
             Else
                 Return False
