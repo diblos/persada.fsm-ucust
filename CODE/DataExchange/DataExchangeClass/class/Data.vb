@@ -52,7 +52,7 @@
             sql.AppendLine("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;")
             sql.AppendLine("BEGIN TRANSACTION;")
 
-            sql.AppendLine("UPDATE [fdb].[dbo].[TmpParty] SET ")
+            sql.AppendLine("UPDATE [TmpParty] SET ")
             sql.Append("[CFGK1RegNum] = '" & data.CustomFormNumber & "',")
             sql.Append("[BATCHID] = '" & data.HeaderObj.batchID & "',")
             sql.Append("[LMDT] = '" & Now.ToString(DATETIME_FORMAT) & "' WHERE [BATCHID] = '" & data.HeaderObj.batchID & "';")
