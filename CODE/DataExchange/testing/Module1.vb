@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 
 Module Module1
-    Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\20170824\FSQD_RQCA_20170817T174720.txt"
+    Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\20171019\FSQD_RQCA_20171011T191018.txt"
     'Dim textFilePath As String = "C:\Users\lenovo\Desktop\workspace\ucustom\neo\fwucustomsfosim-2017\FSQD_RQCA_20170523T085201.txt"
 
     Dim dummyDataCA As DataExchangeClass.deprecating.ConsigmentApprovalResponse
@@ -35,7 +35,10 @@ Module Module1
 
         'Reading()
 
-        Writing(WritingOption.FSQDDeclarationResponse)
+        'Writing(WritingOption.FSQDDeclarationResponse)
+
+        Dim s As Date = CDate("31-12-2017")
+        Console.WriteLine(s.ToString("yyyy-MMM-dd"))
 
         HappyEnd() 'Wait input to end
     End Sub
@@ -77,7 +80,9 @@ Module Module1
                 Next
 
                 'Arr2Object_OLD(tmp)
-                Arr2Object_NEW(tmp)
+                'Arr2Object_NEW(tmp)
+                Dim we As DataExchangeClass.FSQDConsAppReq.FSQDDeclaration = Arr2Object_NEW(tmp)
+                Console.WriteLine("station = " & we.getCustomStation)
 
             End Using
         Catch e As Exception
@@ -724,7 +729,15 @@ Module Module1
                     counter = 0
                     'NEW OBJECT
                     Spec = New DataExchangeClass.FSQDConsAppReq.Specification
-                ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Permit") Then
+                ElseIf (item.IndexOf("InvoiceItem") >= 0) And (currTag = "Specification") Then 'Next InvoiceItem '2017-10-30
+                    invoiceItemCount += 1
+                    currTag = "InvoiceItem"
+                    counter = 0
+                    'NEW OBJECT
+                    InvoiceItem = New DataExchangeClass.FSQDConsAppReq.InvoiceItem
+
+                ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Specification") Then
+                    'ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Permit") Then
                     currTag = "Attachments"
                 ElseIf (item.IndexOf("Attachment") >= 0) And (currTag = "Attachments") Then
                     attachementCount += 1
@@ -1008,7 +1021,7 @@ Module Module1
                                     FSQD.Invoice.InvoiceItems.Add(InvoiceItem)
                             End Select
 
-                            Debug.Print(key)
+                            'Debug.Print(key)
 
                             'Console.WriteLine(currTag & " : " & item)
                             Console.WriteLine(key & " : " & item)

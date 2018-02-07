@@ -24,8 +24,43 @@
         Dim result As Integer = 0
         Try
             Dim sql As New System.Text.StringBuilder
+            '==================================================================================
+            'sql.Append("INSERT INTO TmpParty")
+            'sql.Append("(")
+            'sql.Append("[CFGK1RegNum],")
+            'sql.Append("[BATCHID],")
+            'sql.Append("[LMDT]")
+            'sql.Append(" )")
+            ''----------------------------------------------------------------------------------
+            'sql.Append(" VALUES ")
+            'sql.Append(" (")
+            'sql.Append("'" & data.CustomFormNumber & "',")
+            'sql.Append("'" & data.HeaderObj.batchID & "',")
+            'sql.Append("'" & Now.ToString(DATETIME_FORMAT) & "'")
+            'sql.Append(")")
+            '==================================================================================
 
-            sql.Append("INSERT INTO TmpParty")
+            'SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+            'BEGIN TRANSACTION;
+            'UPDATE dbo.table SET ... WHERE PK = @PK;
+            'IF @@ROWCOUNT = 0
+            '                BEGIN()
+            '  INSERT dbo.table(PK, ...) SELECT @PK, ...;
+            '                End
+            'COMMIT TRANSACTION;
+
+            sql.AppendLine("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;")
+            sql.AppendLine("BEGIN TRANSACTION;")
+
+            sql.AppendLine("UPDATE [TmpParty] SET ")
+            sql.Append("[CFGK1RegNum] = '" & data.CustomFormNumber & "',")
+            sql.Append("[BATCHID] = '" & data.HeaderObj.batchID & "',")
+            sql.Append("[LMDT] = '" & Now.ToString(DATETIME_FORMAT) & "' WHERE [BATCHID] = '" & data.HeaderObj.batchID & "';")
+
+            sql.AppendLine("IF @@ROWCOUNT = 0")
+            sql.AppendLine("BEGIN")
+
+            sql.AppendLine("INSERT INTO TmpParty")
             sql.Append("(")
             sql.Append("[CFGK1RegNum],")
             sql.Append("[BATCHID],")
@@ -37,8 +72,12 @@
             sql.Append("'" & data.CustomFormNumber & "',")
             sql.Append("'" & data.HeaderObj.batchID & "',")
             sql.Append("'" & Now.ToString(DATETIME_FORMAT) & "'")
-            sql.Append(")")
+            sql.Append(");")
 
+            sql.AppendLine("END")
+            sql.AppendLine("COMMIT TRANSACTION;")
+
+            '==================================================================================
             result = result + ExecuteQuery(sql.ToString)
         Catch ex As Exception
             result = 0
@@ -51,6 +90,9 @@
         Dim result As Integer = 0
 
         Dim test As New System.Text.StringBuilder
+
+        Dim SMKFORM_CTRL As Boolean = False
+        Dim TMPPARTY_CTRL As Boolean = False
 
         For Each item In data.Invoice.InvoiceItems
 
@@ -146,6 +188,10 @@
             sql.Append(" ,[LMBY]")
             sql.Append(" ,[LMDT]")
             sql.Append(" ,[UCUSTOM]")
+
+            sql.Append(" ,[SMKFilePath]")
+            sql.Append(" ,[SMKFileContent]")
+
             sql.Append(" )")
             '----------------------------------------------------------------------------------
             sql.Append(" VALUES ")
@@ -245,7 +291,7 @@
             'sql.Append(" ,[SMKAccident]")
 
             'sql.Append(" ,'" & data.Purpose_of_import & "'")
-            sql.Append(" ,'" & EP_ID_DEFAULT & "'")
+            sql.Append(" ,'" & GetEntryPointID(data.getCustomStation) & "'") 'sql.Append(" ,'" & EP_ID_DEFAULT & "'")
             'sql.Append(" ,'" & data.Warehouse_Code & "'")
             'sql.Append(" ,'" & data.Warehouse_Name & "'")
             'sql.Append(" ,'" & data.Warehouse_Address & "'") '-> Form Inline Address
@@ -255,6 +301,15 @@
             sql.Append(" ,'" & UPDATEDBY & "'")
             sql.Append(" ,'" & UPDATEDDATE & "'")
             sql.Append(" ,'Y'")
+
+            If data.Attachments.Count > 0 Then
+                For Each att In data.Attachments
+                    sql.Append(" ,'" & att.FilePath & "'")
+                    sql.Append(" ,'" & att.FileContent & "'")
+                    Exit For 'TABLE CURRENTLY ACCEPT 1 ATTACHMENT
+                Next
+            End If
+
             '----------------------------------------------------------------------------------
             sql.Append(" )")
 
@@ -357,7 +412,10 @@
             Try
                 'MsgBox(sql.ToString)
                 'nEventLOG(sql.ToString)
-                result = result + ExecuteQuery(sql.ToString)
+                If Not SMKFORM_CTRL Then ' ONLY SINGLE ENTRY IN SMKFORM TABLE
+                    SMKFORM_CTRL = True
+                    result = result + ExecuteQuery(sql.ToString)
+                End If
 
             Catch ex As Exception
                 Throw ex
@@ -418,6 +476,30 @@
             sql.Append(" ,[LMBY]")
             sql.Append(" ,[LMDT]")
             'sql.Append(" ,[Remarks]")
+
+            '========
+            sql.Append(" ,[CFGGrossWeight]")
+            sql.Append(" ,[CFGImpPermitNo]")
+            sql.Append(" ,[CFGPurposeImp]")
+            sql.Append(" ,[CFGWarehouseCode]")
+            sql.Append(" ,[CFGWarehouseName]")
+            sql.Append(" ,[CFGWarehouseAdd]")
+            sql.Append(" ,[CFGExpCode]")
+            sql.Append(" ,[CFGIMGBrand]")
+            sql.Append(" ,[CFGIMGDateProduce]")
+            sql.Append(" ,[CFGIMGDateExpiry]")
+            sql.Append(" ,[CFGTreatment]")
+            sql.Append(" ,[CFGManuCode]")
+            sql.Append(" ,[CFGIMGmnfName]")
+            sql.Append(" ,[CFGIMGmnfAddr]")
+
+            sql.Append(" ,[CFGPreImpRegNo]")
+
+            sql.Append(" ,[CFGDistributorName]")
+            sql.Append(" ,[CFGDistributorAdd]")
+
+            sql.Append(" ,[CFGCommodityStatus]")
+            '========
             sql.Append(" )")
             '----------------------------------------------------------------------------------
             sql.Append(" VALUES ")
@@ -472,6 +554,74 @@
             sql.Append(" ,'" & UPDATEDBY & "'")
             sql.Append(" ,'" & UPDATEDDATE & "'")
             'sql.Append(" ,[Remarks]")
+
+            '========
+            'CFGGrossWeight
+            sql.Append(" ,'" & item.GrossWeightInKGS & "'")
+            If item.Permits.Count > 0 Then
+                For Each permit In item.Permits
+                    'CFGImpPermitNo
+                    sql.Append(" ,'" & permit.ImportPermitNumber & "'")
+                    Exit For
+                Next
+            Else
+                sql.Append(" ,''") 'NULL
+            End If
+            If item.Specifications.Count > 0 Then
+                For Each spec In item.Specifications
+                    'CFGPurposeImp
+                    sql.Append(" ,'" & spec.PurposeOfImport & "'")
+                    'CFGWarehouseCode
+                    sql.Append(" ,'" & spec.WarehouseCode & "'")
+                    'CFGWarehouseName
+                    sql.Append(" ,'" & spec.WarehouseName & "'")
+                    'CFGWarehouseAdd
+                    sql.Append(" ,'" & spec.WarehouseAddress & "'")
+                    'CFGExpCode
+                    sql.Append(" ,'" & spec.ExporterCode & "'")
+                    'CFGIMGBrand
+                    sql.Append(" ,'" & spec.Brand & "'")
+                    'CFGIMGDateProduce
+                    Dim s As Date = CDate(spec.DateOfProduction)
+                    sql.Append(" ,'" & s.ToString("yyyy-MM-dd") & "'") 'dd-mm-yyyy
+                    'CFGIMGDateExpiry
+                    s = CDate(spec.DateOfExpire)
+                    sql.Append(" ,'" & s.ToString("yyyy-MM-dd") & "'") 'dd-mm-yyyy
+                    'CFGTreatment
+                    sql.Append(" ,'" & spec.Treatment & "'")
+                    'CFGManuCode
+                    sql.Append(" ,'" & spec.ManufacturerCode & "'")
+                    'CFGIMGmnfName
+                    sql.Append(" ,'" & spec.ManufacturerName & "'")
+                    'CFGIMGmnfAddr
+                    sql.Append(" ,'" & spec.ManufacturerAddress & "'")
+                    'CFGPreImpRegNo
+                    sql.Append(" ,'" & spec.PreImportRegistrationNo & "'")
+                    Exit For
+                Next
+            Else
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,'" & FormValidDateTime("19700101", "0001") & "'") 'NULL datetime
+                sql.Append(" ,'" & FormValidDateTime("19700101", "0001") & "'") 'NULL datetime
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+                sql.Append(" ,''") 'NULL
+            End If
+            
+            'CFGDistributorName
+            sql.Append(" ,''") 'NULL
+            'CFGDistributorAdd
+            sql.Append(" ,''") 'NULL
+            'CFGCommodityStatus
+            sql.Append(" ,'" & item.CommodityStatus & "'")
+            '========
             '----------------------------------------------------------------------------------
             sql.Append(" )")
 
@@ -490,12 +640,57 @@
                 Throw ex
             End Try
 
-            If result > 0 Then InsertParty(data)
+            If result > 0 And TMPPARTY_CTRL = False Then
+                TMPPARTY_CTRL = True
+                InsertParty(data)
+            End If
+
+            'Missing items by hazree
+            ' CFGGrossWeight >
+            ' CFGImpPermitNo > permit
+            ' CFGPurposeImp
+            ' CFGWarehouseCode
+            ' CFGWarehouseName
+            ' CFGWarehouseAdd
+            ' CFGExpCode
+            ' CFGFoodCode
+            ' CFGIMGBrand
+            ' CFGIMGDateProduce
+            ' CFGIMGDateExpiry
+            ' CFGTreatment
+            ' CFGManuCode
+            ' CFGIMGmnfName
+            ' CFGIMGmnfAddr
+            ' CFGDistributorName
+            ' CFGDistributorAdd
+            ' CFGPreImpRegNo
+            ' CFGCommodityStatus >
+
 
         Next
 
         Return result
 
+    End Function
+
+    Public Function CheckBatchID(ByVal BatchID As String) As Boolean
+        Dim Result As Boolean = False
+        Try
+            Dim SQL As String = "SELECT count(1) as COUNTER FROM TmpParty WHERE BATCHID='" & BatchID & "';"
+            Dim dt As DataTable = db.ExecuteDataSet(System.Data.CommandType.Text, SQL).Tables(0)
+            If dt.Rows.Count > 0 Then
+                If dt.Rows(0).Item("COUNTER") > 0 Then
+                    Result = True
+                Else
+                    Result = False
+                End If
+            Else
+                Result = False
+            End If
+        Catch ex As Exception
+            Result = False
+        End Try
+        Return Result
     End Function
 
     Public Function CAInsert(ByVal data As DataExchangeClass.deprecating.ConsigmentApprovalRequest) As Integer
@@ -813,7 +1008,29 @@
         Dim command As System.Data.Common.DbCommand = db.GetSqlStringCommand(sql)
         Try
             number = db.ExecuteDataSet(command).Tables(0).Rows(0).Item("MAX")
-            Return number + 1
+
+            Return IIf(Filter = Nothing, number + 1, number)
+
+        Catch ex As Exception
+            RaiseEvent OnError(Now, New Exception("GetAutonumberKey: " & ex.Message))
+            Return number
+        Finally
+            command.Connection.Close()
+            command.Dispose()
+        End Try
+    End Function
+
+    Private Function GetEntryPointID(ByVal CustomStation As String) As Integer
+        Dim number As Integer = 999
+        Dim sql As String = _
+        "SELECT EP_ID FROM ADMEntryPoint WHERE STT_ID = (SELECT STT_ID FROM CODStation WHERE STTCode = '" & CustomStation & "' AND RStatus = '2') AND RStatus = '2';"
+
+        Dim command As System.Data.Common.DbCommand = db.GetSqlStringCommand(sql)
+        Try
+            number = db.ExecuteDataSet(command).Tables(0).Rows(0).Item("EP_ID")
+
+            Return number
+
         Catch ex As Exception
             RaiseEvent OnError(Now, New Exception("GetAutonumberKey: " & ex.Message))
             Return number
@@ -990,7 +1207,7 @@
 
             Return CDate(newDate & " " & newTime)
         Catch ex As Exception
-            Return New Date
+            Return New Date(1970, 1, 1, 0, 0, 1) '1970-01-01 00:00:01
         End Try
     End Function
 

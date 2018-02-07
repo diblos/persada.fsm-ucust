@@ -154,13 +154,14 @@ Public Class frmWatcher
             '             NotifyFilters.LastWrite Or _
             '             NotifyFilters.FileName Or _
             '             NotifyFilters.DirectoryName)
-            watchfolder(x).NotifyFilter = IO.NotifyFilters.DirectoryName
+            'watchfolder(x).NotifyFilter = IO.NotifyFilters.DirectoryName
             'watchfolder(x).NotifyFilter = watchfolder(x).NotifyFilter Or _
             '                              IO.NotifyFilters.LastWrite
-            watchfolder(x).NotifyFilter = (NotifyFilters.LastAccess Or _
-             NotifyFilters.LastWrite Or _
-             NotifyFilters.FileName Or _
-             NotifyFilters.DirectoryName)
+            'watchfolder(x).NotifyFilter = (NotifyFilters.LastAccess Or _
+            ' NotifyFilters.LastWrite Or _
+            ' NotifyFilters.FileName Or _
+            ' NotifyFilters.DirectoryName)
+            watchfolder(x).NotifyFilter = (NotifyFilters.FileName)
             '-------------------------------------------------------------
             ' add the handler to each event
 
@@ -310,6 +311,8 @@ Public Class frmWatcher
         lstMsgs(FILE_NAME)
 
         Try
+
+            File.SetAttributes(FILE_NAME, FileAttributes.Normal)
             ' Open the file using a stream reader.
             'Using sr As New StreamReader(FILE_NAME, System.Text.Encoding.GetEncoding("UCS-2"))
             Using sr As New StreamReader(FILE_NAME, System.Text.Encoding.GetEncoding("UTF-8"))
@@ -329,9 +332,14 @@ Public Class frmWatcher
 
                 Dim NewData As DataExchangeClass.FSQDConsAppReq.FSQDDeclaration = Arr2Object(tmp)
 
-                dService.FSQDInsert(NewData)
+                Dim Header As DataExchangeClass.Header.NewHeader = DirectCast(NewData.HeaderObj, DataExchangeClass.Header.NewHeader)
+                If dService.CheckBatchID(Header.batchID) = False Then
+                    dService.FSQDInsert(NewData)
+                End If
 
+                sr.Close()
             End Using
+
         Catch e As Exception
             lstMsgs(Now.ToString(LOGTIMEFORMAT) & INDENT & e.Message)
         End Try
@@ -408,7 +416,15 @@ Public Class frmWatcher
                     counter = 0
                     'NEW OBJECT
                     Spec = New DataExchangeClass.FSQDConsAppReq.Specification
-                ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Permit") Then
+                ElseIf (item.IndexOf("InvoiceItem") >= 0) And (currTag = "Specification") Then 'Next InvoiceItem '2017-10-30
+                    invoiceItemCount += 1
+                    currTag = "InvoiceItem"
+                    counter = 0
+                    'NEW OBJECT
+                    InvoiceItem = New DataExchangeClass.FSQDConsAppReq.InvoiceItem
+
+                ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Specification") Then
+                    'ElseIf (item.IndexOf("Attachments") >= 0) And (currTag = "Permit") Then
                     currTag = "Attachments"
                 ElseIf (item.IndexOf("Attachment") >= 0) And (currTag = "Attachments") Then
                     attachementCount += 1

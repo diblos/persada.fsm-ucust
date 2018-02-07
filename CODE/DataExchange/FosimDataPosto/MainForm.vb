@@ -178,7 +178,7 @@ Public Class MainForm
                 Next
                 '=================================================================================================
             End If
-            
+
         End If
         lstMsgs("Finished at " & Now)
         Me.Cursor = Cursors.Default
@@ -225,7 +225,7 @@ Public Class MainForm
                         str.AppendLine("<empty>")
                         str.AppendLine(Now.ToString("yyyy-MM-ddTHH:mm:ss")) 'yyyyMMddTHHmmss
                         str.AppendLine("<empty>")
-                        str.AppendLine(False)
+                        str.AppendLine("false") 'hardcode doe
                         str.AppendLine("<empty>")
                         str.AppendLine("FSQDConsAppRes")
                         str.AppendLine("RES")
@@ -249,6 +249,8 @@ Public Class MainForm
                             str.AppendLine(lineIndent & item.ApprovalStatus.ToString)
                             'str.Append(lineIndent & item.ActionCode.ToString)
                             str.Append(lineIndent & IIf(item.ActionCode.ToString = DataExchangeClass.FSQDConsAppRes.InvoiceItem.enumActionCode.X.ToString, "", item.ActionCode.ToString))
+
+                            str.AppendLine(String.Empty) 'for multiple invoice item separator
                         Next
 
                     End With
@@ -281,6 +283,9 @@ Public Class MainForm
             str.Replace(vbNewLine, "|")
             str.Replace("<empty>", "")
             str.Replace(vbTab, "")
+
+            'THIS LINE REMOVE/DELETE LAST CHARACTER FROM STRINGBUILDER.
+            str.Remove(str.Length - 1, 1)
 
             Select Case Writing
                 Case WritingOption.FSQDDeclarationResponse
