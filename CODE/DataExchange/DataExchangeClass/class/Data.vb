@@ -480,6 +480,9 @@
             '========
             sql.Append(" ,[CFGGrossWeight]")
             sql.Append(" ,[CFGImpPermitNo]")
+
+            sql.Append(" ,[CFGIMGFoodCode]") '>>
+
             sql.Append(" ,[CFGPurposeImp]")
             sql.Append(" ,[CFGWarehouseCode]")
             sql.Append(" ,[CFGWarehouseName]")
@@ -489,6 +492,7 @@
             sql.Append(" ,[CFGIMGDateProduce]")
             sql.Append(" ,[CFGIMGDateExpiry]")
             sql.Append(" ,[CFGTreatment]")
+
             sql.Append(" ,[CFGManuCode]")
             sql.Append(" ,[CFGIMGmnfName]")
             sql.Append(" ,[CFGIMGmnfAddr]")
@@ -567,8 +571,10 @@
             Else
                 sql.Append(" ,''") 'NULL
             End If
-            If item.Specifications.Count > 0 Then
+            If item.Specifications.Count > 0 Then ' FOOD CODE IS HERE
                 For Each spec In item.Specifications
+                    'CFGIMGFoodCode
+                    sql.Append(" ,'" & spec.FoodCode & "'")
                     'CFGPurposeImp
                     sql.Append(" ,'" & spec.PurposeOfImport & "'")
                     'CFGWarehouseCode
